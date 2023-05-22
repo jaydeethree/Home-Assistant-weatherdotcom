@@ -11,19 +11,19 @@ from homeassistant.helpers.typing import StateType
 
 
 @dataclass
-class WundergroundPWSRequiredKeysMixin:
+class WeatherRequiredKeysMixin:
     """Mixin for required keys."""
     value_fn: Callable[[dict[str, Any], str], StateType]
     feature: str
 
 
 @dataclass
-class WundergroundPWSSensorEntityDescription(
-    SensorEntityDescription, WundergroundPWSRequiredKeysMixin
+class WeatherSensorEntityDescription(
+    SensorEntityDescription, WeatherRequiredKeysMixin
 ):
     attr_fn: Callable[[dict[str, Any]], dict[str, StateType]] = lambda _: {}
     unit_fn: Callable[[bool], str | None] = lambda _: None
-    """Describes WundergroundPWS Sensor entity."""
+    """Describes Weather.com Sensor entity."""
 
 
 def degrees_to_cardinal(d):
@@ -36,14 +36,14 @@ obs_sensor_descriptions = [
     # observations
     # *'stationID': 'obsTimeUtc': *'obsTimeLocal': *'neighborhood': 'softwareType': 'country': *'solarRadiation': 'lon':
     # 'realtimeFrequency': 'epoch': 'lat': *'uv': *'winddir': '*humidity': 'qcStatus':
-    WundergroundPWSSensorEntityDescription(
+    WeatherSensorEntityDescription(
         key="neighborhood",
         name="Neighborhood",
         feature=FEATURE_OBSERVATIONS,
         icon="mdi:map-marker",
         value_fn=lambda data, _: cast(str, data),
     ),
-    WundergroundPWSSensorEntityDescription(
+    WeatherSensorEntityDescription(
         key="obsTimeLocal",
         name="Local Observation Time",
         feature=FEATURE_OBSERVATIONS,
@@ -51,7 +51,7 @@ obs_sensor_descriptions = [
         value_fn=lambda data, _: cast(str, data),
         # value_fn=lambda data, _: cast(str, datetime.strptime(data,  '%Y-%m-%d %H:%M:%S').strftime('%m/%d/%Y %H:%M:%S')),
     ),
-    WundergroundPWSSensorEntityDescription(
+    WeatherSensorEntityDescription(
         key="humidity",
         name="Relative Humidity",
         feature=FEATURE_OBSERVATIONS,
@@ -61,14 +61,14 @@ obs_sensor_descriptions = [
         unit_fn=lambda _: PERCENTAGE,
         value_fn=lambda data, _: cast(int, data) or 0,
     ),
-    WundergroundPWSSensorEntityDescription(
+    WeatherSensorEntityDescription(
         key="stationID",
         name="Station ID",
         feature=FEATURE_OBSERVATIONS,
         icon="mdi:home",
         value_fn=lambda data, _: cast(str, data),
     ),
-    WundergroundPWSSensorEntityDescription(
+    WeatherSensorEntityDescription(
         key="solarRadiation",
         name="Solar Radiation",
         feature=FEATURE_OBSERVATIONS,
@@ -78,7 +78,7 @@ obs_sensor_descriptions = [
         unit_fn=lambda _: UnitOfIrradiance.WATTS_PER_SQUARE_METER,
         value_fn=lambda data, _: cast(int, data) or 0,
     ),
-    WundergroundPWSSensorEntityDescription(
+    WeatherSensorEntityDescription(
         key="uv",
         name="UV Index",
         feature=FEATURE_OBSERVATIONS,
@@ -87,7 +87,7 @@ obs_sensor_descriptions = [
         unit_fn=lambda _: UV_INDEX,
         value_fn=lambda data, _: cast(int, data) or 0,
     ),
-    WundergroundPWSSensorEntityDescription(
+    WeatherSensorEntityDescription(
         key="winddir",
         name="Wind Direction - Degrees",
         feature=FEATURE_OBSERVATIONS,
@@ -97,7 +97,7 @@ obs_sensor_descriptions = [
         value_fn=lambda data, _: cast(int, data) or 0,
     ),
     # computed observations
-    WundergroundPWSSensorEntityDescription(
+    WeatherSensorEntityDescription(
         key="windDirectionCardinal",
         name="Wind Direction - Cardinal",
         feature="",
@@ -107,7 +107,7 @@ obs_sensor_descriptions = [
     ),
     # conditions -> unit imperial/metric
     # temp: heatIndex: dewpt: windChill: windSpeed: windGust: pressure: precipRate: precipTotal: elev:
-    WundergroundPWSSensorEntityDescription(
+    WeatherSensorEntityDescription(
         key="elev",
         name="Elevation",
         feature=FEATURE_CONDITIONS,
@@ -116,7 +116,7 @@ obs_sensor_descriptions = [
         unit_fn=lambda metric: UnitOfLength.METERS if metric else UnitOfLength.FEET,
         value_fn=lambda data, _: cast(float, data),
     ),
-    WundergroundPWSSensorEntityDescription(
+    WeatherSensorEntityDescription(
         key="dewpt",
         name="Dewpoint",
         feature=FEATURE_CONDITIONS,
@@ -126,7 +126,7 @@ obs_sensor_descriptions = [
         unit_fn=lambda metric: UnitOfTemperature.CELSIUS if metric else UnitOfTemperature.FAHRENHEIT,
         value_fn=lambda data, _: cast(float, data),
     ),
-    WundergroundPWSSensorEntityDescription(
+    WeatherSensorEntityDescription(
         key="temp",
         name="Temperature",
         feature=FEATURE_CONDITIONS,
@@ -136,7 +136,7 @@ obs_sensor_descriptions = [
         unit_fn=lambda metric: UnitOfTemperature.CELSIUS if metric else UnitOfTemperature.FAHRENHEIT,
         value_fn=lambda data, _: cast(float, data),
     ),
-    WundergroundPWSSensorEntityDescription(
+    WeatherSensorEntityDescription(
         key="heatIndex",
         name="Heat Index",
         feature=FEATURE_CONDITIONS,
@@ -146,7 +146,7 @@ obs_sensor_descriptions = [
         unit_fn=lambda metric: UnitOfTemperature.CELSIUS if metric else UnitOfTemperature.FAHRENHEIT,
         value_fn=lambda data, _: cast(float, data),
     ),
-    WundergroundPWSSensorEntityDescription(
+    WeatherSensorEntityDescription(
         key="windChill",
         name="Wind Chill",
         feature=FEATURE_CONDITIONS,
@@ -156,7 +156,7 @@ obs_sensor_descriptions = [
         unit_fn=lambda metric: UnitOfTemperature.CELSIUS if metric else UnitOfTemperature.FAHRENHEIT,
         value_fn=lambda data, _: cast(float, data),
     ),
-    WundergroundPWSSensorEntityDescription(
+    WeatherSensorEntityDescription(
         key="precipRate",
         name="Precipitation Rate",
         feature=FEATURE_CONDITIONS,
@@ -167,7 +167,7 @@ obs_sensor_descriptions = [
             metric: UnitOfVolumetricFlux.MILLIMETERS_PER_HOUR if metric else UnitOfVolumetricFlux.INCHES_PER_HOUR,
         value_fn=lambda data, _: cast(float, data),
     ),
-    WundergroundPWSSensorEntityDescription(
+    WeatherSensorEntityDescription(
         key="precipTotal",
         name="Precipitation Today",
         feature=FEATURE_CONDITIONS,
@@ -177,7 +177,7 @@ obs_sensor_descriptions = [
         unit_fn=lambda metric: UnitOfLength.MILLIMETERS if metric else UnitOfLength.INCHES,
         value_fn=lambda data, _: cast(float, data),
     ),
-    WundergroundPWSSensorEntityDescription(
+    WeatherSensorEntityDescription(
         key="pressure",
         name="Pressure",
         feature=FEATURE_CONDITIONS,
@@ -187,7 +187,7 @@ obs_sensor_descriptions = [
         unit_fn=lambda metric: UnitOfPressure.MBAR if metric else UnitOfPressure.INHG,
         value_fn=lambda data, _: cast(float, data),
     ),
-    WundergroundPWSSensorEntityDescription(
+    WeatherSensorEntityDescription(
         key="windGust",
         name="Wind Gust",
         feature=FEATURE_CONDITIONS,
@@ -197,7 +197,7 @@ obs_sensor_descriptions = [
         unit_fn=lambda metric: UnitOfSpeed.KILOMETERS_PER_HOUR if metric else UnitOfSpeed.MILES_PER_HOUR,
         value_fn=lambda data, _: cast(float, data),
     ),
-    WundergroundPWSSensorEntityDescription(
+    WeatherSensorEntityDescription(
         key="windSpeed",
         name="Wind Speed",
         feature=FEATURE_CONDITIONS,

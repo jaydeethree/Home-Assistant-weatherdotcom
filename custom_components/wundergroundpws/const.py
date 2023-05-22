@@ -1,7 +1,7 @@
 """
-Support for WUndergroundPWS weather service.
+Support for Weather.com weather service.
 For more details about this platform, please refer to the documentation at
-https://github.com/cytech/Home-Assistant-wundergroundpws/tree/v2.X.X
+https://github.com/jaydeethree/Home-Assistant-weatherdotcom/tree/v2.X.X
 """
 from typing import Final
 
@@ -23,10 +23,10 @@ from homeassistant.components.weather import (
     ATTR_CONDITION_WINDY_VARIANT
 )
 
-DOMAIN = 'wundergroundpws'
+DOMAIN = 'weatherdotcom'
 # MANUFACTURER = 'WeatherUnderground'
 # NAME = 'WeatherUnderground'
-CONF_ATTRIBUTION = 'Data provided by the WUnderground weather service'
+CONF_ATTRIBUTION = 'Data provided by the Weather.com weather service'
 CONF_PWS_ID = 'pws_id'
 CONF_NUMERIC_PRECISION = 'numeric_precision'
 CONF_LANG = 'lang'

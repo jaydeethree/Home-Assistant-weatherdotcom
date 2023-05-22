@@ -1,7 +1,7 @@
 """
-Sensor Support for WUndergroundPWS weather service.
+Sensor Support for Weather.com weather service.
 For more details about this platform, please refer to the documentation at
-https://github.com/cytech/Home-Assistant-wundergroundpws/tree/v2.X.X
+https://github.com/jaydeethree/Home-Assistant-weatherdotcom/tree/v2.X.X
 """
 from __future__ import annotations
 
@@ -15,7 +15,7 @@ from homeassistant.helpers.entity_platform import AddEntitiesCallback
 from homeassistant.helpers.update_coordinator import CoordinatorEntity
 from homeassistant.util.unit_system import METRIC_SYSTEM
 
-from .coordinator import WundergroundPWSUpdateCoordinator
+from .coordinator import WeatherUpdateCoordinator
 
 from .const import (
     CONF_ATTRIBUTION, DOMAIN, FIELD_DAYPART, FIELD_OBSERVATIONS, MAX_FORECAST_DAYS,
@@ -28,12 +28,12 @@ from .wupws_forecast_sensors import *
 _LOGGER = logging.getLogger(__name__)
 
 # Declaration of supported WUpws observation/condition sensors
-SENSOR_DESCRIPTIONS: tuple[WundergroundPWSSensorEntityDescription, ...] = (
+SENSOR_DESCRIPTIONS: tuple[WeatherSensorEntityDescription, ...] = (
     obs_sensor_descriptions
 )
 
 # Declaration of supported WUpws forecast sensors
-FORECAST_SENSOR_DESCRIPTIONS: tuple[WundergroundPWSSensorEntityDescription, ...] = (
+FORECAST_SENSOR_DESCRIPTIONS: tuple[WeatherSensorEntityDescription, ...] = (
     forecast_sensor_descriptions
 )
 
@@ -41,22 +41,22 @@ FORECAST_SENSOR_DESCRIPTIONS: tuple[WundergroundPWSSensorEntityDescription, ...]
 async def async_setup_entry(
         hass: HomeAssistant, entry: ConfigEntry, async_add_entities: AddEntitiesCallback
 ) -> None:
-    """Add WundergroundPWS entities from a config_entry."""
-    coordinator: WundergroundPWSUpdateCoordinator = hass.data[DOMAIN][entry.entry_id]
+    """Add Weather.com entities from a config_entry."""
+    coordinator: WeatherUpdateCoordinator = hass.data[DOMAIN][entry.entry_id]
     sensors = [
-        WundergroundPWSSensor(coordinator, description) for description in SENSOR_DESCRIPTIONS
+        WeatherSensor(coordinator, description) for description in SENSOR_DESCRIPTIONS
     ]
 
     if coordinator.forecast_enable:
         sensors.extend(
-            WundergroundPWSForecastSensor(coordinator, description, forecast_day=day)
+            WeatherForecastSensor(coordinator, description, forecast_day=day)
             for day in range(MAX_FORECAST_DAYS)
             for description in FORECAST_SENSOR_DESCRIPTIONS
             if description.feature == FEATURE_FORECAST
         )
 
         sensors.extend(
-            WundergroundPWSForecastSensor(coordinator, description, forecast_day=day)
+            WeatherForecastSensor(coordinator, description, forecast_day=day)
             for day in range(MAX_FORECAST_DAYS * 2)
             for description in FORECAST_SENSOR_DESCRIPTIONS
             if description.feature == FEATURE_FORECAST_DAYPART
@@ -65,16 +65,16 @@ async def async_setup_entry(
     async_add_entities(sensors)
 
 
-class WundergroundPWSSensor(CoordinatorEntity, SensorEntity):
-    """Implementing the WUnderground sensor."""
+class WeatherSensor(CoordinatorEntity, SensorEntity):
+    """Implementing the Weather.com sensor."""
     _attr_has_entity_name = True
     _attr_attribution = CONF_ATTRIBUTION
-    entity_description: WundergroundPWSSensorEntityDescription
+    entity_description: WeatherSensorEntityDescription
 
     def __init__(
             self,
-            coordinator: WundergroundPWSUpdateCoordinator,
-            description: WundergroundPWSSensorEntityDescription,
+            coordinator: WeatherUpdateCoordinator,
+            description: WeatherSensorEntityDescription,
             forecast_day: int | None = None,
     ):
         super().__init__(coordinator)
@@ -182,8 +182,8 @@ def _get_sensor_data(
         return sensors
 
 
-class WundergroundPWSForecastSensor(WundergroundPWSSensor):
-    """Define an WundergroundPWS forecast entity."""
+class WeatherForecastSensor(WeatherSensor):
+    """Define a Weather.com forecast entity."""
 
     @property
     def extra_state_attributes(self) -> dict[str, Any]:

@@ -1,4 +1,4 @@
-"""The wundergroundpws component."""
+"""The weather.com component."""
 import logging
 from typing import Final
 from homeassistant.config_entries import ConfigEntry
@@ -8,7 +8,7 @@ from homeassistant.const import (
 )
 from homeassistant.core import HomeAssistant
 from homeassistant.util.unit_system import METRIC_SYSTEM
-from .coordinator import WundergroundPWSUpdateCoordinator, WundergroundPWSUpdateCoordinatorConfig
+from .coordinator import WeatherUpdateCoordinator, WeatherUpdateCoordinatorConfig
 from .const import (
     CONF_LANG,
     CONF_NUMERIC_PRECISION,
@@ -23,7 +23,7 @@ _LOGGER = logging.getLogger(__name__)
 
 
 async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry):
-    """Set up the WundergroundPWS component."""
+    """Set up the Weather.com component."""
     hass.data.setdefault(DOMAIN, {})
 
     latitude = entry.options[CONF_LATITUDE]
@@ -36,7 +36,7 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry):
         unit_system_api = API_URL_IMPERIAL
         unit_system = API_IMPERIAL
 
-    config = WundergroundPWSUpdateCoordinatorConfig(
+    config = WeatherUpdateCoordinatorConfig(
         api_key=entry.data[CONF_API_KEY],
         pws_id=entry.data[CONF_PWS_ID],
         numeric_precision=entry.options[CONF_NUMERIC_PRECISION],
@@ -49,7 +49,7 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry):
         forecast_enable=entry.options.get(CONF_FORECAST_SENSORS, False)
     )
 
-    wupwscoordinator = WundergroundPWSUpdateCoordinator(hass, config)
+    wupwscoordinator = WeatherUpdateCoordinator(hass, config)
     await wupwscoordinator.async_config_entry_first_refresh()
 
     entry.async_on_unload(entry.add_update_listener(_async_update_listener))

@@ -5,7 +5,7 @@ from typing import cast
 from .const import FEATURE_FORECAST, FEATURE_FORECAST_DAYPART
 from homeassistant.components.sensor import SensorDeviceClass
 from homeassistant.const import UnitOfTemperature, UnitOfSpeed, UnitOfLength, PERCENTAGE
-from .wupws_obs_sensors import WundergroundPWSSensorEntityDescription
+from .wupws_obs_sensors import WeatherSensorEntityDescription
 
 forecast_sensor_descriptions = [
     # forecast outside daypart
@@ -13,7 +13,7 @@ forecast_sensor_descriptions = [
     # moonPhaseDay: moonriseTimeLocal: moonriseTimeUtc: moonsetTimeLocal: moonsetTimeUtc: *narrative: qpf: *qpfSnow:
     # sunriseTimeLocal: sunriseTimeUtc: sunsetTimeLocal: sunsetTimeUtc: temperatureMax: temperatureMin: validTimeLocal:
     # validTimeUtc:
-    WundergroundPWSSensorEntityDescription(
+    WeatherSensorEntityDescription(
         key="narrative",
         name="Weather Summary",
         feature=FEATURE_FORECAST,
@@ -21,7 +21,7 @@ forecast_sensor_descriptions = [
         value_fn=lambda data, _: cast(str, data),
         entity_registry_enabled_default=False,
     ),
-    WundergroundPWSSensorEntityDescription(
+    WeatherSensorEntityDescription(
         key="qpfSnow",
         name="Snow Amount",
         feature=FEATURE_FORECAST,
@@ -37,7 +37,7 @@ forecast_sensor_descriptions = [
     # qpfSnow: qualifierCode: qualifierPhrase: relativeHumidity: snowRange: *temperature: temperatureHeatIndex:
     # temperatureWindChill: thunderCategory: thunderIndex: uvDescription: uvIndex: windDirection: windDirectionCardinal:
     # windPhrase: *windSpeed: wxPhraseLong: wxPhraseShort:
-    WundergroundPWSSensorEntityDescription(
+    WeatherSensorEntityDescription(
         key="temperature",
         name="Forecast Temperature",
         feature=FEATURE_FORECAST_DAYPART,
@@ -47,7 +47,7 @@ forecast_sensor_descriptions = [
         value_fn=lambda data, _: cast(float, data) if (data is not None) else str('—'),
         entity_registry_enabled_default=False,
     ),
-    WundergroundPWSSensorEntityDescription(
+    WeatherSensorEntityDescription(
         key="narrative",
         name="Forecast Summary",
         feature=FEATURE_FORECAST_DAYPART,
@@ -55,7 +55,7 @@ forecast_sensor_descriptions = [
         value_fn=lambda data, _: cast(str, data) if (data is not None) else str('—'),
         entity_registry_enabled_default=False,
     ),
-    WundergroundPWSSensorEntityDescription(
+    WeatherSensorEntityDescription(
         key="windSpeed",
         name="Average Wind",
         feature=FEATURE_FORECAST_DAYPART,
@@ -65,7 +65,7 @@ forecast_sensor_descriptions = [
         value_fn=lambda data, _: cast(float, data) if (data is not None) else str('—'),
         entity_registry_enabled_default=False,
     ),
-    WundergroundPWSSensorEntityDescription(
+    WeatherSensorEntityDescription(
         key="qpf",
         name="Precipitation Amount",
         feature=FEATURE_FORECAST_DAYPART,
@@ -75,7 +75,7 @@ forecast_sensor_descriptions = [
         value_fn=lambda data, _: cast(float, data) if (data is not None) else str('—'),
         entity_registry_enabled_default=False,
     ),
-    WundergroundPWSSensorEntityDescription(
+    WeatherSensorEntityDescription(
         key="precipChance",
         name="Precipitation Probability",
         feature=FEATURE_FORECAST_DAYPART,

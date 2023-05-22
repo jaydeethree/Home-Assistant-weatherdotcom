@@ -1,4 +1,4 @@
-"""Config Flow to configure WundergrounPWS Integration."""
+"""Config Flow to configure Weather.com Integration."""
 from __future__ import annotations
 import logging
 from http import HTTPStatus
@@ -20,8 +20,8 @@ from .const import (
 _LOGGER = logging.getLogger(__name__)
 
 
-class WundergrounPWSFlowHandler(config_entries.ConfigFlow, domain=DOMAIN):
-    """Handle a WundergrounPWS config flow."""
+class WeatherFlowHandler(config_entries.ConfigFlow, domain=DOMAIN):
+    """Handle a Weather.com config flow."""
 
     VERSION = 1
 
@@ -63,7 +63,7 @@ class WundergrounPWSFlowHandler(config_entries.ConfigFlow, domain=DOMAIN):
                 # 401 status is most likely bad api_key or api usage limit exceeded
                 if response.status == HTTPStatus.UNAUTHORIZED:
                     _LOGGER.error(
-                        "WundergroundPWS config responded with HTTP error %s: %s",
+                        "Weather.com config responded with HTTP error %s: %s",
                         response.status,
                         response.reason,
                     )
@@ -71,14 +71,14 @@ class WundergrounPWSFlowHandler(config_entries.ConfigFlow, domain=DOMAIN):
                 if response.status == HTTPStatus.NO_CONTENT:
                     # 204 status is most likely bad station_id
                     _LOGGER.error(
-                        "WundergroundPWS config responded with HTTP error %s: %s",
+                        "Weather.com config responded with HTTP error %s: %s",
                         response.status,
                         response.reason,
                     )
                     raise InvalidStationId
                 else:
                     _LOGGER.error(
-                        "WundergroundPWS config responded with HTTP error %s: %s",
+                        "Weather.com config responded with HTTP error %s: %s",
                         response.status,
                         response.reason,
                     )

@@ -1,4 +1,4 @@
-"""The WundergroundPWS data coordinator."""
+"""The Weather.com data coordinator."""
 
 from __future__ import annotations
 
@@ -44,7 +44,7 @@ MIN_TIME_BETWEEN_UPDATES = timedelta(minutes=5)
 
 
 @dataclass
-class WundergroundPWSUpdateCoordinatorConfig:
+class WeatherUpdateCoordinatorConfig:
     """Class representing coordinator configuration."""
 
     api_key: str
@@ -60,13 +60,13 @@ class WundergroundPWSUpdateCoordinatorConfig:
     update_interval = MIN_TIME_BETWEEN_UPDATES
 
 
-class WundergroundPWSUpdateCoordinator(DataUpdateCoordinator):
-    """The WundergroundPWS update coordinator."""
+class WeatherUpdateCoordinator(DataUpdateCoordinator):
+    """The Weather.com update coordinator."""
 
     icon_condition_map = ICON_CONDITION_MAP
 
     def __init__(
-            self, hass: HomeAssistant, config: WundergroundPWSUpdateCoordinatorConfig
+            self, hass: HomeAssistant, config: WeatherUpdateCoordinatorConfig
     ) -> None:
         """Initialize."""
         self._hass = hass
@@ -97,7 +97,7 @@ class WundergroundPWSUpdateCoordinator(DataUpdateCoordinator):
         super().__init__(
             hass,
             _LOGGER,
-            name="WundergroundPWSUpdateCoordinator",
+            name="WeatherUpdateCoordinator",
             update_interval=config.update_interval,
         )
 
@@ -150,10 +150,10 @@ class WundergroundPWSUpdateCoordinator(DataUpdateCoordinator):
             return result
 
         except ValueError as err:
-            _LOGGER.error("Check WUnderground API %s", err.args)
+            _LOGGER.error("Check Weather.com API %s", err.args)
         except (asyncio.TimeoutError, aiohttp.ClientError) as err:
-            _LOGGER.error("Error fetching WUnderground data: %s", repr(err))
-        # _LOGGER.debug(f'WUnderground data {self.data}')
+            _LOGGER.error("Error fetching Weather.com data: %s", repr(err))
+        # _LOGGER.debug(f'Weather.com data {self.data}')
 
     def _build_url(self, baseurl):
         if baseurl == _RESOURCECURRENT:

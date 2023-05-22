@@ -1,10 +1,10 @@
 """
-Support for WUndergroundPWS weather service.
+Support for Weather.com weather service.
 For more details about this platform, please refer to the documentation at
-https://github.com/cytech/Home-Assistant-wundergroundpws/tree/v2.X.X
+https://github.com/jaydeethree/Home-Assistant-weatherdotcom/tree/v2.X.X
 """
 
-from . import WundergroundPWSUpdateCoordinator
+from . import WeatherUpdateCoordinator
 from homeassistant.config_entries import ConfigEntry
 from homeassistant.helpers.update_coordinator import CoordinatorEntity
 from .const import (
@@ -63,7 +63,7 @@ async def async_setup_entry(
 ) -> None:
     """Add weather entity."""
     pws_id: str = entry.data[CONF_PWS_ID]
-    coordinator: WundergroundPWSUpdateCoordinator = hass.data[DOMAIN][entry.entry_id]
+    coordinator: WeatherUpdateCoordinator = hass.data[DOMAIN][entry.entry_id]
     async_add_entities([WUWeather(pws_id, coordinator)])
 
 
@@ -72,7 +72,7 @@ class WUWeather(CoordinatorEntity, WeatherEntity):
     def __init__(
             self,
             pws_id: str,
-            coordinator: WundergroundPWSUpdateCoordinator
+            coordinator: WeatherUpdateCoordinator
     ):
         super().__init__(coordinator)
         """Initialize the sensor."""
