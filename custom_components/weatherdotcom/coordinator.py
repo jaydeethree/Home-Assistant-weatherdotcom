@@ -224,8 +224,8 @@ class WeatherUpdateCoordinator(DataUpdateCoordinator):
         return None
 
     def get_tran_file(self):
-        """get translation file for wupws sensor friendly_name"""
-        tfiledir = f'{self._hass.config.config_dir}/custom_components/{DOMAIN}/wupws_translations/'
+        """get translation file for Weather.com sensor friendly_name"""
+        tfiledir = f'{self._hass.config.config_dir}/custom_components/{DOMAIN}/weather_translations/'
         tfilename = self._lang.split('-', 1)[0]
         try:
             tfiledata = json.load_json(f'{tfiledir}{tfilename}.json')

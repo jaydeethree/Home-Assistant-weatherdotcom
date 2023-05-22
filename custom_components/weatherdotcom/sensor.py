@@ -22,17 +22,17 @@ from .const import (
     FEATURE_CONDITIONS, FEATURE_FORECAST, FEATURE_FORECAST_DAYPART, FIELD_FORECAST_DAYPARTNAME,
     FIELD_FORECAST_DAYOFWEEK, FIELD_FORECAST_EXPIRED
 )
-from .wupws_obs_sensors import *
-from .wupws_forecast_sensors import *
+from .weather_obs_sensors import *
+from .weather_forecast_sensors import *
 
 _LOGGER = logging.getLogger(__name__)
 
-# Declaration of supported WUpws observation/condition sensors
+# Declaration of supported Weather.com observation/condition sensors
 SENSOR_DESCRIPTIONS: tuple[WeatherSensorEntityDescription, ...] = (
     obs_sensor_descriptions
 )
 
-# Declaration of supported WUpws forecast sensors
+# Declaration of supported Weather.com forecast sensors
 FORECAST_SENSOR_DESCRIPTIONS: tuple[WeatherSensorEntityDescription, ...] = (
     forecast_sensor_descriptions
 )

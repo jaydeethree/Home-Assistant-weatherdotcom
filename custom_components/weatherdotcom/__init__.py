@@ -49,11 +49,11 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry):
         forecast_enable=entry.options.get(CONF_FORECAST_SENSORS, False)
     )
 
-    wupwscoordinator = WeatherUpdateCoordinator(hass, config)
-    await wupwscoordinator.async_config_entry_first_refresh()
+    weathercoordinator = WeatherUpdateCoordinator(hass, config)
+    await weathercoordinator.async_config_entry_first_refresh()
 
     entry.async_on_unload(entry.add_update_listener(_async_update_listener))
-    hass.data[DOMAIN][entry.entry_id] = wupwscoordinator
+    hass.data[DOMAIN][entry.entry_id] = weathercoordinator
 
     await hass.config_entries.async_forward_entry_setups(entry, PLATFORMS)
 
