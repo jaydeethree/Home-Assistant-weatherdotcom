@@ -84,12 +84,12 @@ class WeatherFlowHandler(config_entries.ConfigFlow, domain=DOMAIN):
         if not errors:
             result_current = await response.json()
 
-            unique_id = str(f"{DOMAIN}-{name}")
+            unique_id = str(f"{DOMAIN}-{description.name}")
             await self.async_set_unique_id(unique_id)
             self._abort_if_unique_id_configured()
 
             return self.async_create_entry(
-                title=name,
+                title=f"{description.name}",
                 data={
                     CONF_API_KEY: user_input[CONF_API_KEY],
                 },
