@@ -153,9 +153,8 @@ class WeatherUpdateCoordinator(DataUpdateCoordinator):
         if baseurl == _RESOURCECURRENT:
             if self._numeric_precision != 'none':
                 baseurl += '&numericPrecision={numericPrecision}'
-        elif baseurl == _RESOURCEFORECAST:
-            baseurl += '&language={language}'
-
+            
+        baseurl += '&language={language}'
         baseurl += _RESOURCESHARED
 
         return baseurl.format(

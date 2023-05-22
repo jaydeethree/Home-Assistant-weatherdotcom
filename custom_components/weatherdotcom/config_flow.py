@@ -53,7 +53,7 @@ class WeatherFlowHandler(config_entries.ConfigFlow, domain=DOMAIN):
 
             with async_timeout.timeout(10):
                 url = f'https://api.weather.com/v3/wx/observations/current?geocode={latitude},{longitude}&format=json&units=e' \
-                      f'&apiKey={api_key}'
+                      f'&apiKey={api_key}&language=en-US'
                 response = await session.get(url, headers=headers)
             # _LOGGER.debug(response.status)
             if response.status != HTTPStatus.OK:
