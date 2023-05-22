@@ -1,12 +1,12 @@
 {
-  "domain": "wundergroundpws",
-  "name": "Wundergroundpws",
+  "domain": "weatherdotcom",
+  "name": "Weather.com",
   "version": "2.0.1",
-  "documentation": "https://github.com/cytech/Home-Assistant-wundergroundpws/tree/v2.X.X",
-  "issue_tracker": "https://github.com/cytech/Home-Assistant-wundergroundpws/issues/",
+  "documentation": "https://github.com/jaydeethree/Home-Assistant-weatherdotcom/tree/v2.X.X",
+  "issue_tracker": "https://github.com/jaydeethree/Home-Assistant-weatherdotcom/issues/",
   "requirements": [],
   "dependencies": [],
-  "codeowners": ["@cytech"],
+  "codeowners": ["@jaydeethree"],
   "config_flow": true,
   "iot_class": "cloud_polling"
 }
