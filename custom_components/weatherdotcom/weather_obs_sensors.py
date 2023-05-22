@@ -34,15 +34,8 @@ def degrees_to_cardinal(d):
 
 obs_sensor_descriptions = [
     # observations
-    # *'stationID': 'obsTimeUtc': *'validTimeLocal': *'neighborhood': 'softwareType': 'country': *'solarRadiation': 'lon':
+    # 'obsTimeUtc': *'validTimeLocal': 'softwareType': 'country': 'lon':
     # 'realtimeFrequency': 'epoch': 'lat': *'uvIndex': *'windDirection': '*relativeHumidity': 'qcStatus':
-    WeatherSensorEntityDescription(
-        key="neighborhood",
-        name="Neighborhood",
-        feature=FEATURE_OBSERVATIONS,
-        icon="mdi:map-marker",
-        value_fn=lambda data, _: cast(str, data),
-    ),
     WeatherSensorEntityDescription(
         key="validTimeLocal",
         name="Local Observation Time",
@@ -59,23 +52,6 @@ obs_sensor_descriptions = [
         device_class=SensorDeviceClass.HUMIDITY,
         state_class=SensorStateClass.MEASUREMENT,
         unit_fn=lambda _: PERCENTAGE,
-        value_fn=lambda data, _: cast(int, data) or 0,
-    ),
-    WeatherSensorEntityDescription(
-        key="stationID",
-        name="Station ID",
-        feature=FEATURE_OBSERVATIONS,
-        icon="mdi:home",
-        value_fn=lambda data, _: cast(str, data),
-    ),
-    WeatherSensorEntityDescription(
-        key="solarRadiation",
-        name="Solar Radiation",
-        feature=FEATURE_OBSERVATIONS,
-        icon="mdi:weather-sunny",
-        device_class=SensorDeviceClass.IRRADIANCE,
-        state_class=SensorStateClass.MEASUREMENT,
-        unit_fn=lambda _: UnitOfIrradiance.WATTS_PER_SQUARE_METER,
         value_fn=lambda data, _: cast(int, data) or 0,
     ),
     WeatherSensorEntityDescription(
@@ -106,16 +82,7 @@ obs_sensor_descriptions = [
         value_fn=lambda data, _: degrees_to_cardinal(cast(int, data['observations'][0]['windDirection'])) or "",
     ),
     # conditions -> unit imperial/metric
-    # temperature: temperatureHeatIndex: temperatureDewPoint: temperatureWindChill: windSpeed: windGust: pressureAltimeter: precip1Hour: precip24Hour: elev:
-    WeatherSensorEntityDescription(
-        key="elev",
-        name="Elevation",
-        feature=FEATURE_CONDITIONS,
-        icon="mdi:elevation-rise",
-        device_class=SensorDeviceClass.DISTANCE,
-        unit_fn=lambda metric: UnitOfLength.METERS if metric else UnitOfLength.FEET,
-        value_fn=lambda data, _: cast(float, data),
-    ),
+    # temperature: temperatureHeatIndex: temperatureDewPoint: temperatureWindChill: windSpeed: windGust: pressureAltimeter: precip1Hour: precip24Hour:
     WeatherSensorEntityDescription(
         key="temperatureDewPoint",
         name="Dewpoint",

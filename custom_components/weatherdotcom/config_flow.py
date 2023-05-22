@@ -97,7 +97,7 @@ class WeatherFlowHandler(config_entries.ConfigFlow, domain=DOMAIN):
 
         if not errors:
             result_current = await response.json()
-            station_id = result_current[FIELD_OBSERVATIONS][0]['stationID']
+            station_id = "test"
 
             unique_id = str(f"{DOMAIN}-{station_id}")
             await self.async_set_unique_id(unique_id)
