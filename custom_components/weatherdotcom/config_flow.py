@@ -95,9 +95,6 @@ class WeatherFlowHandler(config_entries.ConfigFlow, domain=DOMAIN):
             await self.async_set_unique_id(unique_id)
             self._abort_if_unique_id_configured()
 
-            longitude = self.hass.config.longitude
-            latitude = self.hass.config.latitude
-
             return self.async_create_entry(
                 title=station_id,
                 data={
@@ -120,7 +117,12 @@ class WeatherFlowHandler(config_entries.ConfigFlow, domain=DOMAIN):
             data_schema=vol.Schema(
                 {
                     vol.Required(CONF_API_KEY): str,
-                    vol.Required(CONF_PWS_ID): str,
+                    vol.Required(
+                        CONF_LATITUDE, default=self.hass.config.latitude
+                    ): cv.latitude,
+                    vol.Required(
+                        CONF_LONGITUDE, default=self.hass.config.longitude
+                    ): cv.longitude,
                 }
             ),
             errors=errors or {},
