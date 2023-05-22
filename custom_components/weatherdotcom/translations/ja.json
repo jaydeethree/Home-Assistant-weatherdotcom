@@ -12,7 +12,7 @@
           "name": "名前",
           "pws_id": "パーソナル ウェザー ステーション ID (大文字と小文字を区別)"
         },
-        "description": "WundergroundPWS 統合をセットアップします。 ",
+        "description": "Weather.com 統合をセットアップします。 ",
         "title": "ワンダーグラウンドPWS"
       }
     }

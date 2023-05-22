@@ -12,8 +12,8 @@
           "name": "Name",
           "pws_id": "Persönliche Wetterstations-ID (Groß-/Kleinschreibung beachten)"
         },
-        "description": "Richten Sie die WundergroundPWS-Integration ein. ",
-        "title": "WundergroundPWS"
+        "description": "Richten Sie die Weather.com-Integration ein. ",
+        "title": "Weather.com"
       }
     }
   },

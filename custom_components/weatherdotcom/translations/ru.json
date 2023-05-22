@@ -12,8 +12,8 @@
           "name": "Имя",
           "pws_id": "Идентификатор персональной метеостанции (с учетом регистра)"
         },
-        "description": "Настройте интеграцию WundergroundPWS. ",
-        "title": "WundergroundPWS"
+        "description": "Настройте интеграцию Weather.com. ",
+        "title": "Weather.com"
       }
     }
   },

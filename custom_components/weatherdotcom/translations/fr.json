@@ -12,8 +12,8 @@
           "name": "Nom",
           "pws_id": "ID personnel de la station météo (sensible à la casse)"
         },
-        "description": "Configurez l'intégration WundergroundPWS. ",
-        "title": "WundergroundPWS"
+        "description": "Configurez l'intégration Weather.com. ",
+        "title": "Weather.com"
       }
     }
   },

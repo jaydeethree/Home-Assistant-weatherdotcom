@@ -12,8 +12,8 @@
           "name": "Name",
           "pws_id": "Personal Weather Station ID (Case Sensitive)"
         },
-        "description": "Set up WundergroundPWS integration. To generate API key go to https://www.wunderground.com/member/api-keys",
-        "title": "WundergroundPWS"
+        "description": "Set up Weather.com integration. To generate API key go to https://www.wunderground.com/member/api-keys",
+        "title": "Weather.com"
       }
     }
   },
