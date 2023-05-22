@@ -79,7 +79,7 @@ obs_sensor_descriptions = [
         feature="",
         icon="mdi:weather-windy",
         unit_fn=lambda _: None,
-        value_fn=lambda data, _: degrees_to_cardinal(cast(int, data['observations'][0]['windDirection'])) or "",
+        value_fn=lambda data, _: degrees_to_cardinal(cast(int, data['windDirection'])) or "",
     ),
     # conditions -> unit imperial/metric
     # temperature: temperatureHeatIndex: temperatureDewPoint: temperatureWindChill: windSpeed: windGust: pressureAltimeter: precip1Hour: precip24Hour:

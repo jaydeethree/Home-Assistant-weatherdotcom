@@ -18,7 +18,7 @@ from homeassistant.util.unit_system import METRIC_SYSTEM
 from .coordinator import WeatherUpdateCoordinator
 
 from .const import (
-    CONF_ATTRIBUTION, DOMAIN, FIELD_DAYPART, FIELD_OBSERVATIONS, MAX_FORECAST_DAYS,
+    CONF_ATTRIBUTION, DOMAIN, FIELD_DAYPART, MAX_FORECAST_DAYS,
     FEATURE_CONDITIONS, FEATURE_FORECAST, FEATURE_FORECAST_DAYPART, FIELD_FORECAST_DAYPARTNAME,
     FIELD_FORECAST_DAYOFWEEK, FIELD_FORECAST_EXPIRED
 )
@@ -171,13 +171,13 @@ def _get_sensor_data(
 ) -> Any:
     """Get sensor data."""
     if feature == FEATURE_CONDITIONS:
-        return sensors[FIELD_OBSERVATIONS][0][unit_system][kind]
+        return sensors[kind]
     elif feature == FEATURE_FORECAST:
         return sensors[kind][forecast_day]
     elif feature == FEATURE_FORECAST_DAYPART:
         return sensors[FIELD_DAYPART][0][kind][forecast_day]
     elif feature == FEATURE_OBSERVATIONS:
-        return sensors[FIELD_OBSERVATIONS][0][kind]
+        return sensors[kind]
     else:
         return sensors
 

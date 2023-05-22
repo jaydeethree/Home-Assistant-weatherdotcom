@@ -21,7 +21,6 @@ from homeassistant.const import (
     PERCENTAGE, UnitOfPressure, UnitOfTemperature, UnitOfLength, UnitOfSpeed, UnitOfVolumetricFlux)
 from .const import (
     ICON_CONDITION_MAP,
-    FIELD_OBSERVATIONS,
     FIELD_CONDITION_HUMIDITY,
     FIELD_CONDITION_WINDDIR,
     FIELD_DAYPART,
@@ -35,8 +34,8 @@ from .const import (
 _LOGGER = logging.getLogger(__name__)
 
 _RESOURCESHARED = '&format=json&apiKey={apiKey}&units={units}'
-_RESOURCECURRENT = ('https://api.weather.com/v2/pws/observations/current'
-                    '?stationId={stationId}')
+_RESOURCECURRENT = ('https://api.weather.com/v3/wx/observations/current'
+                    '?geocode={latitude},{longitude}')
 _RESOURCEFORECAST = ('https://api.weather.com/v3/wx/forecast/daily/5day'
                      '?geocode={latitude},{longitude}')
 
@@ -129,11 +128,6 @@ class WeatherUpdateCoordinator(DataUpdateCoordinator):
                     raise ValueError('NO CURRENT RESULT')
                 self._check_errors(url, result_current)
 
-                if not self._longitude:
-                    self._longitude = (result_current[FIELD_OBSERVATIONS][0][FIELD_LONGITUDE])
-                if not self._latitude:
-                    self._latitude = (result_current[FIELD_OBSERVATIONS][0][FIELD_LATITUDE])
-
             with async_timeout.timeout(10):
                 url = self._build_url(_RESOURCEFORECAST)
                 response = await self._session.get(url, headers=headers)
@@ -170,7 +164,6 @@ class WeatherUpdateCoordinator(DataUpdateCoordinator):
             latitude=self._latitude,
             longitude=self._longitude,
             numericPrecision=self._numeric_precision,
-            stationId=self._pws_id,
             units=self._unit_system_api
         )
 
@@ -197,8 +190,8 @@ class WeatherUpdateCoordinator(DataUpdateCoordinator):
             FIELD_CONDITION_WINDDIR,
         ]:
             # Those fields are unit-less
-            return self.data[FIELD_OBSERVATIONS][0][field] or 0
-        return self.data[FIELD_OBSERVATIONS][0][self.unit_system][field]
+            return self.data[field] or 0
+        return self.data[field]
 
     def get_forecast(self, field, period=0):
         try:
@@ -236,8 +229,4 @@ class WeatherUpdateCoordinator(DataUpdateCoordinator):
 
 
 class InvalidApiKey(HomeAssistantError):
-    """Error to indicate there is an invalid api key."""
-
-
-class InvalidStationId(HomeAssistantError):
     """Error to indicate there is an invalid api key."""

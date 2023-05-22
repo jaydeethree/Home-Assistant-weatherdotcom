@@ -9,11 +9,11 @@ import homeassistant.helpers.config_validation as cv
 from homeassistant.const import CONF_API_KEY, CONF_LATITUDE, CONF_LONGITUDE
 from homeassistant.core import callback
 from homeassistant.helpers.aiohttp_client import async_create_clientsession
-from .coordinator import InvalidApiKey, InvalidStationId
+from .coordinator import InvalidApiKey
 
 from .const import (
     DOMAIN, CONF_PWS_ID, CONF_NUMERIC_PRECISION, CONF_LANG, CONF_CALENDARDAYTEMPERATURE, DEFAULT_NUMERIC_PRECISION,
-    DEFAULT_LANG, LANG_CODES, DEFAULT_CALENDARDAYTEMPERATURE, FIELD_OBSERVATIONS, FIELD_LONGITUDE, FIELD_LATITUDE,
+    DEFAULT_LANG, LANG_CODES, DEFAULT_CALENDARDAYTEMPERATURE, FIELD_LONGITUDE, FIELD_LATITUDE,
     CONF_FORECAST_SENSORS, DEFAULT_FORECAST_SENSORS,
 )
 
@@ -39,7 +39,6 @@ class WeatherFlowHandler(config_entries.ConfigFlow, domain=DOMAIN):
         errors = {}
         session = async_create_clientsession(self.hass)
 
-        pws_id = user_input[CONF_PWS_ID]
         api_key = user_input[CONF_API_KEY]
         headers = {
             'Accept-Encoding': 'gzip',
@@ -50,12 +49,8 @@ class WeatherFlowHandler(config_entries.ConfigFlow, domain=DOMAIN):
                 errors["base"] = "invalid_api_key"
                 raise InvalidApiKey
 
-            if user_input[CONF_PWS_ID] is None or user_input[CONF_PWS_ID] == "":
-                errors["base"] = "invalid_station_id"
-                raise InvalidStationId
-
             with async_timeout.timeout(10):
-                url = f'https://api.weather.com/v2/pws/observations/current?stationId={pws_id}&format=json&units=e' \
+                url = f'https://api.weather.com/v3/wx/observations/current?geocode={latitude},{longitude}&format=json&units=e' \
                       f'&apiKey={api_key}'
                 response = await session.get(url, headers=headers)
             # _LOGGER.debug(response.status)
@@ -75,7 +70,7 @@ class WeatherFlowHandler(config_entries.ConfigFlow, domain=DOMAIN):
                         response.status,
                         response.reason,
                     )
-                    raise InvalidStationId
+                    raise Exception
                 else:
                     _LOGGER.error(
                         "Weather.com config responded with HTTP error %s: %s",
@@ -86,9 +81,6 @@ class WeatherFlowHandler(config_entries.ConfigFlow, domain=DOMAIN):
 
         except InvalidApiKey:
             errors["base"] = "invalid_api_key"
-            return await self._show_setup_form(errors=errors)
-        except InvalidStationId:
-            errors["base"] = "invalid_station_id"
             return await self._show_setup_form(errors=errors)
         except Exception:  # pylint: disable=broad-except
             _LOGGER.exception("Unexpected exception")
@@ -103,14 +95,13 @@ class WeatherFlowHandler(config_entries.ConfigFlow, domain=DOMAIN):
             await self.async_set_unique_id(unique_id)
             self._abort_if_unique_id_configured()
 
-            longitude = (result_current[FIELD_OBSERVATIONS][0][FIELD_LONGITUDE])
-            latitude = (result_current[FIELD_OBSERVATIONS][0][FIELD_LATITUDE])
+            longitude = self.hass.config.longitude
+            latitude = self.hass.config.latitude
 
             return self.async_create_entry(
                 title=station_id,
                 data={
                     CONF_API_KEY: user_input[CONF_API_KEY],
-                    CONF_PWS_ID: user_input[CONF_PWS_ID],
                 },
                 options={
                     CONF_LATITUDE: latitude,
