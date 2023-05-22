@@ -42,6 +42,7 @@ class WeatherFlowHandler(config_entries.ConfigFlow, domain=DOMAIN):
         api_key = user_input[CONF_API_KEY]
         latitude = user_input[CONF_LATITUDE]
         longitude = user_input[CONF_LONGITUDE]
+        name = user_input[CONF_NAME]
         headers = {
             'Accept-Encoding': 'gzip',
             "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/111.0.0.0 Safari/537.36"
@@ -84,12 +85,12 @@ class WeatherFlowHandler(config_entries.ConfigFlow, domain=DOMAIN):
         if not errors:
             result_current = await response.json()
 
-            unique_id = str(f"{DOMAIN}-{description.name}")
+            unique_id = str(f"{DOMAIN}-{name}")
             await self.async_set_unique_id(unique_id)
             self._abort_if_unique_id_configured()
 
             return self.async_create_entry(
-                title=f"{description.name}",
+                title=name,
                 data={
                     CONF_API_KEY: user_input[CONF_API_KEY],
                 },
