@@ -34,8 +34,8 @@ def degrees_to_cardinal(d):
 
 obs_sensor_descriptions = [
     # observations
-    # *'stationID': 'obsTimeUtc': *'obsTimeLocal': *'neighborhood': 'softwareType': 'country': *'solarRadiation': 'lon':
-    # 'realtimeFrequency': 'epoch': 'lat': *'uv': *'winddir': '*humidity': 'qcStatus':
+    # *'stationID': 'obsTimeUtc': *'validTimeLocal': *'neighborhood': 'softwareType': 'country': *'solarRadiation': 'lon':
+    # 'realtimeFrequency': 'epoch': 'lat': *'uvIndex': *'windDirection': '*relativeHumidity': 'qcStatus':
     WeatherSensorEntityDescription(
         key="neighborhood",
         name="Neighborhood",
@@ -44,7 +44,7 @@ obs_sensor_descriptions = [
         value_fn=lambda data, _: cast(str, data),
     ),
     WeatherSensorEntityDescription(
-        key="obsTimeLocal",
+        key="validTimeLocal",
         name="Local Observation Time",
         feature=FEATURE_OBSERVATIONS,
         icon="mdi:clock",
@@ -52,7 +52,7 @@ obs_sensor_descriptions = [
         # value_fn=lambda data, _: cast(str, datetime.strptime(data,  '%Y-%m-%d %H:%M:%S').strftime('%m/%d/%Y %H:%M:%S')),
     ),
     WeatherSensorEntityDescription(
-        key="humidity",
+        key="relativeHumidity",
         name="Relative Humidity",
         feature=FEATURE_OBSERVATIONS,
         icon="mdi:water-percent",
@@ -79,7 +79,7 @@ obs_sensor_descriptions = [
         value_fn=lambda data, _: cast(int, data) or 0,
     ),
     WeatherSensorEntityDescription(
-        key="uv",
+        key="uvIndex",
         name="UV Index",
         feature=FEATURE_OBSERVATIONS,
         icon="mdi:sunglasses",
@@ -88,7 +88,7 @@ obs_sensor_descriptions = [
         value_fn=lambda data, _: cast(int, data) or 0,
     ),
     WeatherSensorEntityDescription(
-        key="winddir",
+        key="windDirection",
         name="Wind Direction - Degrees",
         feature=FEATURE_OBSERVATIONS,
         icon="mdi:weather-windy",
@@ -103,10 +103,10 @@ obs_sensor_descriptions = [
         feature="",
         icon="mdi:weather-windy",
         unit_fn=lambda _: None,
-        value_fn=lambda data, _: degrees_to_cardinal(cast(int, data['observations'][0]['winddir'])) or "",
+        value_fn=lambda data, _: degrees_to_cardinal(cast(int, data['observations'][0]['windDirection'])) or "",
     ),
     # conditions -> unit imperial/metric
-    # temp: heatIndex: dewpt: windChill: windSpeed: windGust: pressure: precipRate: precipTotal: elev:
+    # temperature: temperatureHeatIndex: temperatureDewPoint: temperatureWindChill: windSpeed: windGust: pressureAltimeter: precip1Hour: precip24Hour: elev:
     WeatherSensorEntityDescription(
         key="elev",
         name="Elevation",
@@ -117,7 +117,7 @@ obs_sensor_descriptions = [
         value_fn=lambda data, _: cast(float, data),
     ),
     WeatherSensorEntityDescription(
-        key="dewpt",
+        key="temperatureDewPoint",
         name="Dewpoint",
         feature=FEATURE_CONDITIONS,
         icon="mdi:water",
@@ -127,7 +127,7 @@ obs_sensor_descriptions = [
         value_fn=lambda data, _: cast(float, data),
     ),
     WeatherSensorEntityDescription(
-        key="temp",
+        key="temperature",
         name="Temperature",
         feature=FEATURE_CONDITIONS,
         icon="mdi:thermometer",
@@ -137,7 +137,7 @@ obs_sensor_descriptions = [
         value_fn=lambda data, _: cast(float, data),
     ),
     WeatherSensorEntityDescription(
-        key="heatIndex",
+        key="temperatureHeatIndex",
         name="Heat Index",
         feature=FEATURE_CONDITIONS,
         icon="mdi:thermometer",
@@ -147,7 +147,7 @@ obs_sensor_descriptions = [
         value_fn=lambda data, _: cast(float, data),
     ),
     WeatherSensorEntityDescription(
-        key="windChill",
+        key="temperatureWindChill",
         name="Wind Chill",
         feature=FEATURE_CONDITIONS,
         icon="mdi:thermometer",
@@ -157,7 +157,7 @@ obs_sensor_descriptions = [
         value_fn=lambda data, _: cast(float, data),
     ),
     WeatherSensorEntityDescription(
-        key="precipRate",
+        key="precip1Hour",
         name="Precipitation Rate",
         feature=FEATURE_CONDITIONS,
         icon="mdi:umbrella",
@@ -168,7 +168,7 @@ obs_sensor_descriptions = [
         value_fn=lambda data, _: cast(float, data),
     ),
     WeatherSensorEntityDescription(
-        key="precipTotal",
+        key="precip24Hour",
         name="Precipitation Today",
         feature=FEATURE_CONDITIONS,
         icon="mdi:umbrella",
@@ -178,7 +178,7 @@ obs_sensor_descriptions = [
         value_fn=lambda data, _: cast(float, data),
     ),
     WeatherSensorEntityDescription(
-        key="pressure",
+        key="pressureAltimeter",
         name="Pressure",
         feature=FEATURE_CONDITIONS,
         icon="mdi:gauge",

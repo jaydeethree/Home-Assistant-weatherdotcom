@@ -108,8 +108,8 @@ class WUWeather(CoordinatorEntity, WeatherEntity):
         return self.coordinator.units_of_measurement[PRESSUREUNIT]
 
     @property
-    def humidity(self) -> float:
-        """Return the humidity in native units."""
+    def relativeHumidity(self) -> float:
+        """Return the relative humidity in native units."""
         return self.coordinator.get_condition(FIELD_CONDITION_HUMIDITY)
 
     @property
