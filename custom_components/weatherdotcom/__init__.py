@@ -12,7 +12,6 @@ from .coordinator import WeatherUpdateCoordinator, WeatherUpdateCoordinatorConfi
 from .const import (
     CONF_LANG,
     CONF_NUMERIC_PRECISION,
-    CONF_PWS_ID,
     DOMAIN, API_METRIC, API_IMPERIAL, API_URL_METRIC, API_URL_IMPERIAL, CONF_CALENDARDAYTEMPERATURE,
     CONF_FORECAST_SENSORS
 )
@@ -38,7 +37,6 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry):
 
     config = WeatherUpdateCoordinatorConfig(
         api_key=entry.data[CONF_API_KEY],
-        pws_id=entry.data[CONF_PWS_ID],
         numeric_precision=entry.options[CONF_NUMERIC_PRECISION],
         unit_system_api=unit_system_api,
         unit_system=unit_system,

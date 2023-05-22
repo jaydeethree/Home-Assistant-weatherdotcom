@@ -30,7 +30,7 @@ from .const import (
     FIELD_FORECAST_CALENDARDAYTEMPERATUREMIN,
     FIELD_FORECAST_WINDDIRECTIONCARDINAL,
     FIELD_FORECAST_WINDSPEED,
-    FIELD_FORECAST_ICONCODE, CONF_PWS_ID,
+    FIELD_FORECAST_ICONCODE,
 )
 
 import logging
@@ -62,25 +62,22 @@ async def async_setup_entry(
         hass: HomeAssistant, entry: ConfigEntry, async_add_entities: AddEntitiesCallback
 ) -> None:
     """Add weather entity."""
-    pws_id: str = entry.data[CONF_PWS_ID]
     coordinator: WeatherUpdateCoordinator = hass.data[DOMAIN][entry.entry_id]
-    async_add_entities([WUWeather(pws_id, coordinator)])
+    async_add_entities([WUWeather(coordinator)])
 
 
 class WUWeather(CoordinatorEntity, WeatherEntity):
 
     def __init__(
             self,
-            pws_id: str,
             coordinator: WeatherUpdateCoordinator
     ):
         super().__init__(coordinator)
         """Initialize the sensor."""
-        self._attr_name = pws_id
         self.entity_id = generate_entity_id(
-            ENTITY_ID_FORMAT, f"{self._attr_name}", hass=coordinator.hass
+            ENTITY_ID_FORMAT, f"{description.name}", hass=coordinator.hass
         )
-        self._attr_unique_id = f"{coordinator.pws_id},{WEATHER_DOMAIN}".lower()
+        self._attr_unique_id = f"{description.name},{WEATHER_DOMAIN}".lower()
 
     @property
     def native_temperature(self) -> float:

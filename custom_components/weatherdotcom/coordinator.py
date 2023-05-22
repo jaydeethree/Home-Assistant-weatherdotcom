@@ -47,7 +47,6 @@ class WeatherUpdateCoordinatorConfig:
     """Class representing coordinator configuration."""
 
     api_key: str
-    pws_id: str
     numeric_precision: str
     unit_system_api: str
     unit_system: str
@@ -70,7 +69,6 @@ class WeatherUpdateCoordinator(DataUpdateCoordinator):
         """Initialize."""
         self._hass = hass
         self._api_key = config.api_key
-        self._pws_id = config.pws_id
         self._numeric_precision = config.numeric_precision
         self._unit_system_api = config.unit_system_api
         self.unit_system = config.unit_system
@@ -104,11 +102,6 @@ class WeatherUpdateCoordinator(DataUpdateCoordinator):
     def is_metric(self):
         """Determine if this is the metric unit system."""
         return self._hass.config.units is METRIC_SYSTEM
-
-    @property
-    def pws_id(self):
-        """Return the location used for data."""
-        return self._pws_id
 
     async def _async_update_data(self) -> dict[str, Any]:
         return await self.get_weather()

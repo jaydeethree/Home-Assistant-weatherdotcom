@@ -6,13 +6,13 @@ import async_timeout
 import voluptuous as vol
 from homeassistant import config_entries
 import homeassistant.helpers.config_validation as cv
-from homeassistant.const import CONF_API_KEY, CONF_LATITUDE, CONF_LONGITUDE
+from homeassistant.const import CONF_API_KEY, CONF_LATITUDE, CONF_LONGITUDE, CONF_NAME
 from homeassistant.core import callback
 from homeassistant.helpers.aiohttp_client import async_create_clientsession
 from .coordinator import InvalidApiKey
 
 from .const import (
-    DOMAIN, CONF_PWS_ID, CONF_NUMERIC_PRECISION, CONF_LANG, CONF_CALENDARDAYTEMPERATURE, DEFAULT_NUMERIC_PRECISION,
+    DOMAIN, CONF_NUMERIC_PRECISION, CONF_LANG, CONF_CALENDARDAYTEMPERATURE, DEFAULT_NUMERIC_PRECISION,
     DEFAULT_LANG, LANG_CODES, DEFAULT_CALENDARDAYTEMPERATURE, FIELD_LONGITUDE, FIELD_LATITUDE,
     CONF_FORECAST_SENSORS, DEFAULT_FORECAST_SENSORS,
 )
@@ -65,14 +65,6 @@ class WeatherFlowHandler(config_entries.ConfigFlow, domain=DOMAIN):
                         response.reason,
                     )
                     raise InvalidApiKey
-                if response.status == HTTPStatus.NO_CONTENT:
-                    # 204 status is most likely bad station_id
-                    _LOGGER.error(
-                        "Weather.com config responded with HTTP error %s: %s",
-                        response.status,
-                        response.reason,
-                    )
-                    raise Exception
                 else:
                     _LOGGER.error(
                         "Weather.com config responded with HTTP error %s: %s",
@@ -91,14 +83,13 @@ class WeatherFlowHandler(config_entries.ConfigFlow, domain=DOMAIN):
 
         if not errors:
             result_current = await response.json()
-            station_id = "test"
 
-            unique_id = str(f"{DOMAIN}-{station_id}")
+            unique_id = str(f"{DOMAIN}-{name}")
             await self.async_set_unique_id(unique_id)
             self._abort_if_unique_id_configured()
 
             return self.async_create_entry(
-                title=station_id,
+                title=name,
                 data={
                     CONF_API_KEY: user_input[CONF_API_KEY],
                 },
@@ -125,6 +116,9 @@ class WeatherFlowHandler(config_entries.ConfigFlow, domain=DOMAIN):
                     vol.Required(
                         CONF_LONGITUDE, default=self.hass.config.longitude
                     ): cv.longitude,
+                    vol.Required(
+                        CONF_NAME, default=self.hass.config.location_name
+                    ): str,
                 }
             ),
             errors=errors or {},
