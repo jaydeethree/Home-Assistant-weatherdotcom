@@ -63,10 +63,10 @@ async def async_setup_entry(
 ) -> None:
     """Add weather entity."""
     coordinator: WeatherUpdateCoordinator = hass.data[DOMAIN][entry.entry_id]
-    async_add_entities([WUWeather(coordinator)])
+    async_add_entities([WeatherDotCom(coordinator)])
 
 
-class WUWeather(CoordinatorEntity, WeatherEntity):
+class WeatherDotCom(CoordinatorEntity, WeatherEntity):
 
     def __init__(
             self,

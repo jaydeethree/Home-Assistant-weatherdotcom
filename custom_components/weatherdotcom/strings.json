@@ -6,7 +6,7 @@
           "api_key": "[%key:common::config_flow::data::api_key%]",
           "name": "Name of the integration",
         },
-        "description": "Set up Weather.com integration. To generate API key go to https://www.wunderground.com/member/api-keys",
+        "description": "Set up Weather.com integration. To generate an API key, view the source of https://www.wunderground.com/ and search for apiKey",
         "title": "Weather.com"
       }
     },

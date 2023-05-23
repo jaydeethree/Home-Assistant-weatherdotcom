@@ -180,7 +180,7 @@ class WeatherUpdateCoordinator(DataUpdateCoordinator):
             )
 
     def request_feature(self, feature):
-        """Register feature to be fetched from WU API."""
+        """Register feature to be fetched from Weather.com API."""
         self._features.add(feature)
 
     def get_condition(self, field):
