@@ -1,8 +1,8 @@
 {
   "domain": "weatherdotcom",
   "name": "Weather.com",
-  "version": "2.0.1",
-  "documentation": "https://github.com/jaydeethree/Home-Assistant-weatherdotcom/tree/v2.X.X",
+  "version": "1.0.0b1",
+  "documentation": "https://github.com/jaydeethree/Home-Assistant-weatherdotcom",
   "issue_tracker": "https://github.com/jaydeethree/Home-Assistant-weatherdotcom/issues/",
   "requirements": [],
   "dependencies": [],
