@@ -9,7 +9,6 @@
         "data": {
           "api_key": "API Key",
           "name": "Name",
-          "pws_id": "Personal Weather Station ID (Case Sensitive)"
         },
         "description": "Set up Weather.com integration. To generate an API key, view the source of https://www.wunderground.com/ and search for apiKey",
         "title": "Weather.com"

@@ -9,7 +9,6 @@
         "data": {
           "api_key": "clé API",
           "name": "Nom",
-          "pws_id": "ID personnel de la station météo (sensible à la casse)"
         },
         "description": "Configurez l'intégration Weather.com. ",
         "title": "Weather.com"

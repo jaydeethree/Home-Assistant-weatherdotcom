@@ -9,7 +9,6 @@
         "data": {
           "api_key": "API-Schlüssel",
           "name": "Name",
-          "pws_id": "Persönliche Wetterstations-ID (Groß-/Kleinschreibung beachten)"
         },
         "description": "Richten Sie die Weather.com-Integration ein. ",
         "title": "Weather.com"

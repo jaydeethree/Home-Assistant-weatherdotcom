@@ -9,7 +9,6 @@
         "data": {
           "api_key": "API-ключ",
           "name": "Имя",
-          "pws_id": "Идентификатор персональной метеостанции (с учетом регистра)"
         },
         "description": "Настройте интеграцию Weather.com. ",
         "title": "Weather.com"

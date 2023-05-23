@@ -9,7 +9,6 @@
         "data": {
           "api_key": "مفتاح API",
           "name": "اسم",
-          "pws_id": "معرف محطة الطقس الشخصي (حساس لحالة الأحرف)"
         },
         "description": "قم بإعداد تكامل Weather.com. ",
         "title": "Weather.com"

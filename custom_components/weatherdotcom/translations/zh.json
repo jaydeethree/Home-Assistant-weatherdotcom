@@ -9,7 +9,6 @@
         "data": {
           "api_key": "API密钥",
           "name": "姓名",
-          "pws_id": "个人气象站 ID（区分大小写）"
         },
         "description": "设置 Weather.com 集成。",
         "title": "奇妙乐园PWS"
