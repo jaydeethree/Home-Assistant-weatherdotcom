@@ -1,7 +1,6 @@
 {
   "config": {
     "error": {
-      "invalid_station_id": "Ungültige Stations-ID",
       "invalid_api_key": "Ungültiger API-Schlüssel",
       "unknown_error": "Unbekannter Fehler"
     },
