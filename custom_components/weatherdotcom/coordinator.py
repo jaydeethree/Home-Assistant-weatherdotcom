@@ -36,8 +36,10 @@ _LOGGER = logging.getLogger(__name__)
 _RESOURCESHARED = '&format=json&apiKey={apiKey}&units={units}'
 _RESOURCECURRENT = ('https://api.weather.com/v3/wx/observations/current'
                     '?geocode={latitude},{longitude}')
-_RESOURCEFORECAST = ('https://api.weather.com/v3/wx/forecast/daily/5day'
-                     '?geocode={latitude},{longitude}')
+_RESOURCEFORECASTDAILY = ('https://api.weather.com/v3/wx/forecast/daily/5day'
+                          '?geocode={latitude},{longitude}')
+_RESOURCEFORECASTHOURLY = ('https://api.weather.com/v3/wx/forecast/hourly/2day'
+                           '?geocode={latitude},{longitude}')
 
 MIN_TIME_BETWEEN_UPDATES = timedelta(minutes=15)
 
@@ -55,6 +57,7 @@ class WeatherUpdateCoordinatorConfig:
     calendarday: bool
     latitude: str
     longitude: str
+    forecast_mode: str
     forecast_enable: bool
     update_interval = MIN_TIME_BETWEEN_UPDATES
 
@@ -78,6 +81,7 @@ class WeatherUpdateCoordinator(DataUpdateCoordinator):
         self._calendarday = config.calendarday
         self._latitude = config.latitude
         self._longitude = config.longitude
+        self._forecast_mode = config.forecast_mode
         self.forecast_enable = config.forecast_enable
         self._features = set()
         self.data = None
@@ -129,7 +133,7 @@ class WeatherUpdateCoordinator(DataUpdateCoordinator):
                 self._check_errors(url, result_current)
 
             with async_timeout.timeout(10):
-                url = self._build_url(_RESOURCEFORECAST)
+                url = self._build_url(_RESOURCEFORECASTDAILY)
                 response = await self._session.get(url, headers=headers)
                 result_forecast = await response.json()
 
