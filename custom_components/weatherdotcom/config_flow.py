@@ -97,6 +97,7 @@ class WeatherFlowHandler(config_entries.ConfigFlow, domain=DOMAIN):
                 options={
                     CONF_LATITUDE: latitude,
                     CONF_LONGITUDE: longitude,
+                    CONF_NAME: name,
                     CONF_NUMERIC_PRECISION: DEFAULT_NUMERIC_PRECISION,
                     CONF_LANG: DEFAULT_LANG,
                     CONF_CALENDARDAYTEMPERATURE: DEFAULT_CALENDARDAYTEMPERATURE,

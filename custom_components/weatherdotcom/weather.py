@@ -75,9 +75,9 @@ class WUWeather(CoordinatorEntity, WeatherEntity):
         super().__init__(coordinator)
         """Initialize the sensor."""
         self.entity_id = generate_entity_id(
-            ENTITY_ID_FORMAT, f"{description.name}", hass=coordinator.hass
+            ENTITY_ID_FORMAT, f"{coordinator.name}", hass=coordinator.hass
         )
-        self._attr_unique_id = f"{description.name},{WEATHER_DOMAIN}".lower()
+        self._attr_unique_id = f"{coordinator.name},{WEATHER_DOMAIN}".lower()
 
     @property
     def native_temperature(self) -> float:

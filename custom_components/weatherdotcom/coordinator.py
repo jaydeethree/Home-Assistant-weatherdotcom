@@ -47,6 +47,7 @@ class WeatherUpdateCoordinatorConfig:
     """Class representing coordinator configuration."""
 
     api_key: str
+    name: str
     numeric_precision: str
     unit_system_api: str
     unit_system: str
@@ -69,6 +70,7 @@ class WeatherUpdateCoordinator(DataUpdateCoordinator):
         """Initialize."""
         self._hass = hass
         self._api_key = config.api_key
+        self._name = config.name
         self._numeric_precision = config.numeric_precision
         self._unit_system_api = config.unit_system_api
         self.unit_system = config.unit_system
