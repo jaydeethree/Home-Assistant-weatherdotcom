@@ -85,31 +85,31 @@ class WeatherSensor(CoordinatorEntity, SensorEntity):
         if forecast_day is not None:
             if description.feature == FEATURE_FORECAST_DAYPART:
                 self._attr_unique_id = (
-                    f"{description.name},{description.key}_{forecast_day}fdp".lower()
+                    f"{self.coordinator.location_name},{description.key}_{forecast_day}fdp".lower()
                 )
                 if forecast_day in range(0, MAX_FORECAST_DAYS * 2, 2):  # [0, 2, 4, 6, 8]  days
                     self.entity_id = generate_entity_id(
-                        entity_id_format, f"{description.name}_{forecast_day}d",
+                        entity_id_format, f"{self.coordinator.location_name}_{description.name}_{forecast_day}d",
                         hass=coordinator.hass
                     )
                 else:  # nights
                     self.entity_id = generate_entity_id(
-                        entity_id_format, f"{description.name}_{forecast_day}n",
+                        entity_id_format, f"{self.coordinator.location_name}_{description.name}_{forecast_day}n",
                         hass=coordinator.hass
                     )
             else:  # forecast outside daypart
                 self._attr_unique_id = (
-                    f"{description.name},{description.key}_{forecast_day}f".lower()
+                    f"{self.coordinator.location_name},{description.key}_{forecast_day}f".lower()
                 )
                 self.entity_id = generate_entity_id(
-                    entity_id_format, f"{description.name}_{forecast_day}",
+                    entity_id_format, f"{self.coordinator.location_name}_{description.name}_{forecast_day}",
                     hass=coordinator.hass
                 )
             self.forecast_day = forecast_day
         else:
-            self._attr_unique_id = f"{description.name},{description.key}".lower()
+            self._attr_unique_id = f"{self.coordinator.location_name},{description.key}".lower()
             self.entity_id = generate_entity_id(
-                entity_id_format, f"{description.name}", hass=coordinator.hass
+                entity_id_format, f"{self.coordinator.location_name}_{description.name}", hass=coordinator.hass
             )
             self.forecast_day = None
         self._unit_system = coordinator.unit_system
