@@ -1,7 +1,7 @@
 """
 Support for Weather.com weather service.
 For more details about this platform, please refer to the documentation at
-https://github.com/jaydeethree/Home-Assistant-weatherdotcom/tree/v2.X.X
+https://github.com/jaydeethree/Home-Assistant-weatherdotcom
 """
 from typing import Final
 
