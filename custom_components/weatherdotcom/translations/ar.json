@@ -8,7 +8,7 @@
       "user": {
         "data": {
           "api_key": "مفتاح API",
-          "name": "اسم",
+          "name": "اسم"
         },
         "description": "قم بإعداد تكامل Weather.com. ",
         "title": "Weather.com"

@@ -8,7 +8,7 @@
       "user": {
         "data": {
           "api_key": "Chiave dell'API",
-          "name": "Nome",
+          "name": "Nome"
         },
         "description": "Configurare l'integrazione Weather.com. ",
         "title": "Weather.com"

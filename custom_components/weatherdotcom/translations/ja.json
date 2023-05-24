@@ -8,7 +8,7 @@
       "user": {
         "data": {
           "api_key": "API キー",
-          "name": "名前",
+          "name": "名前"
         },
         "description": "Weather.com 統合をセットアップします。 ",
         "title": "ワンダーグラウンドPWS"

@@ -8,7 +8,7 @@
       "user": {
         "data": {
           "api_key": "API-ключ",
-          "name": "Имя",
+          "name": "Имя"
         },
         "description": "Настройте интеграцию Weather.com. ",
         "title": "Weather.com"
