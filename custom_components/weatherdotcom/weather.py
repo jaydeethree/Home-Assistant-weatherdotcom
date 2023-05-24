@@ -85,7 +85,7 @@ class WeatherDotCom(CoordinatorEntity, WeatherEntity):
         Return the platform temperature in native units
         (i.e. not converted).
         """
-        return self.coordinator.get_condition(FIELD_CONDITION_TEMP)
+        return self.coordinator.get_current(FIELD_CONDITION_TEMP)
 
     @property
     def native_temperature_unit(self) -> str:
@@ -95,9 +95,9 @@ class WeatherDotCom(CoordinatorEntity, WeatherEntity):
     @property
     def native_pressure(self) -> float:
         """Return the pressure in native units."""
-        pressure = self.coordinator.get_condition(FIELD_CONDITION_PRESSURE)
+        pressure = self.coordinator.get_current(FIELD_CONDITION_PRESSURE)
         if pressure is not None:
-            return self.coordinator.get_condition(FIELD_CONDITION_PRESSURE)
+            return self.coordinator.get_current(FIELD_CONDITION_PRESSURE)
 
     @property
     def native_pressure_unit(self) -> str:
@@ -107,12 +107,12 @@ class WeatherDotCom(CoordinatorEntity, WeatherEntity):
     @property
     def relativeHumidity(self) -> float:
         """Return the relative humidity in native units."""
-        return self.coordinator.get_condition(FIELD_CONDITION_HUMIDITY)
+        return self.coordinator.get_current(FIELD_CONDITION_HUMIDITY)
 
     @property
     def native_wind_speed(self) -> float:
         """Return the wind speed in native units."""
-        return self.coordinator.get_condition(FIELD_CONDITION_WINDSPEED)
+        return self.coordinator.get_current(FIELD_CONDITION_WINDSPEED)
 
     @property
     def native_wind_speed_unit(self) -> str:
@@ -122,7 +122,7 @@ class WeatherDotCom(CoordinatorEntity, WeatherEntity):
     @property
     def wind_bearing(self) -> str:
         """Return the wind bearing."""
-        return self.coordinator.get_condition(FIELD_CONDITION_WINDDIR)
+        return self.coordinator.get_current(FIELD_CONDITION_WINDDIR)
 
     @property
     def ozone(self) -> float:
@@ -149,15 +149,15 @@ class WeatherDotCom(CoordinatorEntity, WeatherEntity):
     @property
     def condition(self) -> str:
         """Return the current condition."""
-        day = self.coordinator.get_forecast(FIELD_FORECAST_ICONCODE)
-        night = self.coordinator.get_forecast(FIELD_FORECAST_ICONCODE, 1)
+        day = self.coordinator.get_forecast_daily(FIELD_FORECAST_ICONCODE)
+        night = self.coordinator.get_forecast_daily(FIELD_FORECAST_ICONCODE, 1)
         return self.coordinator._iconcode_to_condition(day or night)
 
     @property
     def forecast(self) -> list[Forecast]:
         """Return the forecast in native units."""
         days = [0, 2, 4, 6, 8]
-        if self.coordinator.get_forecast('temperature', 0) is None:
+        if self.coordinator.get_forecast_daily('temperature', 0) is None:
             days[0] += 1
         if self.coordinator._calendarday is True:
             caldaytempmax = FIELD_FORECAST_CALENDARDAYTEMPERATUREMAX
@@ -171,28 +171,28 @@ class WeatherDotCom(CoordinatorEntity, WeatherEntity):
             forecast.append(Forecast({
                 ATTR_FORECAST_CONDITION:
                     self.coordinator._iconcode_to_condition(
-                        self.coordinator.get_forecast(
+                        self.coordinator.get_forecast_daily(
                             FIELD_FORECAST_ICONCODE, period)
                     ),
                 ATTR_FORECAST_PRECIPITATION:
-                    self.coordinator.get_forecast(FIELD_FORECAST_QPF, period),
+                    self.coordinator.get_forecast_daily(FIELD_FORECAST_QPF, period),
                 ATTR_FORECAST_PRECIPITATION_PROBABILITY:
-                    self.coordinator.get_forecast(FIELD_FORECAST_PRECIPCHANCE, period),
+                    self.coordinator.get_forecast_daily(FIELD_FORECAST_PRECIPCHANCE, period),
 
                 ATTR_FORECAST_TEMP:
-                    self.coordinator.get_forecast(caldaytempmax, period),
+                    self.coordinator.get_forecast_daily(caldaytempmax, period),
                 ATTR_FORECAST_TEMP_LOW:
-                    self.coordinator.get_forecast(
+                    self.coordinator.get_forecast_daily(
                         caldaytempmin, period),
 
                 ATTR_FORECAST_TIME:
-                    self.coordinator.get_forecast(
+                    self.coordinator.get_forecast_daily(
                         FIELD_FORECAST_VALIDTIMEUTC, period) * 1000,
 
                 ATTR_FORECAST_WIND_BEARING:
-                    self.coordinator.get_forecast(
+                    self.coordinator.get_forecast_daily(
                         FIELD_FORECAST_WINDDIRECTIONCARDINAL, period),
-                ATTR_FORECAST_WIND_SPEED: self.coordinator.get_forecast(
+                ATTR_FORECAST_WIND_SPEED: self.coordinator.get_forecast_daily(
                     FIELD_FORECAST_WINDSPEED, period)
             }))
         # _LOGGER.debug(f'{forecast=}')

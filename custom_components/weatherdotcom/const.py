@@ -96,6 +96,10 @@ FEATURE_FORECAST = 'forecast'
 FEATURE_FORECAST_DAYPART = 'forecast_daypart'
 FEATURE_OBSERVATIONS = 'observations'
 
+RESULTS_CURRENT = 'current'
+RESULTS_FORECAST_DAILY = 'daily'
+RESULTS_FORECAST_HOURLY = 'hourly'
+
 FIELD_CONDITION_HUMIDITY = 'relativeHumidity'
 FIELD_CONDITION_PRESSURE = 'pressureAltimeter'
 FIELD_CONDITION_TEMP = 'temperature'

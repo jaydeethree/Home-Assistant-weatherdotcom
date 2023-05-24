@@ -28,7 +28,8 @@ from .const import (
     FIELD_FORECAST_TEMPERATUREMAX,
     FIELD_FORECAST_TEMPERATUREMIN,
     FIELD_FORECAST_CALENDARDAYTEMPERATUREMAX,
-    FIELD_FORECAST_CALENDARDAYTEMPERATUREMIN, DOMAIN, FIELD_LONGITUDE, FIELD_LATITUDE
+    FIELD_FORECAST_CALENDARDAYTEMPERATUREMIN, DOMAIN, FIELD_LONGITUDE, FIELD_LATITUDE,
+    RESULTS_CURRENT, RESULTS_FORECAST_DAILY, RESULTS_FORECAST_HOURLY
 )
 
 _LOGGER = logging.getLogger(__name__)
@@ -135,22 +136,16 @@ class WeatherUpdateCoordinator(DataUpdateCoordinator):
             with async_timeout.timeout(10):
                 url = self._build_url(_RESOURCEFORECASTDAILY)
                 response = await self._session.get(url, headers=headers)
-                result_forecast = await response.json()
+                result_forecast_daily = await response.json()
 
-                if result_forecast is None:
+                if result_forecast_daily is None:
                     raise ValueError('NO FORECAST RESULT')
-                self._check_errors(url, result_forecast)
-                # When the current conditions and forecast results get merged,
-                # fields that exist in both get set to the value from the
-                # forecast results. This is unwanted for some fields, so delete
-                # those from the forecast results before the results get
-                # merged.
-                try:
-                    del result_forecast['validTimeLocal']
-                except KeyError:
-                    _LOGGER.error("validTimeLocal not found in forecast result")
+                self._check_errors(url, result_forecast_daily)
 
-            result = {**result_current, **result_forecast}
+            result = {
+                RESULTS_CURRENT: result_current,
+                RESULTS_FORECAST_DAILY: result_forecast_daily,
+            }
 
             self.data = result
 
@@ -196,16 +191,16 @@ class WeatherUpdateCoordinator(DataUpdateCoordinator):
         """Register feature to be fetched from Weather.com API."""
         self._features.add(feature)
 
-    def get_condition(self, field):
+    def get_current(self, field):
         if field in [
             FIELD_CONDITION_HUMIDITY,
             FIELD_CONDITION_WINDDIR,
         ]:
             # Those fields are unit-less
-            return self.data[field] or 0
-        return self.data[field]
+            return self.data[RESULTS_CURRENT][field] or 0
+        return self.data[RESULTS_CURRENT][field]
 
-    def get_forecast(self, field, period=0):
+    def get_forecast_daily(self, field, period=0):
         try:
             if field in [
                 FIELD_FORECAST_TEMPERATUREMAX,
@@ -215,8 +210,8 @@ class WeatherUpdateCoordinator(DataUpdateCoordinator):
                 FIELD_FORECAST_VALIDTIMEUTC,
             ]:
                 # Those fields exist per-day, rather than per dayPart, so the period is halved
-                return self.data[field][int(period / 2)]
-            return self.data[FIELD_DAYPART][0][field][period]
+                return self.data[RESULTS_FORECAST_DAILY][field][int(period / 2)]
+            return self.data[RESULTS_FORECAST_DAILY][FIELD_DAYPART][0][field][period]
         except IndexError:
             return None
 
