@@ -1,3 +1,8 @@
+v1.0.0b3
+* Simplify wind cardinal direction sensor
+* Fix precipitation entries using wrong names and units
+* Fix local observation time being incorrect
+
 v1.0.0b2
 * Properly handle windGust being null
 * Fix JSON trailing commas that were causing log spam
