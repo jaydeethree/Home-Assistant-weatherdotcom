@@ -140,6 +140,15 @@ class WeatherUpdateCoordinator(DataUpdateCoordinator):
                 if result_forecast is None:
                     raise ValueError('NO FORECAST RESULT')
                 self._check_errors(url, result_forecast)
+                # When the current conditions and forecast results get merged,
+                # fields that exist in both get set to the value from the
+                # forecast results. This is unwanted for some fields, so delete
+                # those from the forecast results before the results get
+                # merged.
+                try:
+                    del result_forecast['validTimeLocal']
+                except KeyError:
+                    _LOGGER.error("validTimeLocal not found in forecast result")
 
             result = {**result_current, **result_forecast}
 
