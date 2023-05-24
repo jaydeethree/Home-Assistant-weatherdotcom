@@ -22,8 +22,8 @@ from .const import (
     FEATURE_CURRENT_CONDITIONS, FEATURE_FORECAST, FEATURE_FORECAST_DAYPART, FIELD_FORECAST_DAYPARTNAME,
     FIELD_FORECAST_DAYOFWEEK, FIELD_FORECAST_EXPIRED
 )
-from .weather_obs_sensors import *
-from .weather_forecast_sensors import *
+from .weather_current_conditions_sensors import *
+from .weather_daily_forecast_sensors import *
 
 _LOGGER = logging.getLogger(__name__)
 

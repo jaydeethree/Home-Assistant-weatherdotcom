@@ -5,7 +5,7 @@ from typing import cast
 from .const import FEATURE_FORECAST, FEATURE_FORECAST_DAYPART
 from homeassistant.components.sensor import SensorDeviceClass
 from homeassistant.const import UnitOfTemperature, UnitOfSpeed, UnitOfLength, PERCENTAGE
-from .weather_obs_sensors import WeatherSensorEntityDescription
+from .weather_current_conditions_sensors import WeatherSensorEntityDescription
 
 forecast_sensor_descriptions = [
     # forecast outside daypart
