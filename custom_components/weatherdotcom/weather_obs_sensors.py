@@ -118,18 +118,17 @@ obs_sensor_descriptions = [
     ),
     WeatherSensorEntityDescription(
         key="precip1Hour",
-        name="Precipitation Rate",
+        name="Precipitation - Last hour",
         feature=FEATURE_CONDITIONS,
         icon="mdi:umbrella",
-        state_class=SensorStateClass.MEASUREMENT,
-        device_class=SensorDeviceClass.PRECIPITATION_INTENSITY,
-        unit_fn=lambda
-            metric: UnitOfVolumetricFlux.MILLIMETERS_PER_HOUR if metric else UnitOfVolumetricFlux.INCHES_PER_HOUR,
+        state_class=SensorStateClass.TOTAL_INCREASING,
+        device_class=SensorDeviceClass.PRECIPITATION,
+        unit_fn=lambda metric: UnitOfLength.MILLIMETERS if metric else UnitOfLength.INCHES,
         value_fn=lambda data, _: cast(float, data),
     ),
     WeatherSensorEntityDescription(
         key="precip24Hour",
-        name="Precipitation Today",
+        name="Precipitation - Last 24 hours",
         feature=FEATURE_CONDITIONS,
         icon="mdi:umbrella",
         state_class=SensorStateClass.TOTAL_INCREASING,
