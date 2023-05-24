@@ -26,12 +26,6 @@ class WeatherSensorEntityDescription(
     """Describes Weather.com Sensor entity."""
 
 
-def degrees_to_cardinal(d):
-    dirs = ['N', 'NNE', 'NE', 'ENE', 'E', 'ESE', 'SE', 'SSE', 'S', 'SSW', 'SW', 'WSW', 'W', 'WNW', 'NW', 'NNW']
-    ix = round(d / (360. / len(dirs)))
-    return dirs[ix % len(dirs)]
-
-
 obs_sensor_descriptions = [
     # observations
     # 'obsTimeUtc': *'validTimeLocal': 'softwareType': 'country': 'lon':
@@ -72,14 +66,13 @@ obs_sensor_descriptions = [
         unit_fn=lambda _: DEGREE,
         value_fn=lambda data, _: cast(int, data) or 0,
     ),
-    # computed observations
     WeatherSensorEntityDescription(
         key="windDirectionCardinal",
         name="Wind Direction - Cardinal",
-        feature="",
+        feature=FEATURE_OBSERVATIONS,
         icon="mdi:weather-windy",
         unit_fn=lambda _: None,
-        value_fn=lambda data, _: degrees_to_cardinal(cast(int, data['windDirection'])) or "",
+        value_fn=lambda data, _: cast(str, data) or "",
     ),
     # conditions -> unit imperial/metric
     # temperature: temperatureHeatIndex: temperatureDewPoint: temperatureWindChill: windSpeed: windGust: pressureAltimeter: precip1Hour: precip24Hour:
