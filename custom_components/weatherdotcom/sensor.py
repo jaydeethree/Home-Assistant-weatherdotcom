@@ -19,7 +19,7 @@ from .coordinator import WeatherUpdateCoordinator
 
 from .const import (
     CONF_ATTRIBUTION, DOMAIN, FIELD_DAYPART, MAX_FORECAST_DAYS,
-    FEATURE_CONDITIONS, FEATURE_FORECAST, FEATURE_FORECAST_DAYPART, FIELD_FORECAST_DAYPARTNAME,
+    FEATURE_CURRENT_CONDITIONS, FEATURE_FORECAST, FEATURE_FORECAST_DAYPART, FIELD_FORECAST_DAYPARTNAME,
     FIELD_FORECAST_DAYOFWEEK, FIELD_FORECAST_EXPIRED
 )
 from .weather_obs_sensors import *
@@ -170,14 +170,12 @@ def _get_sensor_data(
         forecast_day: int | None = None
 ) -> Any:
     """Get sensor data."""
-    if feature == FEATURE_CONDITIONS:
+    if feature == FEATURE_CURRENT_CONDITIONS:
         return sensors[kind]
     elif feature == FEATURE_FORECAST:
         return sensors[kind][forecast_day]
     elif feature == FEATURE_FORECAST_DAYPART:
         return sensors[FIELD_DAYPART][0][kind][forecast_day]
-    elif feature == FEATURE_OBSERVATIONS:
-        return sensors[kind]
     else:
         return sensors
 
