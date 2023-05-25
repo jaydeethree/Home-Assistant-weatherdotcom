@@ -63,21 +63,10 @@ async def async_setup_entry(
 ) -> None:
     """Add weather entity."""
     coordinator: WeatherUpdateCoordinator = hass.data[DOMAIN][entry.entry_id]
-    async_add_entities([WeatherDotCom(coordinator)])
+    async_add_entities([WeatherDotComDaily(coordinator)])
 
 
 class WeatherDotCom(CoordinatorEntity, WeatherEntity):
-
-    def __init__(
-            self,
-            coordinator: WeatherUpdateCoordinator
-    ):
-        super().__init__(coordinator)
-        """Initialize the sensor."""
-        self.entity_id = generate_entity_id(
-            ENTITY_ID_FORMAT, f"{coordinator.location_name}", hass=coordinator.hass
-        )
-        self._attr_unique_id = f"{coordinator.location_name},{WEATHER_DOMAIN}".lower()
 
     @property
     def native_temperature(self) -> float:
@@ -152,6 +141,20 @@ class WeatherDotCom(CoordinatorEntity, WeatherEntity):
         day = self.coordinator.get_forecast_daily(FIELD_FORECAST_ICONCODE)
         night = self.coordinator.get_forecast_daily(FIELD_FORECAST_ICONCODE, 1)
         return self.coordinator._iconcode_to_condition(day or night)
+
+
+class WeatherDotComDaily(WeatherDotCom):
+
+    def __init__(
+            self,
+            coordinator: WeatherUpdateCoordinator
+    ):
+        super().__init__(coordinator)
+        """Initialize the sensor."""
+        self.entity_id = generate_entity_id(
+            ENTITY_ID_FORMAT, f"{coordinator.location_name}", hass=coordinator.hass
+        )
+        self._attr_unique_id = f"{coordinator.location_name},{WEATHER_DOMAIN}".lower()
 
     @property
     def forecast(self) -> list[Forecast]:
