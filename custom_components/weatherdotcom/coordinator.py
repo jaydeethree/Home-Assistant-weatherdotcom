@@ -42,7 +42,7 @@ _RESOURCEFORECASTDAILY = ('https://api.weather.com/v3/wx/forecast/daily/5day'
 _RESOURCEFORECASTHOURLY = ('https://api.weather.com/v3/wx/forecast/hourly/2day'
                            '?geocode={latitude},{longitude}')
 
-MIN_TIME_BETWEEN_UPDATES = timedelta(minutes=15)
+MIN_TIME_BETWEEN_UPDATES = timedelta(minutes=20)
 
 
 @dataclass
