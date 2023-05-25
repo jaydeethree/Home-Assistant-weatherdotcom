@@ -137,12 +137,22 @@ class WeatherUpdateCoordinator(DataUpdateCoordinator):
                 result_forecast_daily = await response.json()
 
                 if result_forecast_daily is None:
-                    raise ValueError('NO FORECAST RESULT')
+                    raise ValueError('NO DAILY FORECAST RESULT')
                 self._check_errors(url, result_forecast_daily)
+
+            with async_timeout.timeout(10):
+                url = self._build_url(_RESOURCEFORECASTHOURLY)
+                response = await self._session.get(url, headers=headers)
+                result_forecast_hourly = await response.json()
+
+                if result_forecast_hourly is None:
+                    raise ValueError('NO HOURLY FORECAST RESULT')
+                self._check_errors(url, result_forecast_hourly)
 
             result = {
                 RESULTS_CURRENT: result_current,
                 RESULTS_FORECAST_DAILY: result_forecast_daily,
+                RESULTS_FORECAST_HOURLY: result_forecast_hourly,
             }
 
             self.data = result
@@ -210,6 +220,12 @@ class WeatherUpdateCoordinator(DataUpdateCoordinator):
                 # Those fields exist per-day, rather than per dayPart, so the period is halved
                 return self.data[RESULTS_FORECAST_DAILY][field][int(period / 2)]
             return self.data[RESULTS_FORECAST_DAILY][FIELD_DAYPART][0][field][period]
+        except IndexError:
+            return None
+
+    def get_forecast_hourly(self, field, hour):
+        try:
+            return self.data[RESULTS_FORECAST_HOURLY][field][hour]
         except IndexError:
             return None
 

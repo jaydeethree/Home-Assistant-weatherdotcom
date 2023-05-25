@@ -63,7 +63,10 @@ async def async_setup_entry(
 ) -> None:
     """Add weather entity."""
     coordinator: WeatherUpdateCoordinator = hass.data[DOMAIN][entry.entry_id]
-    async_add_entities([WeatherDotComDaily(coordinator)])
+    async_add_entities([
+        WeatherDotComDaily(coordinator),
+        WeatherDotComHourly(coordinator),
+    ])
 
 
 class WeatherDotCom(CoordinatorEntity, WeatherEntity):
@@ -199,4 +202,47 @@ class WeatherDotComDaily(WeatherDotCom):
                     FIELD_FORECAST_WINDSPEED, period)
             }))
         # _LOGGER.debug(f'{forecast=}')
+        return forecast
+
+
+class WeatherDotComHourly(WeatherDotCom):
+
+    def __init__(
+            self,
+            coordinator: WeatherUpdateCoordinator
+    ):
+        super().__init__(coordinator)
+        """Initialize the sensor."""
+        self.entity_id = generate_entity_id(
+            ENTITY_ID_FORMAT, f"{coordinator.location_name}_hourly", hass=coordinator.hass
+        )
+        self._attr_unique_id = f"{coordinator.location_name}_hourly,{WEATHER_DOMAIN}".lower()
+
+    @property
+    def forecast(self) -> list[Forecast]:
+        """Return the forecast in native units."""
+
+        forecast = []
+        for hour in range(0, 48, 1):
+            forecast.append(Forecast({
+                ATTR_FORECAST_CONDITION:
+                    self.coordinator._iconcode_to_condition(
+                        self.coordinator.get_forecast_hourly(
+                            FIELD_FORECAST_ICONCODE, hour)
+                    ),
+                ATTR_FORECAST_PRECIPITATION:
+                    self.coordinator.get_forecast_hourly(FIELD_FORECAST_QPF, hour),
+                ATTR_FORECAST_PRECIPITATION_PROBABILITY:
+                    self.coordinator.get_forecast_hourly(FIELD_FORECAST_PRECIPCHANCE, hour),
+                ATTR_FORECAST_TEMP:
+                    self.coordinator.get_forecast_hourly(FIELD_CONDITION_TEMP, hour),
+                ATTR_FORECAST_TIME:
+                    self.coordinator.get_forecast_hourly(
+                        FIELD_FORECAST_VALIDTIMEUTC, hour) * 1000,
+                ATTR_FORECAST_WIND_BEARING:
+                    self.coordinator.get_forecast_hourly(
+                        FIELD_FORECAST_WINDDIRECTIONCARDINAL, hour),
+                ATTR_FORECAST_WIND_SPEED: self.coordinator.get_forecast_hourly(
+                    FIELD_FORECAST_WINDSPEED, hour)
+            }))
         return forecast
