@@ -6,7 +6,7 @@ import async_timeout
 import voluptuous as vol
 from homeassistant import config_entries
 import homeassistant.helpers.config_validation as cv
-from homeassistant.const import CONF_API_KEY, CONF_LATITUDE, CONF_LONGITUDE, CONF_MODE, CONF_NAME
+from homeassistant.const import CONF_API_KEY, CONF_LATITUDE, CONF_LONGITUDE, CONF_NAME
 from homeassistant.core import callback
 from homeassistant.helpers.aiohttp_client import async_create_clientsession
 from .coordinator import InvalidApiKey
@@ -14,7 +14,7 @@ from .coordinator import InvalidApiKey
 from .const import (
     DOMAIN, CONF_NUMERIC_PRECISION, CONF_LANG, CONF_CALENDARDAYTEMPERATURE, DEFAULT_NUMERIC_PRECISION,
     DEFAULT_LANG, LANG_CODES, DEFAULT_CALENDARDAYTEMPERATURE, FIELD_LONGITUDE, FIELD_LATITUDE,
-    CONF_FORECAST_SENSORS, DEFAULT_FORECAST_SENSORS, DEFAULT_FORECAST_MODE, FORECAST_MODES
+    CONF_FORECAST_SENSORS, DEFAULT_FORECAST_SENSORS
 )
 
 _LOGGER = logging.getLogger(__name__)
@@ -43,7 +43,6 @@ class WeatherFlowHandler(config_entries.ConfigFlow, domain=DOMAIN):
         latitude = user_input[CONF_LATITUDE]
         longitude = user_input[CONF_LONGITUDE]
         location_name = user_input[CONF_NAME]
-        forecast_mode = user_input[CONF_MODE]
         headers = {
             'Accept-Encoding': 'gzip',
             "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/111.0.0.0 Safari/537.36"
@@ -102,7 +101,6 @@ class WeatherFlowHandler(config_entries.ConfigFlow, domain=DOMAIN):
                     CONF_NUMERIC_PRECISION: DEFAULT_NUMERIC_PRECISION,
                     CONF_LANG: DEFAULT_LANG,
                     CONF_CALENDARDAYTEMPERATURE: DEFAULT_CALENDARDAYTEMPERATURE,
-                    CONF_MODE: forecast_mode,
                     CONF_FORECAST_SENSORS: DEFAULT_FORECAST_SENSORS
                 },
             )
@@ -114,9 +112,6 @@ class WeatherFlowHandler(config_entries.ConfigFlow, domain=DOMAIN):
             data_schema=vol.Schema(
                 {
                     vol.Required(CONF_API_KEY): str,
-                    vol.Required(CONF_MODE, default=DEFAULT_FORECAST_MODE): vol.In(
-                        FORECAST_MODES
-                    ),
                     vol.Required(
                         CONF_LATITUDE, default=self.hass.config.latitude
                     ): cv.latitude,

@@ -58,7 +58,6 @@ class WeatherUpdateCoordinatorConfig:
     calendarday: bool
     latitude: str
     longitude: str
-    forecast_mode: str
     forecast_enable: bool
     update_interval = MIN_TIME_BETWEEN_UPDATES
 
@@ -82,7 +81,6 @@ class WeatherUpdateCoordinator(DataUpdateCoordinator):
         self._calendarday = config.calendarday
         self._latitude = config.latitude
         self._longitude = config.longitude
-        self._forecast_mode = config.forecast_mode
         self.forecast_enable = config.forecast_enable
         self._features = set()
         self.data = None

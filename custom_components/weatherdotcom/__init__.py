@@ -4,7 +4,7 @@ from typing import Final
 from homeassistant.config_entries import ConfigEntry
 from homeassistant.const import (
     CONF_API_KEY,
-    CONF_LATITUDE, CONF_LONGITUDE, CONF_MODE, CONF_NAME, Platform
+    CONF_LATITUDE, CONF_LONGITUDE, CONF_NAME, Platform
 )
 from homeassistant.core import HomeAssistant
 from homeassistant.util.unit_system import METRIC_SYSTEM
@@ -28,7 +28,6 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry):
     latitude = entry.options[CONF_LATITUDE]
     longitude = entry.options[CONF_LONGITUDE]
     location_name = entry.options[CONF_NAME]
-    forecast_mode = entry.options[CONF_MODE]
 
     if hass.config.units is METRIC_SYSTEM:
         unit_system_api = API_URL_METRIC
@@ -47,7 +46,6 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry):
         calendarday=entry.options[CONF_CALENDARDAYTEMPERATURE],
         latitude=latitude,
         longitude=longitude,
-        forecast_mode=forecast_mode,
         forecast_enable=entry.options.get(CONF_FORECAST_SENSORS, False)
     )
 
