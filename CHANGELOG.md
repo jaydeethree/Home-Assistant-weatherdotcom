@@ -1,3 +1,7 @@
+v1.0.0-RC1
+* Add hourly forecasts
+* Lots of refactoring/code clean-up to support hourly forecasts
+
 v1.0.0b3
 * Simplify wind cardinal direction sensor
 * Fix precipitation entries using wrong names and units
