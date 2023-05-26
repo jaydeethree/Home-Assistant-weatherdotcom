@@ -34,12 +34,7 @@ Add this repository as a custom repository in HACS and install from there. Then:
 1. In Home Assistant Settings, select DEVICES & SERVICES, then ADD INTEGRATION.  
 2. Select the "Weather.com" integration.  
 3. Enter your Weather.com API key and submit.  
-4. After the integration setup is complete, you can select "Configure" to change:  
-
-* Create Forecast Sensors, language, and override latitude and longitude for forecast.  
-* Observation and condition sensors will be created and enabled.  
-* Forecast sensors are not created by default. They will be created if you enable "Create Forecast Sensors" in the integration "Configure".  
-* Forecast sensors will then be created but are disabled. To enable, goto the integration - entities and select the sensors you would like and enable them.
+4. After the integration setup is complete, you can select "Configure" to change language, latitude, and longitude.
 
 [Back to top](#top)
 
@@ -105,36 +100,6 @@ Add this repository as a custom repository in HACS and install from there. Then:
    unique_id: <location_name>,windspeed
    entity_id: sensor.<location_name>_wind_speed   
    description: Current wind speed      
-#   Forecast
- narrative:
-   unique_id: <location_name>,narrative_<day>f
-   entity_id: sensor.<location_name>_weather_summary_<day>
-   description: A human-readable weather forecast for Day. (<day> Variations 0, 1, 2, 3, 4)
- qpfSnow:
-   unique_id: <location_name>,qpfsnow_<day>f
-   entity_id: sensor.<location_name>_snow_amount_<day>
-   description: Forecasted snow intensity. (<day> Variations 0, 1, 2, 3, 4)
-#   Forecast daypart
- narrative:
-   unique_id: <location_name>,narrative_<daypart>fdp
-   entity_id: sensor.<location_name>_forecast_summary_<suffix>
-   description: A human-readable weather forecast for Day. (suffix Variations 0d, 1n, 2d, 3n, 4d, 5n, 6d, 7n, 8d, 9n)
- qpf:
-   unique_id: <location_name>,qpf_<daypart>fdp
-   entity_id: sensor.<location_name>_precipitation_amount_<suffix>
-   description: Forecasted precipitation intensity. (suffix Variations 0d, 1n, 2d, 3n, 4d, 5n, 6d, 7n, 8d, 9n)
- precipChance:
-   unique_id: <location_name>,precipchance_<daypart>fdp
-   entity_id: sensor.<location_name>_precipitation_probability_<suffix>
-   description: Forecasted precipitation probability in %. (suffix Variations 0d, 1n, 2d, 3n, 4d, 5n, 6d, 7n, 8d, 9n)      
- temperature:
-   unique_id: <location_name>,temperature<daypart>fdp
-   entity_id: sensor.<location_name>_forecast_temperature_<suffix>
-   description: Forecasted temperature. (suffix Variations 0d, 1n, 2d, 3n, 4d, 5n, 6d, 7n, 8d, 9n)
- windSpeed:
-   unique_id: <location_name>,windspeed_<daypart>fdp
-   entity_id: sensor.<location_name>_average_wind_<suffix>
-   description: Forecasted wind speed. (suffix Variations 0d, 1n, 2d, 3n, 4d, 5n, 6d, 7n, 8d, 9n)
 ```
 
 All the conditions listed above will be updated every 5 minutes.  
@@ -142,15 +107,6 @@ All the conditions listed above will be updated every 5 minutes.
 **_Weather.com API caveat:   
 The daypart object as well as the temperatureMax field OUTSIDE of the daypart object will appear as null in the API after 3:00pm Local Apparent Time.  
 The affected sensors will return as "Today Expired" with a value of "—" when this condition is met._**
-
-
-Variations above marked with "#d" are daily forecasts.
-Variations above marked with "#n" are nightly forecasts.
-
-
-Note: While the platform is called weatherdotcom the sensors will show up in Home Assistant as  
-```sensor.<location_name>_forecast_temperature_<suffix>```  
-(eg: sensor.sanfrancisco_forecast_temperature_0d).
 
 Additional details about the API are available [here](https://docs.google.com/document/d/14OK6NG5GRwezb6-5C1vQJoRdStrGnXUiXBDCmQP9T9s/edit).  
 [Back to top](#top)
@@ -228,8 +184,7 @@ Files were translated, using 'en.json' as the base, via https://translate.i18nex
 Translations only use the base language code and not the variant (i.e. zh-CN/zh-HK/zh-TW uses zh).  
 The default is en-US (translations/en.json) if the lang: option is not set in the weather.com config.  
 If lang: is set (i.e.  lang: de-DE), then the translations/de.json file is loaded, and the Weather.com API is queried with de-DE.    
-The translation file applies to all sensor friendly names.   
-Forecast-narrative, forecast-dayOfWeek, forecast-daypart-narrative and forecast-daypart-daypartName are translated by the api. 
+The translation file applies to all sensor friendly names.    
 Available lang: options are:  
 ```
 'am-ET', 'ar-AE', 'az-AZ', 'bg-BG', 'bn-BD', 'bn-IN', 'bs-BA', 'ca-ES', 'cs-CZ', 'da-DK', 'de-DE', 'el-GR', 'en-GB',

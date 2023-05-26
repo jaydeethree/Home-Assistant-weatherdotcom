@@ -19,7 +19,6 @@
     "step": {
       "init": {
         "data": {
-          "forecast_sensors": "Создать датчики прогноза?",
           "lang": "Язык",
           "latitude": "Широта — по умолчанию извлекается из StationID",
           "longitude": "Долгота — по умолчанию извлекается из StationID."

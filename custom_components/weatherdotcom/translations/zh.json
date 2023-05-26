@@ -19,7 +19,6 @@
     "step": {
       "init": {
         "data": {
-          "forecast_sensors": "创建预测传感器？",
           "lang": "语言",
           "latitude": "纬度 - 默认值是从 StationID 检索的",
           "longitude": "经度 - 默认值是从 StationID 检索的"

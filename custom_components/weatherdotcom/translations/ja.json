@@ -19,7 +19,6 @@
     "step": {
       "init": {
         "data": {
-          "forecast_sensors": "予測センサーを作成しますか?",
           "lang": "言語",
           "latitude": "Latitude - デフォルトは StationID から取得されます",
           "longitude": "経度 - デフォルトは StationID から取得されます"

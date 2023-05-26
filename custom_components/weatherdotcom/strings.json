@@ -19,7 +19,6 @@
     "step": {
       "init": {
         "data": {
-          "forecast_sensors": "Create Forecast Sensors ?",
           "lang": "Language",
           "latitude": "Latitude - default is retrieved from StationID",
           "longitude": "Longitude - default is retrieved from StationID"

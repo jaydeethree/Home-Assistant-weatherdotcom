@@ -19,7 +19,6 @@
     "step": {
       "init": {
         "data": {
-          "forecast_sensors": "Créer des capteurs de prévision ?",
           "lang": "Langue",
           "latitude": "Latitude - la valeur par défaut est extraite de StationID",
           "longitude": "Longitude - la valeur par défaut est extraite de StationID"

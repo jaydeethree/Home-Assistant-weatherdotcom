@@ -19,7 +19,6 @@
     "step": {
       "init": {
         "data": {
-          "forecast_sensors": "إنشاء مستشعرات التنبؤ؟",
           "lang": "لغة",
           "latitude": "خط العرض - يتم استرداد الإعداد الافتراضي من StationID",
           "longitude": "خط الطول - يتم استرداد الافتراضي من StationID"

@@ -19,7 +19,6 @@
     "step": {
       "init": {
         "data": {
-          "forecast_sensors": "Creare sensori di previsione?",
           "lang": "Lingua",
           "latitude": "Latitudine: l'impostazione predefinita viene recuperata da StationID",
           "longitude": "Longitudine: l'impostazione predefinita viene recuperata da StationID"
