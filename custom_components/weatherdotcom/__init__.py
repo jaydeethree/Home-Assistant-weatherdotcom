@@ -11,8 +11,7 @@ from homeassistant.util.unit_system import METRIC_SYSTEM
 from .coordinator import WeatherUpdateCoordinator, WeatherUpdateCoordinatorConfig
 from .const import (
     CONF_LANG,
-    DOMAIN, API_METRIC, API_IMPERIAL, API_URL_METRIC, API_URL_IMPERIAL,
-    CONF_FORECAST_SENSORS
+    DOMAIN, API_METRIC, API_IMPERIAL, API_URL_METRIC, API_URL_IMPERIAL
 )
 
 PLATFORMS: Final = [Platform.WEATHER, Platform.SENSOR]
@@ -42,8 +41,7 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry):
         unit_system=unit_system,
         lang=entry.options[CONF_LANG],
         latitude=latitude,
-        longitude=longitude,
-        forecast_enable=entry.options.get(CONF_FORECAST_SENSORS, False)
+        longitude=longitude
     )
 
     weathercoordinator = WeatherUpdateCoordinator(hass, config)

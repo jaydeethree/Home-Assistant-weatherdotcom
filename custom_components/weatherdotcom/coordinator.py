@@ -55,7 +55,6 @@ class WeatherUpdateCoordinatorConfig:
     lang: str
     latitude: str
     longitude: str
-    forecast_enable: bool
     update_interval = MIN_TIME_BETWEEN_UPDATES
 
 
@@ -76,7 +75,6 @@ class WeatherUpdateCoordinator(DataUpdateCoordinator):
         self._lang = config.lang
         self._latitude = config.latitude
         self._longitude = config.longitude
-        self.forecast_enable = config.forecast_enable
         self._features = set()
         self.data = None
         self._session = async_get_clientsession(self._hass)

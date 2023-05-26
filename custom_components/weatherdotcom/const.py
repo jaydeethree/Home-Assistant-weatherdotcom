@@ -28,7 +28,6 @@ DOMAIN = 'weatherdotcom'
 # NAME = 'WeatherUnderground'
 CONF_ATTRIBUTION = 'Data provided by the Weather.com weather service'
 CONF_LANG = 'lang'
-CONF_FORECAST_SENSORS = 'forecast_sensors'
 
 ENTRY_WEATHER_COORDINATOR = 'weather_coordinator'
 ENTRY_LANG = 'lang'
@@ -66,7 +65,6 @@ ICON_CONDITION_MAP: Final[dict[str, list[int]]] = {
 }
 
 DEFAULT_LANG = 'en-US'
-DEFAULT_FORECAST_SENSORS = False
 MAX_FORECAST_DAYS: Final = 5
 API_IMPERIAL: Final = "imperial"
 API_METRIC: Final = "metric"

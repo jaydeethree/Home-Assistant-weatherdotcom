@@ -24,18 +24,12 @@ from .const import (
     RESULTS_CURRENT, RESULTS_FORECAST_DAILY, RESULTS_FORECAST_HOURLY
 )
 from .weather_current_conditions_sensors import *
-from .weather_daily_forecast_sensors import *
 
 _LOGGER = logging.getLogger(__name__)
 
 # Declaration of supported Weather.com observation/condition sensors
 SENSOR_DESCRIPTIONS: tuple[WeatherSensorEntityDescription, ...] = (
     obs_sensor_descriptions
-)
-
-# Declaration of supported Weather.com forecast sensors
-FORECAST_SENSOR_DESCRIPTIONS: tuple[WeatherSensorEntityDescription, ...] = (
-    forecast_sensor_descriptions
 )
 
 
@@ -47,21 +41,6 @@ async def async_setup_entry(
     sensors = [
         WeatherSensor(coordinator, description) for description in SENSOR_DESCRIPTIONS
     ]
-
-    if coordinator.forecast_enable:
-        sensors.extend(
-            WeatherForecastSensor(coordinator, description, forecast_day=day)
-            for day in range(MAX_FORECAST_DAYS)
-            for description in FORECAST_SENSOR_DESCRIPTIONS
-            if description.feature == FEATURE_FORECAST
-        )
-
-        sensors.extend(
-            WeatherForecastSensor(coordinator, description, forecast_day=day)
-            for day in range(MAX_FORECAST_DAYS * 2)
-            for description in FORECAST_SENSOR_DESCRIPTIONS
-            if description.feature == FEATURE_FORECAST_DAYPART
-        )
 
     async_add_entities(sensors)
 
