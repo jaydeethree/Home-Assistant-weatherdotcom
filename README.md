@@ -1,9 +1,9 @@
 # Home-Assistant-Weather.com
-
 Home Assistant custom integration for Weather.com.
 Includes a native Home Assistant Weather Entity and a variety of weather sensors.  
 
-:+1: If you find this software useful, feel free to make a donation to the original author (@cytech): [Paypal.me Donation Link](https://paypal.me/cytecheng)  
+This is a fork of the excellent [wundergroundpws integration by @cytech](https://github.com/cytech/Home-Assistant-wundergroundpws) - if you
+find this software useful, feel free to make a donation to them.
 
 -------------------
 
@@ -13,6 +13,7 @@ install and use the software.
 
 - This integration requires Home Assistant Version 2023.1 or greater
 - A Weather.com API Key is required (see below for how to get this)
+
 [Back to top](#top) 
 
 # Weather.com API Key
@@ -26,7 +27,6 @@ Important notes:
 
 [Back to top](#top)
 
-
 # Installation
 
 Add this repository as a custom repository in HACS and install from there. Then:
@@ -38,99 +38,29 @@ Add this repository as a custom repository in HACS and install from there. Then:
 
 [Back to top](#top)
 
-# Available Sensors
-```yaml
-# description: Conditions to display in the frontend. The following conditions can be monitored.
-#
-# Observations (current)
- validTimeLocal:
-   unique_id: <location_name>,obstimelocal
-   entity_id: sensor.<location_name>_local_observation_time   
-   description: Text summary of local observation time
- relativeHumidity:
-   unique_id: <location_name>,humidity
-   entity_id: sensor.<location_name>_relative_humidity   
-   description: Relative humidity    
- uvIndex:
-   unique_id: <location_name>,uv
-   entity_id: sensor.<location_name>_uv_index   
-   description: Current levels of UV radiation.
- windDirection:
-   unique_id: <location_name>,winddir
-   entity_id: sensor.<location_name>_wind_direction_degrees   
-   description: Wind degrees
- windDirectionCardinal:
-   unique_id: <location_name>,winddirectioncardinal
-   entity_id: sensor.<location_name>_wind_direction_cardinal   
-   description: Wind cardinal direction (N, NE, NNE, S, E, W, etc)
-# conditions (current)       
- temperatureDewPoint:
-   unique_id: <location_name>,dewpt
-   entity_id: sensor.<location_name>_dewpoint
-   description: Temperature below which water droplets begin to condense and dew can form
- temperatureHeatIndex:
-   unique_id: <location_name>,heatindex
-   entity_id: sensor.<location_name>_heat_index   
-   description: Heat index (combined effects of the temperature and humidity of the air)
- precip1Hour:
-   unique_id: <location_name>,preciprate
-   entity_id: sensor.<location_name>_precipitation_rate   
-   description: Rain intensity
- precip24Hour:
-   unique_id: <location_name>,preciptotal
-   entity_id: sensor.<location_name>_precipitation_today   
-   description: Today Total precipitation
- pressureAltimeter:
-   unique_id: <location_name>,pressure
-   entity_id: sensor.<location_name>_pressure   
-   description: Atmospheric air pressure
- temperature:
-   unique_id: <location_name>,temp
-   entity_id: sensor.<location_name>_temperature   
-   description: Current temperature
- temperatureWindChill:
-   unique_id: <location_name>,windchill
-   entity_id: sensor.<location_name>_wind_chill   
-   description: Wind Chill (combined effects of the temperature and wind)      
- windGust:
-   unique_id: <location_name>,windgust
-   entity_id: sensor.<location_name>_wind_gust   
-   description: Wind gusts speed
- windSpeed:
-   unique_id: <location_name>,windspeed
-   entity_id: sensor.<location_name>_wind_speed   
-   description: Current wind speed      
-```
+# Sensors Created By This Integration
+The following Weather.com data is available in the `weather.<LOCATION_NAME>` entity:
 
-All the conditions listed above will be updated every 5 minutes.  
+Current conditions:
+- Condition (icon)
+- Temperature
+- Barometric pressure
+- Wind speed
+- Wind bearing (cardinal direction)
 
-**_Weather.com API caveat:   
-The daypart object as well as the temperatureMax field OUTSIDE of the daypart object will appear as null in the API after 3:00pm Local Apparent Time.  
-The affected sensors will return as "Today Expired" with a value of "—" when this condition is met._**
+Forecast (daily):
+- Date/time of forecast
+- Temperature (high)
+- Temperature (low)
+- Condition (icon)
+- Precipitation quantity
+- Precipitation probability
+- Wind speed
+- Wind bearing (cardinal direction)
 
-Additional details about the API are available [here](https://docs.google.com/document/d/14OK6NG5GRwezb6-5C1vQJoRdStrGnXUiXBDCmQP9T9s/edit).  
-[Back to top](#top)
+Additionally, a `weather.<LOCATION_NAME>_hourly` entity will be created that contains hourly forecast data.
 
-# Weather Entity
-Weather.com data returned to weather entity (HASS weather forecast card):  
-Current:
-- temperature
-- pressure
-- humidity
-- wind_speed
-- wind_bearing
-
-Forecast:
-- datetime
-- temperature (max)
-- temperature (low)
-- condition (icon)
-- precipitation
-- precipitation_probability
-- wind_bearing
-- wind_speed
-
-templates can be created to access these values such as:
+Templates can be created to access these values such as:
 ```
 {% for state in states.weather -%}
   {%- if loop.first %}The {% elif loop.last %} and the {% else %}, the {% endif -%}
@@ -140,41 +70,29 @@ templates can be created to access these values such as:
 Wind is {{ states.weather.<LOCATION_NAME>.attributes.forecast[0].wind_bearing }} at {{ states.weather.<LOCATION_NAME>.attributes.forecast[0].wind_speed }} {{ states.weather.<LOCATION_NAME>.attributes.wind_speed_unit }}
 
 ```
-[Back to top](#top)
 
-# Sensors available in statistics
-The following are Weather.com sensors exposed to the statistics card in Lovelace.  
-Note that only sensors of like units can be combined in a single card.  
+In addition to the Weather entity, these additional sensors will be created by this integration:
 
-* **class NONE**
-* sensor.sanfrancisco_uv_index
-* 
-* **class DEGREE**
-* sensor.sensor.sanfrancisco_wind_direction_degrees
+* `sensor.<LOCATION_NAME>_dewpoint` - the current dew point
+* `sensor.<LOCATION_NAME>_heat_index` - the current heat index, which is what the current temperature "feels like" when combined with the current humidity
+* `sensor.<LOCATION_NAME>_local_observation_time` - the time that the Weather.com data was generated
+* `sensor.<LOCATION_NAME>_precipitation_last_hour` - the quantity of precipitation in the last hour
+* `sensor.<LOCATION_NAME>_precipitation_last_24_hours` - the quantity of precipitation in the last 24 hours
+* `sensor.<LOCATION_NAME>_pressure` - the current barometric pressure
+* `sensor.<LOCATION_NAME>_relative_humidity` - the current relative humidity
+* `sensor.<LOCATION_NAME>_temperature` - the current temperature
+* `sensor.<LOCATION_NAME>_uv_index` - the current UV index, ranging from 0 (very low) to 10 (very high)
+* `sensor.<LOCATION_NAME>_wind_chill` - the current wind chill, which is what the current temperature "feels like" when combined with the current wind
+* `sensor.<LOCATION_NAME>_wind_direction_cardinal` - the current cardinal wind direction - for example: North
+* `sensor.<LOCATION_NAME>_wind_direction_degrees` - the current cardinal wind direction in degrees
+* `sensor.<LOCATION_NAME>_wind_gust` - the current wind gust speed
+* `sensor.<LOCATION_NAME>_wind_speed` - the current wind speed
 
-* 
-* **class RATE & SPEED**
-* sensor.sanfrancisco_precipitation_rate
-* sensor.sanfrancisco_wind_gust
-* sensor.sanfrancisco_wind_speed
-* 
-* **class LENGTH**
-* sensor.sanfrancisco_precipitation_today
-* 
-* **class PRESSURE**
-* sensor.sanfrancisco_pressure
-* 
-* **class HUMIDITY**
-* sensor.sanfrancisco_relative_humidity
-* 
-* **class TEMPERATURE**
-* sensor.sanfrancisco_dewpoint
-* sensor.sanfrancisco_heat_index
-* sensor.sanfrancisco_wind_chill
-* sensor.sanfrancisco_temperature
+All of the data listed above will be updated every 20 minutes.  
+
+Additional details about the API are available [here](https://docs.google.com/document/d/14OK6NG5GRwezb6-5C1vQJoRdStrGnXUiXBDCmQP9T9s/edit).  
 
 [Back to top](#top)
-
 
 # Localization
 
@@ -182,7 +100,7 @@ Sensor "friendly names" are set via translation files.
 Weather.com translation files are located in the 'weatherdotcom/weather_translations' directory.
 Files were translated, using 'en.json' as the base, via https://translate.i18next.com.  
 Translations only use the base language code and not the variant (i.e. zh-CN/zh-HK/zh-TW uses zh).  
-The default is en-US (translations/en.json) if the lang: option is not set in the weather.com config.  
+The default is en-US (translations/en.json) if the lang: option is not set in the Weather.com config.  
 If lang: is set (i.e.  lang: de-DE), then the translations/de.json file is loaded, and the Weather.com API is queried with de-DE.    
 The translation file applies to all sensor friendly names.    
 Available lang: options are:  
@@ -195,5 +113,6 @@ Available lang: options are:
 'sq-AL', 'sr-BA', 'sr-ME', 'sr-RS', 'sv-SE', 'sw-KE', 'ta-IN', 'ta-LK', 'te-IN', 'ti-ER', 'ti-ET', 'tg-TJ', 'th-TH',
 'tk-TM', 'tl-PH', 'tr-TR', 'uk-UA', 'ur-PK', 'uz-UZ', 'vi-VN', 'zh-CN', 'zh-HK', 'zh-TW'
 ```
-Weather Entity (hass weather card) translations are handled by Home Assistant and configured under the user -> language setting.  
+Weather Entity translations are handled by Home Assistant and configured under the User -> Language setting.
+
 [Back to top](#top)
