@@ -11,7 +11,7 @@
           "name": "姓名"
         },
         "description": "设置 Weather.com 集成。",
-        "title": "奇妙乐园PWS"
+        "title": "Weather.com"
       }
     }
   },
@@ -20,8 +20,8 @@
       "init": {
         "data": {
           "lang": "语言",
-          "latitude": "纬度 - 默认值是从 StationID 检索的",
-          "longitude": "经度 - 默认值是从 StationID 检索的"
+          "latitude": "纬度",
+          "longitude": "经度"
         }
       }
     }

@@ -20,8 +20,8 @@
       "init": {
         "data": {
           "lang": "Sprache",
-          "latitude": "Breitengrad – Standardwert wird von StationID abgerufen",
-          "longitude": "Längengrad - Standardwert wird von StationID abgerufen"
+          "latitude": "Breite",
+          "longitude": "Längengrad"
         }
       }
     }

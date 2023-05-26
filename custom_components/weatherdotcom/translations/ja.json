@@ -1,17 +1,17 @@
 {
   "config": {
     "error": {
-      "invalid_api_key": "API キーが無効です",
+      "invalid_api_key": "無効な API キー",
       "unknown_error": "不明なエラー"
     },
     "step": {
       "user": {
         "data": {
-          "api_key": "API キー",
+          "api_key": "APIキー",
           "name": "名前"
         },
         "description": "Weather.com 統合をセットアップします。 ",
-        "title": "ワンダーグラウンドPWS"
+        "title": "Weather.com"
       }
     }
   },
@@ -20,8 +20,8 @@
       "init": {
         "data": {
           "lang": "言語",
-          "latitude": "Latitude - デフォルトは StationID から取得されます",
-          "longitude": "経度 - デフォルトは StationID から取得されます"
+          "latitude": "緯度",
+          "longitude": "経度"
         }
       }
     }

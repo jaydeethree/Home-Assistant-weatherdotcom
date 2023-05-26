@@ -10,7 +10,7 @@
           "api_key": "API-ключ",
           "name": "Имя"
         },
-        "description": "Настройте интеграцию Weather.com. ",
+        "description": "Настройте интеграцию с Weather.com. ",
         "title": "Weather.com"
       }
     }
@@ -20,8 +20,8 @@
       "init": {
         "data": {
           "lang": "Язык",
-          "latitude": "Широта — по умолчанию извлекается из StationID",
-          "longitude": "Долгота — по умолчанию извлекается из StationID."
+          "latitude": "Широта",
+          "longitude": "Долгота"
         }
       }
     }

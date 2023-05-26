@@ -20,8 +20,8 @@
       "init": {
         "data": {
           "lang": "Idioma",
-          "latitude": "Latitud: el valor predeterminado se obtiene de StationID",
-          "longitude": "Longitud: el valor predeterminado se recupera de StationID"
+          "latitude": "Latitud",
+          "longitude": "Longitud"
         }
       }
     }

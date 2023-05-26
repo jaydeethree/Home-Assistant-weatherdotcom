@@ -10,7 +10,7 @@
           "api_key": "Chiave dell'API",
           "name": "Nome"
         },
-        "description": "Configurare l'integrazione Weather.com. ",
+        "description": "Configura l'integrazione Weather.com. ",
         "title": "Weather.com"
       }
     }
@@ -20,8 +20,8 @@
       "init": {
         "data": {
           "lang": "Lingua",
-          "latitude": "Latitudine: l'impostazione predefinita viene recuperata da StationID",
-          "longitude": "Longitudine: l'impostazione predefinita viene recuperata da StationID"
+          "latitude": "Latitudine",
+          "longitude": "Longitudine"
         }
       }
     }

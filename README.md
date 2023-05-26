@@ -137,7 +137,7 @@ templates can be created to access these values such as:
   {{ state.name | lower }} is {{state.state_with_unit}}
 {%- endfor %}.
 
-Wind is {{ states.weather.<STATIONID>.attributes.forecast[0].wind_bearing }} at {{ states.weather.<STATIONID>.attributes.forecast[0].wind_speed }} {{ states.weather.<STATIONID>.attributes.wind_speed_unit }}
+Wind is {{ states.weather.<LOCATION_NAME>.attributes.forecast[0].wind_bearing }} at {{ states.weather.<LOCATION_NAME>.attributes.forecast[0].wind_speed }} {{ states.weather.<LOCATION_NAME>.attributes.wind_speed_unit }}
 
 ```
 [Back to top](#top)

@@ -20,8 +20,8 @@
       "init": {
         "data": {
           "lang": "لغة",
-          "latitude": "خط العرض - يتم استرداد الإعداد الافتراضي من StationID",
-          "longitude": "خط الطول - يتم استرداد الافتراضي من StationID"
+          "latitude": "خط العرض",
+          "longitude": "خط الطول"
         }
       }
     }
