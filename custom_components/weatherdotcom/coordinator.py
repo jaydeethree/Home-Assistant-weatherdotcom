@@ -23,6 +23,7 @@ from .const import (
     ICON_CONDITION_MAP,
     FIELD_CONDITION_HUMIDITY,
     FIELD_CONDITION_WINDDIR,
+    FIELD_CONDITION_WINDSPEED,
     FIELD_DAYPART,
     FIELD_FORECAST_VALIDTIMEUTC,
     FIELD_FORECAST_TEMPERATUREMAX,
@@ -190,7 +191,7 @@ class WeatherUpdateCoordinator(DataUpdateCoordinator):
     def get_current(self, field):
         # windGust is often null. When it is, set it to windSpeed instead.
         if field == 'windGust' and self.data[RESULTS_CURRENT][field] == None:
-            return self.data[RESULTS_CURRENT][windSpeed]
+            return self.data[RESULTS_CURRENT][FIELD_CONDITION_WINDSPEED]
         return self.data[RESULTS_CURRENT][field]
 
     def get_forecast_daily(self, field, period=0):
