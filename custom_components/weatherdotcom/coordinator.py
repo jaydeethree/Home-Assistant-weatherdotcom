@@ -200,12 +200,6 @@ class WeatherUpdateCoordinator(DataUpdateCoordinator):
         self._features.add(feature)
 
     def get_current(self, field):
-        if field in [
-            FIELD_CONDITION_HUMIDITY,
-            FIELD_CONDITION_WINDDIR,
-        ]:
-            # Those fields are unit-less
-            return self.data[RESULTS_CURRENT][field] or 0
         # windGust is often null. When it is, set it to windSpeed instead.
         if field == 'windGust' and self.data[RESULTS_CURRENT][field] == None:
             return self.data[RESULTS_CURRENT][windSpeed]
