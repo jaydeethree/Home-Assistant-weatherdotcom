@@ -22,7 +22,6 @@
           "forecast_sensors": "予測センサーを作成しますか?",
           "numeric_precision": "数値精度",
           "lang": "言語",
-          "calendarday_temp": "暦日別の気温? ",
           "latitude": "Latitude - デフォルトは StationID から取得されます",
           "longitude": "経度 - デフォルトは StationID から取得されます"
         }

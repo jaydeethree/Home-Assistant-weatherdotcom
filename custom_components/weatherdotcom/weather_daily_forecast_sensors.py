@@ -9,7 +9,7 @@ from .weather_current_conditions_sensors import WeatherSensorEntityDescription
 
 forecast_sensor_descriptions = [
     # forecast outside daypart
-    # calendarDayTemperatureMax: calendarDayTemperatureMin: dayOfWeek: expirationTimeUtc: moonPhase: moonPhaseCode:
+    # dayOfWeek: expirationTimeUtc: moonPhase: moonPhaseCode:
     # moonPhaseDay: moonriseTimeLocal: moonriseTimeUtc: moonsetTimeLocal: moonsetTimeUtc: *narrative: qpf: *qpfSnow:
     # sunriseTimeLocal: sunriseTimeUtc: sunsetTimeLocal: sunsetTimeUtc: temperatureMax: temperatureMin: validTimeLocal:
     # validTimeUtc:

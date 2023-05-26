@@ -27,8 +27,7 @@ from .const import (
     FIELD_FORECAST_VALIDTIMEUTC,
     FIELD_FORECAST_TEMPERATUREMAX,
     FIELD_FORECAST_TEMPERATUREMIN,
-    FIELD_FORECAST_CALENDARDAYTEMPERATUREMAX,
-    FIELD_FORECAST_CALENDARDAYTEMPERATUREMIN, DOMAIN, FIELD_LONGITUDE, FIELD_LATITUDE,
+    DOMAIN, FIELD_LONGITUDE, FIELD_LATITUDE,
     RESULTS_CURRENT, RESULTS_FORECAST_DAILY, RESULTS_FORECAST_HOURLY
 )
 
@@ -55,7 +54,6 @@ class WeatherUpdateCoordinatorConfig:
     unit_system_api: str
     unit_system: str
     lang: str
-    calendarday: bool
     latitude: str
     longitude: str
     forecast_enable: bool
@@ -78,7 +76,6 @@ class WeatherUpdateCoordinator(DataUpdateCoordinator):
         self._unit_system_api = config.unit_system_api
         self.unit_system = config.unit_system
         self._lang = config.lang
-        self._calendarday = config.calendarday
         self._latitude = config.latitude
         self._longitude = config.longitude
         self.forecast_enable = config.forecast_enable
@@ -210,8 +207,6 @@ class WeatherUpdateCoordinator(DataUpdateCoordinator):
             if field in [
                 FIELD_FORECAST_TEMPERATUREMAX,
                 FIELD_FORECAST_TEMPERATUREMIN,
-                FIELD_FORECAST_CALENDARDAYTEMPERATUREMAX,
-                FIELD_FORECAST_CALENDARDAYTEMPERATUREMIN,
                 FIELD_FORECAST_VALIDTIMEUTC,
             ]:
                 # Those fields exist per-day, rather than per dayPart, so the period is halved

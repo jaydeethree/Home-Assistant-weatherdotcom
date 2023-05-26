@@ -22,7 +22,6 @@
           "forecast_sensors": "¿Crear sensores de pronóstico?",
           "numeric_precision": "Precisión numérica",
           "lang": "Idioma",
-          "calendarday_temp": "¿Temperatura por día calendario? ",
           "latitude": "Latitud: el valor predeterminado se obtiene de StationID",
           "longitude": "Longitud: el valor predeterminado se recupera de StationID"
         }

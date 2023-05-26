@@ -12,8 +12,8 @@ from homeassistant.helpers.aiohttp_client import async_create_clientsession
 from .coordinator import InvalidApiKey
 
 from .const import (
-    DOMAIN, CONF_NUMERIC_PRECISION, CONF_LANG, CONF_CALENDARDAYTEMPERATURE, DEFAULT_NUMERIC_PRECISION,
-    DEFAULT_LANG, LANG_CODES, DEFAULT_CALENDARDAYTEMPERATURE, FIELD_LONGITUDE, FIELD_LATITUDE,
+    DOMAIN, CONF_NUMERIC_PRECISION, CONF_LANG, DEFAULT_NUMERIC_PRECISION,
+    DEFAULT_LANG, LANG_CODES, FIELD_LONGITUDE, FIELD_LATITUDE,
     CONF_FORECAST_SENSORS, DEFAULT_FORECAST_SENSORS
 )
 
@@ -100,7 +100,6 @@ class WeatherFlowHandler(config_entries.ConfigFlow, domain=DOMAIN):
                     CONF_NAME: location_name,
                     CONF_NUMERIC_PRECISION: DEFAULT_NUMERIC_PRECISION,
                     CONF_LANG: DEFAULT_LANG,
-                    CONF_CALENDARDAYTEMPERATURE: DEFAULT_CALENDARDAYTEMPERATURE,
                     CONF_FORECAST_SENSORS: DEFAULT_FORECAST_SENSORS
                 },
             )
@@ -150,9 +149,6 @@ class OptionsFlowHandler(config_entries.OptionsFlow):
                                  DEFAULT_NUMERIC_PRECISION)): vol.All(vol.In(['none', 'decimal'])),
                     vol.Optional(CONF_LANG, default=self.config_entry.options.get(CONF_LANG, DEFAULT_LANG)):
                         vol.All(vol.In(LANG_CODES)),
-                    vol.Optional(CONF_CALENDARDAYTEMPERATURE,
-                                 default=self.config_entry.options.get(CONF_CALENDARDAYTEMPERATURE,
-                                                                       DEFAULT_CALENDARDAYTEMPERATURE)): bool,
                     vol.Inclusive(CONF_LATITUDE, 'coordinates',
                                   'Latitude and longitude must exist together',
                                   default=self.config_entry.options.get(CONF_LATITUDE)): cv.latitude,

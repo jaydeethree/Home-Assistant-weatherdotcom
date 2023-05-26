@@ -22,7 +22,6 @@
           "forecast_sensors": "创建预测传感器？",
           "numeric_precision": "数值精度",
           "lang": "语言",
-          "calendarday_temp": "日历日的温度？ ",
           "latitude": "纬度 - 默认值是从 StationID 检索的",
           "longitude": "经度 - 默认值是从 StationID 检索的"
         }

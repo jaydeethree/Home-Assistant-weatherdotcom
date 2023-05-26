@@ -22,7 +22,6 @@
           "forecast_sensors": "Создать датчики прогноза?",
           "numeric_precision": "Числовая точность",
           "lang": "Язык",
-          "calendarday_temp": "Температура по календарным дням? ",
           "latitude": "Широта — по умолчанию извлекается из StationID",
           "longitude": "Долгота — по умолчанию извлекается из StationID."
         }

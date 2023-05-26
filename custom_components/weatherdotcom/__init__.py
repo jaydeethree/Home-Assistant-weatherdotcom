@@ -12,7 +12,7 @@ from .coordinator import WeatherUpdateCoordinator, WeatherUpdateCoordinatorConfi
 from .const import (
     CONF_LANG,
     CONF_NUMERIC_PRECISION,
-    DOMAIN, API_METRIC, API_IMPERIAL, API_URL_METRIC, API_URL_IMPERIAL, CONF_CALENDARDAYTEMPERATURE,
+    DOMAIN, API_METRIC, API_IMPERIAL, API_URL_METRIC, API_URL_IMPERIAL,
     CONF_FORECAST_SENSORS
 )
 
@@ -43,7 +43,6 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry):
         unit_system_api=unit_system_api,
         unit_system=unit_system,
         lang=entry.options[CONF_LANG],
-        calendarday=entry.options[CONF_CALENDARDAYTEMPERATURE],
         latitude=latitude,
         longitude=longitude,
         forecast_enable=entry.options.get(CONF_FORECAST_SENSORS, False)

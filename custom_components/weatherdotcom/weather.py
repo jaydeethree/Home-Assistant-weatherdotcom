@@ -26,8 +26,6 @@ from .const import (
     FIELD_FORECAST_QPF,
     FIELD_FORECAST_TEMPERATUREMAX,
     FIELD_FORECAST_TEMPERATUREMIN,
-    FIELD_FORECAST_CALENDARDAYTEMPERATUREMAX,
-    FIELD_FORECAST_CALENDARDAYTEMPERATUREMIN,
     FIELD_FORECAST_WINDDIRECTIONCARDINAL,
     FIELD_FORECAST_WINDSPEED,
     FIELD_FORECAST_ICONCODE,
@@ -165,12 +163,8 @@ class WeatherDotComDaily(WeatherDotCom):
         days = [0, 2, 4, 6, 8]
         if self.coordinator.get_forecast_daily('temperature', 0) is None:
             days[0] += 1
-        if self.coordinator._calendarday is True:
-            caldaytempmax = FIELD_FORECAST_CALENDARDAYTEMPERATUREMAX
-            caldaytempmin = FIELD_FORECAST_CALENDARDAYTEMPERATUREMIN
-        else:
-            caldaytempmax = FIELD_FORECAST_TEMPERATUREMAX
-            caldaytempmin = FIELD_FORECAST_TEMPERATUREMIN
+        caldaytempmax = FIELD_FORECAST_TEMPERATUREMAX
+        caldaytempmin = FIELD_FORECAST_TEMPERATUREMIN
 
         forecast = []
         for period in days:

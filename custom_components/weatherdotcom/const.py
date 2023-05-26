@@ -29,12 +29,10 @@ DOMAIN = 'weatherdotcom'
 CONF_ATTRIBUTION = 'Data provided by the Weather.com weather service'
 CONF_NUMERIC_PRECISION = 'numeric_precision'
 CONF_LANG = 'lang'
-CONF_CALENDARDAYTEMPERATURE = 'calendarday_temp'
 CONF_FORECAST_SENSORS = 'forecast_sensors'
 
 ENTRY_WEATHER_COORDINATOR = 'weather_coordinator'
 ENTRY_LANG = 'lang'
-ENTRY_CALENDARDAYTEMPERATURE = 'calendarday_temp'
 
 # Language Supported Codes
 LANG_CODES = [
@@ -70,7 +68,6 @@ ICON_CONDITION_MAP: Final[dict[str, list[int]]] = {
 
 DEFAULT_NUMERIC_PRECISION = 'none'
 DEFAULT_LANG = 'en-US'
-DEFAULT_CALENDARDAYTEMPERATURE = False
 DEFAULT_FORECAST_SENSORS = False
 MAX_FORECAST_DAYS: Final = 5
 API_IMPERIAL: Final = "imperial"
@@ -100,8 +97,6 @@ FIELD_CONDITION_TEMP = 'temperature'
 FIELD_CONDITION_WINDDIR = 'windDirection'
 FIELD_CONDITION_WINDSPEED = 'windSpeed'
 FIELD_DAYPART = 'daypart'
-FIELD_FORECAST_CALENDARDAYTEMPERATUREMAX = 'calendarDayTemperatureMax'
-FIELD_FORECAST_CALENDARDAYTEMPERATUREMIN = 'calendarDayTemperatureMin'
 FIELD_FORECAST_DAYOFWEEK = 'dayOfWeek'
 FIELD_FORECAST_DAYPARTNAME = 'daypartName'
 FIELD_FORECAST_EXPIRED = 'expired'
