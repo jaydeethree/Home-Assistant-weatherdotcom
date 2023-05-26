@@ -27,7 +27,6 @@ DOMAIN = 'weatherdotcom'
 # MANUFACTURER = 'WeatherUnderground'
 # NAME = 'WeatherUnderground'
 CONF_ATTRIBUTION = 'Data provided by the Weather.com weather service'
-CONF_NUMERIC_PRECISION = 'numeric_precision'
 CONF_LANG = 'lang'
 CONF_FORECAST_SENSORS = 'forecast_sensors'
 
@@ -66,7 +65,6 @@ ICON_CONDITION_MAP: Final[dict[str, list[int]]] = {
     ATTR_CONDITION_WINDY_VARIANT: []
 }
 
-DEFAULT_NUMERIC_PRECISION = 'none'
 DEFAULT_LANG = 'en-US'
 DEFAULT_FORECAST_SENSORS = False
 MAX_FORECAST_DAYS: Final = 5

@@ -36,7 +36,7 @@ Add this repository as a custom repository in HACS and install from there. Then:
 3. Enter your Weather.com API key and submit.  
 4. After the integration setup is complete, you can select "Configure" to change:  
 
-* Create Forecast Sensors, numeric_precision (none or decimal), language, and override latitude and longitude for forecast.  
+* Create Forecast Sensors, language, and override latitude and longitude for forecast.  
 * Observation and condition sensors will be created and enabled.  
 * Forecast sensors are not created by default. They will be created if you enable "Create Forecast Sensors" in the integration "Configure".  
 * Forecast sensors will then be created but are disabled. To enable, goto the integration - entities and select the sensors you would like and enable them.

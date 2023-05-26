@@ -20,7 +20,6 @@
       "init": {
         "data": {
           "forecast_sensors": "Prognosesensoren erstellen ?",
-          "numeric_precision": "Numerische Genauigkeit",
           "lang": "Sprache",
           "latitude": "Breitengrad – Standardwert wird von StationID abgerufen",
           "longitude": "Längengrad - Standardwert wird von StationID abgerufen"

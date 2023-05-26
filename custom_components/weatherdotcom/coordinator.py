@@ -50,7 +50,6 @@ class WeatherUpdateCoordinatorConfig:
 
     api_key: str
     location_name: str
-    numeric_precision: str
     unit_system_api: str
     unit_system: str
     lang: str
@@ -72,7 +71,6 @@ class WeatherUpdateCoordinator(DataUpdateCoordinator):
         self._hass = hass
         self._api_key = config.api_key
         self._location_name = config.location_name
-        self._numeric_precision = config.numeric_precision
         self._unit_system_api = config.unit_system_api
         self.unit_system = config.unit_system
         self._lang = config.lang
@@ -163,10 +161,6 @@ class WeatherUpdateCoordinator(DataUpdateCoordinator):
         # _LOGGER.debug(f'Weather.com data {self.data}')
 
     def _build_url(self, baseurl):
-        if baseurl == _RESOURCECURRENT:
-            if self._numeric_precision != 'none':
-                baseurl += '&numericPrecision={numericPrecision}'
-            
         baseurl += '&language={language}'
         baseurl += _RESOURCESHARED
 
@@ -175,7 +169,6 @@ class WeatherUpdateCoordinator(DataUpdateCoordinator):
             language=self._lang,
             latitude=self._latitude,
             longitude=self._longitude,
-            numericPrecision=self._numeric_precision,
             units=self._unit_system_api
         )
 

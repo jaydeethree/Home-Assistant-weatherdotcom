@@ -20,7 +20,6 @@
       "init": {
         "data": {
           "forecast_sensors": "Создать датчики прогноза?",
-          "numeric_precision": "Числовая точность",
           "lang": "Язык",
           "latitude": "Широта — по умолчанию извлекается из StationID",
           "longitude": "Долгота — по умолчанию извлекается из StationID."

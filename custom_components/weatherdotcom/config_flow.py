@@ -12,7 +12,7 @@ from homeassistant.helpers.aiohttp_client import async_create_clientsession
 from .coordinator import InvalidApiKey
 
 from .const import (
-    DOMAIN, CONF_NUMERIC_PRECISION, CONF_LANG, DEFAULT_NUMERIC_PRECISION,
+    DOMAIN, CONF_LANG,
     DEFAULT_LANG, LANG_CODES, FIELD_LONGITUDE, FIELD_LATITUDE,
     CONF_FORECAST_SENSORS, DEFAULT_FORECAST_SENSORS
 )
@@ -98,7 +98,6 @@ class WeatherFlowHandler(config_entries.ConfigFlow, domain=DOMAIN):
                     CONF_LATITUDE: latitude,
                     CONF_LONGITUDE: longitude,
                     CONF_NAME: location_name,
-                    CONF_NUMERIC_PRECISION: DEFAULT_NUMERIC_PRECISION,
                     CONF_LANG: DEFAULT_LANG,
                     CONF_FORECAST_SENSORS: DEFAULT_FORECAST_SENSORS
                 },
@@ -145,8 +144,6 @@ class OptionsFlowHandler(config_entries.OptionsFlow):
                     vol.Optional(CONF_FORECAST_SENSORS,
                                  default=self.config_entry.options.get(CONF_FORECAST_SENSORS,
                                                                        DEFAULT_FORECAST_SENSORS)): bool,
-                    vol.Optional(CONF_NUMERIC_PRECISION, default=self.config_entry.options.get(CONF_NUMERIC_PRECISION,
-                                 DEFAULT_NUMERIC_PRECISION)): vol.All(vol.In(['none', 'decimal'])),
                     vol.Optional(CONF_LANG, default=self.config_entry.options.get(CONF_LANG, DEFAULT_LANG)):
                         vol.All(vol.In(LANG_CODES)),
                     vol.Inclusive(CONF_LATITUDE, 'coordinates',
