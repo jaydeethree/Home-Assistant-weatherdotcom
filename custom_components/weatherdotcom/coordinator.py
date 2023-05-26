@@ -206,6 +206,9 @@ class WeatherUpdateCoordinator(DataUpdateCoordinator):
         ]:
             # Those fields are unit-less
             return self.data[RESULTS_CURRENT][field] or 0
+        # windGust is often null. When it is, set it to windSpeed instead.
+        if field == 'windGust' and self.data[RESULTS_CURRENT][field] == None:
+            return self.data[RESULTS_CURRENT][windSpeed]
         return self.data[RESULTS_CURRENT][field]
 
     def get_forecast_daily(self, field, period=0):

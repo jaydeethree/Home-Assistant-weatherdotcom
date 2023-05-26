@@ -154,7 +154,7 @@ obs_sensor_descriptions = [
         state_class=SensorStateClass.MEASUREMENT,
         device_class=SensorDeviceClass.WIND_SPEED,
         unit_fn=lambda metric: UnitOfSpeed.KILOMETERS_PER_HOUR if metric else UnitOfSpeed.MILES_PER_HOUR,
-        value_fn=lambda data, _: cast(float, data) or 0.0,
+        value_fn=lambda data, _: cast(float, data),
     ),
     WeatherSensorEntityDescription(
         key="windSpeed",
