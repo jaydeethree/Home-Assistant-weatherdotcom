@@ -1,9 +1,11 @@
 {
   "temperatureDewPoint": "Dewpoint",
+  "temperatureFeelsLike": "Temperature - Feels Like"
   "temperatureHeatIndex": "Heat Index",
   "relativeHumidity": "Relative Humidity",
   "validTimeLocal": "Local Observation Time",
   "precip1Hour": "Precipitation - Last hour",
+  "precip6Hour": "Precipitation - Last 6 hours",
   "precip24Hour": "Precipitation - Last 24 hours",
   "pressureAltimeter": "Pressure",
   "temperature": "Temperature",

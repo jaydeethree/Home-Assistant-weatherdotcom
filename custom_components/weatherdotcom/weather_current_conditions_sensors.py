@@ -86,6 +86,15 @@ current_condition_sensor_descriptions = [
         value_fn=lambda data, _: cast(float, data),
     ),
     WeatherSensorEntityDescription(
+        key="temperatureFeelsLike",
+        name="Temperature - Feels Like",
+        icon=ICON_THERMOMETER,
+        state_class=SensorStateClass.MEASUREMENT,
+        device_class=SensorDeviceClass.TEMPERATURE,
+        unit_fn=lambda metric: UnitOfTemperature.CELSIUS if metric else UnitOfTemperature.FAHRENHEIT,
+        value_fn=lambda data, _: cast(float, data),
+    ),
+    WeatherSensorEntityDescription(
         key=FIELD_CONDITION_TEMP,
         name="Temperature",
         icon=ICON_THERMOMETER,
@@ -115,6 +124,15 @@ current_condition_sensor_descriptions = [
     WeatherSensorEntityDescription(
         key="precip1Hour",
         name="Precipitation - Last hour",
+        icon=ICON_UMBRELLA,
+        state_class=SensorStateClass.TOTAL_INCREASING,
+        device_class=SensorDeviceClass.PRECIPITATION,
+        unit_fn=lambda metric: UnitOfLength.MILLIMETERS if metric else UnitOfLength.INCHES,
+        value_fn=lambda data, _: cast(float, data),
+    ),
+    WeatherSensorEntityDescription(
+        key="precip6Hour",
+        name="Precipitation - Last 6 hours",
         icon=ICON_UMBRELLA,
         state_class=SensorStateClass.TOTAL_INCREASING,
         device_class=SensorDeviceClass.PRECIPITATION,
