@@ -115,11 +115,6 @@ class WeatherDotCom(CoordinatorEntity, WeatherEntity):
         return self.coordinator.get_current(FIELD_CONDITION_WINDDIR)
 
     @property
-    def ozone(self) -> float:
-        """Return the ozone level."""
-        return self._attr_ozone
-
-    @property
     def native_visibility(self) -> float:
         """Return the visibility in native units."""
         return self._attr_visibility
