@@ -3,7 +3,15 @@ from __future__ import annotations
 from dataclasses import dataclass
 from typing import Callable, Any, cast
 
-from .const import FEATURE_CURRENT_CONDITIONS
+from .const import (
+    FEATURE_CURRENT_CONDITIONS,
+    FIELD_CONDITION_HUMIDITY,
+    FIELD_CONDITION_PRESSURE,
+    FIELD_CONDITION_TEMP,
+    FIELD_CONDITION_WINDDIR,
+    FIELD_CONDITION_WINDSPEED,
+    FIELD_FORECAST_WINDDIRECTIONCARDINAL
+)
 from homeassistant.components.sensor import SensorEntityDescription, SensorDeviceClass, SensorStateClass
 from homeassistant.const import PERCENTAGE, UnitOfIrradiance, UV_INDEX, DEGREE, UnitOfLength, UnitOfTemperature, \
     UnitOfVolumetricFlux, UnitOfPressure, UnitOfSpeed
@@ -39,7 +47,7 @@ obs_sensor_descriptions = [
         # value_fn=lambda data, _: cast(str, datetime.strptime(data,  '%Y-%m-%d %H:%M:%S').strftime('%m/%d/%Y %H:%M:%S')),
     ),
     WeatherSensorEntityDescription(
-        key="relativeHumidity",
+        key=FIELD_CONDITION_HUMIDITY,
         name="Relative Humidity",
         feature=FEATURE_CURRENT_CONDITIONS,
         icon="mdi:water-percent",
@@ -58,7 +66,7 @@ obs_sensor_descriptions = [
         value_fn=lambda data, _: cast(int, data) or 0,
     ),
     WeatherSensorEntityDescription(
-        key="windDirection",
+        key=FIELD_CONDITION_WINDDIR,
         name="Wind Direction - Degrees",
         feature=FEATURE_CURRENT_CONDITIONS,
         icon="mdi:weather-windy",
@@ -67,7 +75,7 @@ obs_sensor_descriptions = [
         value_fn=lambda data, _: cast(int, data) or 0,
     ),
     WeatherSensorEntityDescription(
-        key="windDirectionCardinal",
+        key=FIELD_FORECAST_WINDDIRECTIONCARDINAL,
         name="Wind Direction - Cardinal",
         feature=FEATURE_CURRENT_CONDITIONS,
         icon="mdi:weather-windy",
@@ -87,7 +95,7 @@ obs_sensor_descriptions = [
         value_fn=lambda data, _: cast(float, data),
     ),
     WeatherSensorEntityDescription(
-        key="temperature",
+        key=FIELD_CONDITION_TEMP,
         name="Temperature",
         feature=FEATURE_CURRENT_CONDITIONS,
         icon="mdi:thermometer",
@@ -137,7 +145,7 @@ obs_sensor_descriptions = [
         value_fn=lambda data, _: cast(float, data),
     ),
     WeatherSensorEntityDescription(
-        key="pressureAltimeter",
+        key=FIELD_CONDITION_PRESSURE,
         name="Pressure",
         feature=FEATURE_CURRENT_CONDITIONS,
         icon="mdi:gauge",
@@ -147,7 +155,7 @@ obs_sensor_descriptions = [
         value_fn=lambda data, _: cast(float, data),
     ),
     WeatherSensorEntityDescription(
-        key="windGust",
+        key=FIELD_CONDITION_WINDGUST,
         name="Wind Gust",
         feature=FEATURE_CURRENT_CONDITIONS,
         icon="mdi:weather-windy",
@@ -157,7 +165,7 @@ obs_sensor_descriptions = [
         value_fn=lambda data, _: cast(float, data),
     ),
     WeatherSensorEntityDescription(
-        key="windSpeed",
+        key=FIELD_CONDITION_WINDSPEED,
         name="Wind Speed",
         feature=FEATURE_CURRENT_CONDITIONS,
         icon="mdi:weather-windy",
