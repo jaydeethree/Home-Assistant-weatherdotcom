@@ -18,7 +18,8 @@ from homeassistant.util.unit_system import METRIC_SYSTEM
 from .coordinator import WeatherUpdateCoordinator
 
 from .const import (
-    CONF_ATTRIBUTION, DOMAIN, FIELD_DAYPART
+    CONF_ATTRIBUTION, DOMAIN, FIELD_CONDITION_WINDGUST,
+    FIELD_CONDITION_WINDSPEED, FIELD_DAYPART
     RESULTS_CURRENT, RESULTS_FORECAST_DAILY, RESULTS_FORECAST_HOURLY
 )
 from .weather_current_conditions_sensors import *
@@ -109,4 +110,8 @@ def _get_sensor_data(
         feature: str | None = None
 ) -> Any:
     """Get sensor data."""
-    return sensors[RESULTS_CURRENT][kind]
+    # windGust is often null. When it is, set it to windSpeed instead.
+    if kind == FIELD_CONDITION_WINDGUST and sensors[RESULTS_CURRENT][kind] == None:
+        return sensors[RESULTS_CURRENT][FIELD_CONDITION_WINDSPEED]
+    else:
+        return sensors[RESULTS_CURRENT][kind]

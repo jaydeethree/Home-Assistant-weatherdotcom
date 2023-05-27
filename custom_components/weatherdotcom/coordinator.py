@@ -190,9 +190,6 @@ class WeatherUpdateCoordinator(DataUpdateCoordinator):
         self._features.add(feature)
 
     def get_current(self, field):
-        # windGust is often null. When it is, set it to windSpeed instead.
-        if field == FIELD_CONDITION_WINDGUST and self.data[RESULTS_CURRENT][field] == None:
-            return self.data[RESULTS_CURRENT][FIELD_CONDITION_WINDSPEED]
         return self.data[RESULTS_CURRENT][field]
 
     def get_forecast_daily(self, field, period=0):
