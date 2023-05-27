@@ -36,16 +36,12 @@ class WeatherSensorEntityDescription(
 
 
 current_condition_sensor_descriptions = [
-    # observations
-    # 'obsTimeUtc': *'validTimeLocal': 'softwareType': 'country': 'lon':
-    # 'realtimeFrequency': 'epoch': 'lat': *'uvIndex': *'windDirection': '*relativeHumidity': 'qcStatus':
     WeatherSensorEntityDescription(
         key="validTimeLocal",
         name="Local Observation Time",
         feature=FEATURE_CURRENT_CONDITIONS,
         icon="mdi:clock",
         value_fn=lambda data, _: cast(str, data),
-        # value_fn=lambda data, _: cast(str, datetime.strptime(data,  '%Y-%m-%d %H:%M:%S').strftime('%m/%d/%Y %H:%M:%S')),
     ),
     WeatherSensorEntityDescription(
         key=FIELD_CONDITION_HUMIDITY,
@@ -83,8 +79,6 @@ current_condition_sensor_descriptions = [
         unit_fn=lambda _: None,
         value_fn=lambda data, _: cast(str, data) or "",
     ),
-    # conditions -> unit imperial/metric
-    # temperature: temperatureHeatIndex: temperatureDewPoint: temperatureWindChill: windSpeed: windGust: pressureAltimeter: precip1Hour: precip24Hour:
     WeatherSensorEntityDescription(
         key="temperatureDewPoint",
         name="Dewpoint",
