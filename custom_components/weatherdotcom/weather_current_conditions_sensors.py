@@ -10,7 +10,10 @@ from .const import (
     FIELD_CONDITION_WINDDIR,
     FIELD_CONDITION_WINDGUST,
     FIELD_CONDITION_WINDSPEED,
-    FIELD_FORECAST_WINDDIRECTIONCARDINAL
+    FIELD_FORECAST_WINDDIRECTIONCARDINAL,
+    ICON_THERMOMETER,
+    ICON_UMBRELLA,
+    ICON_WIND
 )
 from homeassistant.components.sensor import SensorEntityDescription, SensorDeviceClass, SensorStateClass
 from homeassistant.const import PERCENTAGE, UnitOfIrradiance, UV_INDEX, DEGREE, UnitOfLength, UnitOfTemperature, \
@@ -61,7 +64,7 @@ current_condition_sensor_descriptions = [
     WeatherSensorEntityDescription(
         key=FIELD_CONDITION_WINDDIR,
         name="Wind Direction - Degrees",
-        icon="mdi:weather-windy",
+        icon=ICON_WIND,
         state_class=SensorStateClass.MEASUREMENT,
         unit_fn=lambda _: DEGREE,
         value_fn=lambda data, _: cast(int, data) or 0,
@@ -69,7 +72,7 @@ current_condition_sensor_descriptions = [
     WeatherSensorEntityDescription(
         key=FIELD_FORECAST_WINDDIRECTIONCARDINAL,
         name="Wind Direction - Cardinal",
-        icon="mdi:weather-windy",
+        icon=ICON_WIND,
         unit_fn=lambda _: None,
         value_fn=lambda data, _: cast(str, data) or "",
     ),
@@ -85,7 +88,7 @@ current_condition_sensor_descriptions = [
     WeatherSensorEntityDescription(
         key=FIELD_CONDITION_TEMP,
         name="Temperature",
-        icon="mdi:thermometer",
+        icon=ICON_THERMOMETER,
         state_class=SensorStateClass.MEASUREMENT,
         device_class=SensorDeviceClass.TEMPERATURE,
         unit_fn=lambda metric: UnitOfTemperature.CELSIUS if metric else UnitOfTemperature.FAHRENHEIT,
@@ -94,7 +97,7 @@ current_condition_sensor_descriptions = [
     WeatherSensorEntityDescription(
         key="temperatureHeatIndex",
         name="Heat Index",
-        icon="mdi:thermometer",
+        icon=ICON_THERMOMETER,
         state_class=SensorStateClass.MEASUREMENT,
         device_class=SensorDeviceClass.TEMPERATURE,
         unit_fn=lambda metric: UnitOfTemperature.CELSIUS if metric else UnitOfTemperature.FAHRENHEIT,
@@ -103,7 +106,7 @@ current_condition_sensor_descriptions = [
     WeatherSensorEntityDescription(
         key="temperatureWindChill",
         name="Wind Chill",
-        icon="mdi:thermometer",
+        icon=ICON_THERMOMETER,
         state_class=SensorStateClass.MEASUREMENT,
         device_class=SensorDeviceClass.TEMPERATURE,
         unit_fn=lambda metric: UnitOfTemperature.CELSIUS if metric else UnitOfTemperature.FAHRENHEIT,
@@ -112,7 +115,7 @@ current_condition_sensor_descriptions = [
     WeatherSensorEntityDescription(
         key="precip1Hour",
         name="Precipitation - Last hour",
-        icon="mdi:umbrella",
+        icon=ICON_UMBRELLA,
         state_class=SensorStateClass.TOTAL_INCREASING,
         device_class=SensorDeviceClass.PRECIPITATION,
         unit_fn=lambda metric: UnitOfLength.MILLIMETERS if metric else UnitOfLength.INCHES,
@@ -121,7 +124,7 @@ current_condition_sensor_descriptions = [
     WeatherSensorEntityDescription(
         key="precip24Hour",
         name="Precipitation - Last 24 hours",
-        icon="mdi:umbrella",
+        icon=ICON_UMBRELLA,
         state_class=SensorStateClass.TOTAL_INCREASING,
         device_class=SensorDeviceClass.PRECIPITATION,
         unit_fn=lambda metric: UnitOfLength.MILLIMETERS if metric else UnitOfLength.INCHES,
@@ -139,7 +142,7 @@ current_condition_sensor_descriptions = [
     WeatherSensorEntityDescription(
         key=FIELD_CONDITION_WINDGUST,
         name="Wind Gust",
-        icon="mdi:weather-windy",
+        icon=ICON_WIND,
         state_class=SensorStateClass.MEASUREMENT,
         device_class=SensorDeviceClass.WIND_SPEED,
         unit_fn=lambda metric: UnitOfSpeed.KILOMETERS_PER_HOUR if metric else UnitOfSpeed.MILES_PER_HOUR,
@@ -148,7 +151,7 @@ current_condition_sensor_descriptions = [
     WeatherSensorEntityDescription(
         key=FIELD_CONDITION_WINDSPEED,
         name="Wind Speed",
-        icon="mdi:weather-windy",
+        icon=ICON_WIND,
         state_class=SensorStateClass.MEASUREMENT,
         device_class=SensorDeviceClass.WIND_SPEED,
         unit_fn=lambda metric: UnitOfSpeed.KILOMETERS_PER_HOUR if metric else UnitOfSpeed.MILES_PER_HOUR,

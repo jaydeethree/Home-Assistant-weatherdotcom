@@ -93,3 +93,7 @@ FIELD_FORECAST_TEMPERATUREMIN = 'temperatureMin'
 FIELD_FORECAST_VALIDTIMEUTC = 'validTimeUtc'
 FIELD_FORECAST_WINDDIRECTIONCARDINAL = 'windDirectionCardinal'
 FIELD_FORECAST_WINDSPEED = 'windSpeed'
+
+ICON_THERMOMETER = 'mdi:thermometer'
+ICON_UMBRELLA = 'mdi:umbrella'
+ICON_WIND = 'mdi:weather-windy'
