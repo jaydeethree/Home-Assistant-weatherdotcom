@@ -28,7 +28,7 @@ _LOGGER = logging.getLogger(__name__)
 
 # Declaration of supported Weather.com observation/condition sensors
 SENSOR_DESCRIPTIONS: tuple[WeatherSensorEntityDescription, ...] = (
-    obs_sensor_descriptions
+    current_condition_sensor_descriptions
 )
 
 

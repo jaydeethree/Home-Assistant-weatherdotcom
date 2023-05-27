@@ -35,7 +35,7 @@ class WeatherSensorEntityDescription(
     """Describes Weather.com Sensor entity."""
 
 
-obs_sensor_descriptions = [
+current_condition_sensor_descriptions = [
     # observations
     # 'obsTimeUtc': *'validTimeLocal': 'softwareType': 'country': 'lon':
     # 'realtimeFrequency': 'epoch': 'lat': *'uvIndex': *'windDirection': '*relativeHumidity': 'qcStatus':
