@@ -135,9 +135,8 @@ class WeatherDotCom(CoordinatorEntity, WeatherEntity):
     @property
     def condition(self) -> str:
         """Return the current condition."""
-        day = self.coordinator.get_forecast_daily(FIELD_FORECAST_ICONCODE)
-        night = self.coordinator.get_forecast_daily(FIELD_FORECAST_ICONCODE, 1)
-        return self.coordinator._iconcode_to_condition(day or night)
+        icon = self.coordinator.get_current(FIELD_FORECAST_ICONCODE)
+        return self.coordinator._iconcode_to_condition(icon)
 
 
 class WeatherDotComDaily(WeatherDotCom):
