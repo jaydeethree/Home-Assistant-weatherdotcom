@@ -114,20 +114,3 @@ def _get_sensor_data(
         return sensors[RESULTS_CURRENT][kind]
     else:
         return sensors
-
-
-class WeatherForecastSensor(WeatherSensor):
-    """Define a Weather.com forecast entity."""
-
-    @property
-    def extra_state_attributes(self) -> dict[str, Any]:
-        """Return the state attributes."""
-        return self.entity_description.attr_fn(self._sensor_data)
-
-    @callback
-    def _handle_coordinator_update(self) -> None:
-        """Handle data update."""
-        self._sensor_data = _get_sensor_data(
-            self.coordinator.data, self.entity_description.key, self._unit_system, self.entity_description.feature
-        )
-        self.async_write_ha_state()
