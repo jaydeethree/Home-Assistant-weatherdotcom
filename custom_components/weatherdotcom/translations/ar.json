@@ -8,22 +8,14 @@
       "user": {
         "data": {
           "api_key": "مفتاح API",
-          "name": "اسم"
+          "name": "اسم",
+          "lang": "لغة",
+          "latitude": "خط العرض",
+          "longitude": "خط الطول"
         },
         "description": "قم بإعداد تكامل Weather.com. ",
         "title": "Weather.com"
       }
     }
   },
-  "options": {
-    "step": {
-      "init": {
-        "data": {
-          "lang": "لغة",
-          "latitude": "خط العرض",
-          "longitude": "خط الطول"
-        }
-      }
-    }
-  }
 }

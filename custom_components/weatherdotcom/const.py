@@ -30,7 +30,6 @@ CONF_ATTRIBUTION = 'Data provided by the Weather.com weather service'
 CONF_LANG = 'lang'
 
 ENTRY_WEATHER_COORDINATOR = 'weather_coordinator'
-ENTRY_LANG = 'lang'
 
 # Language Supported Codes
 LANG_CODES = [

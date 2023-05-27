@@ -8,22 +8,14 @@
       "user": {
         "data": {
           "api_key": "API-Schlüssel",
-          "name": "Name"
+          "name": "Name",
+          "lang": "Sprache",
+          "latitude": "Breite",
+          "longitude": "Längengrad"
         },
         "description": "Richten Sie die Weather.com-Integration ein. ",
         "title": "Weather.com"
       }
     }
   },
-  "options": {
-    "step": {
-      "init": {
-        "data": {
-          "lang": "Sprache",
-          "latitude": "Breite",
-          "longitude": "Längengrad"
-        }
-      }
-    }
-  }
 }

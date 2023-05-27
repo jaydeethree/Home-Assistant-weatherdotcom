@@ -8,22 +8,14 @@
       "user": {
         "data": {
           "api_key": "API-ключ",
-          "name": "Имя"
+          "name": "Имя",
+          "lang": "Язык",
+          "latitude": "Широта",
+          "longitude": "Долгота"
         },
         "description": "Настройте интеграцию с Weather.com. ",
         "title": "Weather.com"
       }
     }
   },
-  "options": {
-    "step": {
-      "init": {
-        "data": {
-          "lang": "Язык",
-          "latitude": "Широта",
-          "longitude": "Долгота"
-        }
-      }
-    }
-  }
 }

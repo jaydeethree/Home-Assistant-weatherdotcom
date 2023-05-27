@@ -24,12 +24,6 @@ class WeatherFlowHandler(config_entries.ConfigFlow, domain=DOMAIN):
 
     VERSION = 1
 
-    @staticmethod
-    @callback
-    def async_get_options_flow(config_entry):
-        """Get the options flow for this handler."""
-        return OptionsFlowHandler(config_entry)
-
     async def async_step_user(self, user_input=None):
         """Handle a flow initiated by the user."""
         if user_input is None:
@@ -52,6 +46,8 @@ class WeatherFlowHandler(config_entries.ConfigFlow, domain=DOMAIN):
                 raise InvalidApiKey
 
             with async_timeout.timeout(10):
+                # Use English and US units for the initial test API call. User-supplied units and language will be used for
+                # the created entities.
                 url = f'https://api.weather.com/v3/wx/observations/current?geocode={latitude},{longitude}&format=json&units=e' \
                       f'&apiKey={api_key}&language=en-US'
                 response = await session.get(url, headers=headers)
@@ -92,12 +88,10 @@ class WeatherFlowHandler(config_entries.ConfigFlow, domain=DOMAIN):
                 title=location_name,
                 data={
                     CONF_API_KEY: user_input[CONF_API_KEY],
-                },
-                options={
                     CONF_LATITUDE: latitude,
                     CONF_LONGITUDE: longitude,
                     CONF_NAME: location_name,
-                    CONF_LANG: DEFAULT_LANG
+                    CONF_LANG: user_input[CONF_LANG]
                 },
             )
 
@@ -117,37 +111,10 @@ class WeatherFlowHandler(config_entries.ConfigFlow, domain=DOMAIN):
                     vol.Required(
                         CONF_NAME, default=self.hass.config.location_name
                     ): str,
+                    vol.Required(
+                        CONF_LANG, default=DEFAULT_LANG
+                    ): vol.All(vol.In(LANG_CODES)),
                 }
             ),
             errors=errors or {},
-        )
-
-
-class OptionsFlowHandler(config_entries.OptionsFlow):
-    """Handle options."""
-
-    def __init__(self, config_entry):
-        """Initialize options flow."""
-        self.config_entry = config_entry
-
-    async def async_step_init(self, user_input=None):
-        """Manage the options."""
-        if user_input is not None:
-            return self.async_create_entry(title="", data=user_input)
-
-        return self.async_show_form(
-            step_id="init",
-            data_schema=vol.Schema(
-                {
-                    vol.Optional(CONF_LANG, default=self.config_entry.options.get(CONF_LANG, DEFAULT_LANG)):
-                        vol.All(vol.In(LANG_CODES)),
-                    vol.Inclusive(CONF_LATITUDE, 'coordinates',
-                                  'Latitude and longitude must exist together',
-                                  default=self.config_entry.options.get(CONF_LATITUDE)): cv.latitude,
-                    vol.Inclusive(CONF_LONGITUDE, 'coordinates',
-                                  'Latitude and longitude must exist together',
-                                  default=self.config_entry.options.get(CONF_LONGITUDE)): cv.longitude,
-
-                }
-            ),
         )

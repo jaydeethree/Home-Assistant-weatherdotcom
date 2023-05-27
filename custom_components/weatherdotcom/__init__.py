@@ -23,10 +23,6 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry):
     """Set up the Weather.com component."""
     hass.data.setdefault(DOMAIN, {})
 
-    latitude = entry.options[CONF_LATITUDE]
-    longitude = entry.options[CONF_LONGITUDE]
-    location_name = entry.options[CONF_NAME]
-
     if hass.config.units is METRIC_SYSTEM:
         unit_system_api = API_URL_METRIC
         unit_system = API_METRIC
@@ -36,12 +32,12 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry):
 
     config = WeatherUpdateCoordinatorConfig(
         api_key=entry.data[CONF_API_KEY],
-        location_name=location_name,
+        location_name=entry.data[CONF_NAME],
         unit_system_api=unit_system_api,
         unit_system=unit_system,
-        lang=entry.options[CONF_LANG],
-        latitude=latitude,
-        longitude=longitude
+        lang=entry.data[CONF_LANG],
+        latitude=entry.data[CONF_LATITUDE],
+        longitude=entry.data[CONF_LONGITUDE]
     )
 
     weathercoordinator = WeatherUpdateCoordinator(hass, config)

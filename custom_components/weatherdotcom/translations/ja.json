@@ -8,22 +8,14 @@
       "user": {
         "data": {
           "api_key": "APIキー",
-          "name": "名前"
+          "name": "名前",
+          "lang": "言語",
+          "latitude": "緯度",
+          "longitude": "経度"
         },
         "description": "Weather.com 統合をセットアップします。 ",
         "title": "Weather.com"
       }
     }
   },
-  "options": {
-    "step": {
-      "init": {
-        "data": {
-          "lang": "言語",
-          "latitude": "緯度",
-          "longitude": "経度"
-        }
-      }
-    }
-  }
 }

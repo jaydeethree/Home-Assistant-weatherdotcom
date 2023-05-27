@@ -8,22 +8,14 @@
       "user": {
         "data": {
           "api_key": "API密钥",
-          "name": "姓名"
+          "name": "姓名",
+          "lang": "语言",
+          "latitude": "纬度",
+          "longitude": "经度"
         },
         "description": "设置 Weather.com 集成。",
         "title": "Weather.com"
       }
     }
   },
-  "options": {
-    "step": {
-      "init": {
-        "data": {
-          "lang": "语言",
-          "latitude": "纬度",
-          "longitude": "经度"
-        }
-      }
-    }
-  }
 }

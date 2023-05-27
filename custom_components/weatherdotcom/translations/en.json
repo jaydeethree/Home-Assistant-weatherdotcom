@@ -8,22 +8,14 @@
       "user": {
         "data": {
           "api_key": "API Key",
-          "name": "Name"
+          "name": "Name",
+          "lang": "Language",
+          "latitude": "Latitude",
+          "longitude": "Longitude"
         },
         "description": "Set up Weather.com integration. To generate an API key, view the source of https://www.wunderground.com/ and search for apiKey",
         "title": "Weather.com"
       }
     }
   },
-  "options": {
-    "step": {
-      "init": {
-        "data": {
-          "lang": "Language",
-          "latitude": "Latitude",
-          "longitude": "Longitude"
-        }
-      }
-    }
-  }
 }

@@ -8,22 +8,14 @@
       "user": {
         "data": {
           "api_key": "Chiave dell'API",
-          "name": "Nome"
+          "name": "Nome",
+          "lang": "Lingua",
+          "latitude": "Latitudine",
+          "longitude": "Longitudine"
         },
         "description": "Configura l'integrazione Weather.com. ",
         "title": "Weather.com"
       }
     }
   },
-  "options": {
-    "step": {
-      "init": {
-        "data": {
-          "lang": "Lingua",
-          "latitude": "Latitudine",
-          "longitude": "Longitudine"
-        }
-      }
-    }
-  }
 }
