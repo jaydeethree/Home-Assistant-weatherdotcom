@@ -25,7 +25,6 @@ from homeassistant.helpers.typing import StateType
 class WeatherRequiredKeysMixin:
     """Mixin for required keys."""
     value_fn: Callable[[dict[str, Any], str], StateType]
-    feature: str
 
 
 @dataclass

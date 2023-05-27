@@ -66,7 +66,7 @@ class WeatherSensor(CoordinatorEntity, SensorEntity):
             )
         self._unit_system = coordinator.unit_system
         self._sensor_data = _get_sensor_data(
-            coordinator.data, description.key, self._unit_system, description.feature)
+            coordinator.data, description.key, self._unit_system)
         self._attr_native_unit_of_measurement = self.entity_description.unit_fn(
             self.coordinator.hass.config.units is METRIC_SYSTEM) if self._sensor_data is not None else ""
 
@@ -98,7 +98,7 @@ class WeatherSensor(CoordinatorEntity, SensorEntity):
     def _handle_coordinator_update(self) -> None:
         """Handle data update."""
         self._sensor_data = _get_sensor_data(
-            self.coordinator.data, self.entity_description.key, self._unit_system, self.entity_description.feature
+            self.coordinator.data, self.entity_description.key, self._unit_system
         )
         self.async_write_ha_state()
 
@@ -106,8 +106,7 @@ class WeatherSensor(CoordinatorEntity, SensorEntity):
 def _get_sensor_data(
         sensors: dict[str, Any],
         kind: str,
-        unit_system: str,
-        feature: str | None = None
+        unit_system: str
 ) -> Any:
     """Get sensor data."""
     # windGust is often null. When it is, set it to windSpeed instead.

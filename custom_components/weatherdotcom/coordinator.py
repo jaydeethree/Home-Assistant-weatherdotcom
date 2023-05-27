@@ -77,7 +77,6 @@ class WeatherUpdateCoordinator(DataUpdateCoordinator):
         self._lang = config.lang
         self._latitude = config.latitude
         self._longitude = config.longitude
-        self._features = set()
         self.data = None
         self._session = async_get_clientsession(self._hass)
         self._tranfile = self.get_tran_file()
@@ -184,10 +183,6 @@ class WeatherUpdateCoordinator(DataUpdateCoordinator):
                     for e in errors
                 ])
             )
-
-    def request_feature(self, feature):
-        """Register feature to be fetched from Weather.com API."""
-        self._features.add(feature)
 
     def get_current(self, field):
         return self.data[RESULTS_CURRENT][field]
