@@ -4,7 +4,6 @@ from dataclasses import dataclass
 from typing import Callable, Any, cast
 
 from .const import (
-    FEATURE_CURRENT_CONDITIONS,
     FIELD_CONDITION_HUMIDITY,
     FIELD_CONDITION_PRESSURE,
     FIELD_CONDITION_TEMP,
@@ -39,14 +38,12 @@ current_condition_sensor_descriptions = [
     WeatherSensorEntityDescription(
         key="validTimeLocal",
         name="Local Observation Time",
-        feature=FEATURE_CURRENT_CONDITIONS,
         icon="mdi:clock",
         value_fn=lambda data, _: cast(str, data),
     ),
     WeatherSensorEntityDescription(
         key=FIELD_CONDITION_HUMIDITY,
         name="Relative Humidity",
-        feature=FEATURE_CURRENT_CONDITIONS,
         icon="mdi:water-percent",
         device_class=SensorDeviceClass.HUMIDITY,
         state_class=SensorStateClass.MEASUREMENT,
@@ -56,7 +53,6 @@ current_condition_sensor_descriptions = [
     WeatherSensorEntityDescription(
         key="uvIndex",
         name="UV Index",
-        feature=FEATURE_CURRENT_CONDITIONS,
         icon="mdi:sunglasses",
         state_class=SensorStateClass.MEASUREMENT,
         unit_fn=lambda _: UV_INDEX,
@@ -65,7 +61,6 @@ current_condition_sensor_descriptions = [
     WeatherSensorEntityDescription(
         key=FIELD_CONDITION_WINDDIR,
         name="Wind Direction - Degrees",
-        feature=FEATURE_CURRENT_CONDITIONS,
         icon="mdi:weather-windy",
         state_class=SensorStateClass.MEASUREMENT,
         unit_fn=lambda _: DEGREE,
@@ -74,7 +69,6 @@ current_condition_sensor_descriptions = [
     WeatherSensorEntityDescription(
         key=FIELD_FORECAST_WINDDIRECTIONCARDINAL,
         name="Wind Direction - Cardinal",
-        feature=FEATURE_CURRENT_CONDITIONS,
         icon="mdi:weather-windy",
         unit_fn=lambda _: None,
         value_fn=lambda data, _: cast(str, data) or "",
@@ -82,7 +76,6 @@ current_condition_sensor_descriptions = [
     WeatherSensorEntityDescription(
         key="temperatureDewPoint",
         name="Dewpoint",
-        feature=FEATURE_CURRENT_CONDITIONS,
         icon="mdi:water",
         state_class=SensorStateClass.MEASUREMENT,
         device_class=SensorDeviceClass.TEMPERATURE,
@@ -92,7 +85,6 @@ current_condition_sensor_descriptions = [
     WeatherSensorEntityDescription(
         key=FIELD_CONDITION_TEMP,
         name="Temperature",
-        feature=FEATURE_CURRENT_CONDITIONS,
         icon="mdi:thermometer",
         state_class=SensorStateClass.MEASUREMENT,
         device_class=SensorDeviceClass.TEMPERATURE,
@@ -102,7 +94,6 @@ current_condition_sensor_descriptions = [
     WeatherSensorEntityDescription(
         key="temperatureHeatIndex",
         name="Heat Index",
-        feature=FEATURE_CURRENT_CONDITIONS,
         icon="mdi:thermometer",
         state_class=SensorStateClass.MEASUREMENT,
         device_class=SensorDeviceClass.TEMPERATURE,
@@ -112,7 +103,6 @@ current_condition_sensor_descriptions = [
     WeatherSensorEntityDescription(
         key="temperatureWindChill",
         name="Wind Chill",
-        feature=FEATURE_CURRENT_CONDITIONS,
         icon="mdi:thermometer",
         state_class=SensorStateClass.MEASUREMENT,
         device_class=SensorDeviceClass.TEMPERATURE,
@@ -122,7 +112,6 @@ current_condition_sensor_descriptions = [
     WeatherSensorEntityDescription(
         key="precip1Hour",
         name="Precipitation - Last hour",
-        feature=FEATURE_CURRENT_CONDITIONS,
         icon="mdi:umbrella",
         state_class=SensorStateClass.TOTAL_INCREASING,
         device_class=SensorDeviceClass.PRECIPITATION,
@@ -132,7 +121,6 @@ current_condition_sensor_descriptions = [
     WeatherSensorEntityDescription(
         key="precip24Hour",
         name="Precipitation - Last 24 hours",
-        feature=FEATURE_CURRENT_CONDITIONS,
         icon="mdi:umbrella",
         state_class=SensorStateClass.TOTAL_INCREASING,
         device_class=SensorDeviceClass.PRECIPITATION,
@@ -142,7 +130,6 @@ current_condition_sensor_descriptions = [
     WeatherSensorEntityDescription(
         key=FIELD_CONDITION_PRESSURE,
         name="Pressure",
-        feature=FEATURE_CURRENT_CONDITIONS,
         icon="mdi:gauge",
         state_class=SensorStateClass.MEASUREMENT,
         device_class=SensorDeviceClass.PRESSURE,
@@ -152,7 +139,6 @@ current_condition_sensor_descriptions = [
     WeatherSensorEntityDescription(
         key=FIELD_CONDITION_WINDGUST,
         name="Wind Gust",
-        feature=FEATURE_CURRENT_CONDITIONS,
         icon="mdi:weather-windy",
         state_class=SensorStateClass.MEASUREMENT,
         device_class=SensorDeviceClass.WIND_SPEED,
@@ -162,7 +148,6 @@ current_condition_sensor_descriptions = [
     WeatherSensorEntityDescription(
         key=FIELD_CONDITION_WINDSPEED,
         name="Wind Speed",
-        feature=FEATURE_CURRENT_CONDITIONS,
         icon="mdi:weather-windy",
         state_class=SensorStateClass.MEASUREMENT,
         device_class=SensorDeviceClass.WIND_SPEED,

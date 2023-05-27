@@ -19,7 +19,6 @@ from .coordinator import WeatherUpdateCoordinator
 
 from .const import (
     CONF_ATTRIBUTION, DOMAIN, FIELD_DAYPART
-    FEATURE_CURRENT_CONDITIONS,
     RESULTS_CURRENT, RESULTS_FORECAST_DAILY, RESULTS_FORECAST_HOURLY
 )
 from .weather_current_conditions_sensors import *
@@ -110,7 +109,4 @@ def _get_sensor_data(
         feature: str | None = None
 ) -> Any:
     """Get sensor data."""
-    if feature == FEATURE_CURRENT_CONDITIONS:
-        return sensors[RESULTS_CURRENT][kind]
-    else:
-        return sensors
+    return sensors[RESULTS_CURRENT][kind]
