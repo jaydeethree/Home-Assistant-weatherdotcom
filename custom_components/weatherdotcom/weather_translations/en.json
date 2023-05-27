@@ -11,6 +11,7 @@
   "temperature": "Temperature",
   "uvIndex": "UV Index",
   "temperatureWindChill": "Wind Chill",
+  "visibility": "Visibility",
   "windDirectionCardinal": "Wind Direction - Cardinal",
   "windGust": "Wind Gust",
   "windSpeed": "Wind Speed",

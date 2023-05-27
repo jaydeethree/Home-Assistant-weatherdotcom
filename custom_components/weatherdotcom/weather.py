@@ -18,6 +18,7 @@ from .const import (
     FIELD_CONDITION_HUMIDITY,
     FIELD_CONDITION_PRESSURE,
     FIELD_CONDITION_TEMP,
+    FIELD_CONDITION_VISIBILITY,
     FIELD_CONDITION_WINDDIR,
     FIELD_CONDITION_WINDSPEED,
 
@@ -117,7 +118,7 @@ class WeatherDotCom(CoordinatorEntity, WeatherEntity):
     @property
     def native_visibility(self) -> float:
         """Return the visibility in native units."""
-        return self._attr_visibility
+        return self.coordinator.get_current(FIELD_CONDITION_VISIBILITY)
 
     @property
     def native_visibility_unit(self) -> str:
