@@ -16,7 +16,7 @@ from .const import (
     ICON_WIND
 )
 from homeassistant.components.sensor import SensorEntityDescription, SensorDeviceClass, SensorStateClass
-from homeassistant.const import PERCENTAGE, UnitOfIrradiance, UV_INDEX, DEGREE, UnitOfLength, UnitOfTemperature, \
+from homeassistant.const import PERCENTAGE, UV_INDEX, DEGREE, UnitOfLength, UnitOfTemperature, \
     UnitOfVolumetricFlux, UnitOfPressure, UnitOfSpeed
 from homeassistant.helpers.typing import StateType
 
