@@ -13,7 +13,7 @@ from .coordinator import InvalidApiKey
 
 from .const import (
     DOMAIN, CONF_LANG,
-    DEFAULT_LANG, LANG_CODES, FIELD_LONGITUDE, FIELD_LATITUDE
+    DEFAULT_LANG, LANG_CODES
 )
 
 _LOGGER = logging.getLogger(__name__)

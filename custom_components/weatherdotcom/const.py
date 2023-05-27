@@ -43,7 +43,7 @@ LANG_CODES = [
 ]
 # Only the TWC  5-day forecast API handles the translation of phrases for values of the following data.
 # However, when formatting a request URL a valid language must be passed along.
-# dayOfWeek,daypartName,moonPhase,narrative,qualifierPhrase,uvDescription,windDirectionCardinal,windPhrase,wxPhraseLong
+# dayOfWeek,daypartName,moonPhase,qualifierPhrase,uvDescription,windDirectionCardinal,windPhrase,wxPhraseLong
 
 ICON_CONDITION_MAP: Final[dict[str, list[int]]] = {
     ATTR_CONDITION_CLEAR_NIGHT: [31, 33],
@@ -71,11 +71,8 @@ API_URL_METRIC: Final = "m"
 
 TEMPUNIT = 0
 LENGTHUNIT = 1
-ALTITUDEUNIT = 2
 SPEEDUNIT = 3
 PRESSUREUNIT = 4
-RATE = 5
-PERCENTAGEUNIT = 6
 
 RESULTS_CURRENT = 'current'
 RESULTS_FORECAST_DAILY = 'daily'
@@ -96,5 +93,3 @@ FIELD_FORECAST_TEMPERATUREMIN = 'temperatureMin'
 FIELD_FORECAST_VALIDTIMEUTC = 'validTimeUtc'
 FIELD_FORECAST_WINDDIRECTIONCARDINAL = 'windDirectionCardinal'
 FIELD_FORECAST_WINDSPEED = 'windSpeed'
-FIELD_LATITUDE = 'lat'
-FIELD_LONGITUDE = 'lon'
