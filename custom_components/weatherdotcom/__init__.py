@@ -11,7 +11,12 @@ from homeassistant.util.unit_system import METRIC_SYSTEM
 from .coordinator import WeatherUpdateCoordinator, WeatherUpdateCoordinatorConfig
 from .const import (
     CONF_LANG,
-    DOMAIN, API_METRIC, API_IMPERIAL, API_URL_METRIC, API_URL_IMPERIAL
+    DOMAIN,
+    
+    API_METRIC,
+    API_IMPERIAL,
+    API_URL_METRIC,
+    API_URL_IMPERIAL
 )
 
 PLATFORMS: Final = [Platform.WEATHER, Platform.SENSOR]

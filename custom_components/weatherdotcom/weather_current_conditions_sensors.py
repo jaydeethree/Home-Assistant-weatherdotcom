@@ -4,13 +4,13 @@ from dataclasses import dataclass
 from typing import Callable, Any, cast
 
 from .const import (
-    FIELD_CONDITION_HUMIDITY,
-    FIELD_CONDITION_PRESSURE,
-    FIELD_CONDITION_TEMP,
-    FIELD_CONDITION_WINDDIR,
-    FIELD_CONDITION_WINDGUST,
-    FIELD_CONDITION_WINDSPEED,
-    FIELD_FORECAST_WINDDIRECTIONCARDINAL,
+    FIELD_HUMIDITY,
+    FIELD_PRESSURE,
+    FIELD_TEMP,
+    FIELD_WINDDIR,
+    FIELD_WINDDIRECTIONCARDINAL,
+    FIELD_WINDGUST,
+    FIELD_WINDSPEED,
     ICON_THERMOMETER,
     ICON_UMBRELLA,
     ICON_WIND
@@ -44,7 +44,7 @@ current_condition_sensor_descriptions = [
         value_fn=lambda data, _: cast(str, data),
     ),
     WeatherSensorEntityDescription(
-        key=FIELD_CONDITION_HUMIDITY,
+        key=FIELD_HUMIDITY,
         name="Relative Humidity",
         icon="mdi:water-percent",
         device_class=SensorDeviceClass.HUMIDITY,
@@ -61,7 +61,7 @@ current_condition_sensor_descriptions = [
         value_fn=lambda data, _: cast(int, data) or 0,
     ),
     WeatherSensorEntityDescription(
-        key=FIELD_CONDITION_WINDDIR,
+        key=FIELD_WINDDIR,
         name="Wind Direction - Degrees",
         icon=ICON_WIND,
         state_class=SensorStateClass.MEASUREMENT,
@@ -69,7 +69,7 @@ current_condition_sensor_descriptions = [
         value_fn=lambda data, _: cast(int, data) or 0,
     ),
     WeatherSensorEntityDescription(
-        key=FIELD_FORECAST_WINDDIRECTIONCARDINAL,
+        key=FIELD_WINDDIRECTIONCARDINAL,
         name="Wind Direction - Cardinal",
         icon=ICON_WIND,
         unit_fn=lambda _: None,
@@ -94,7 +94,7 @@ current_condition_sensor_descriptions = [
         value_fn=lambda data, _: cast(float, data),
     ),
     WeatherSensorEntityDescription(
-        key=FIELD_CONDITION_TEMP,
+        key=FIELD_TEMP,
         name="Temperature",
         icon=ICON_THERMOMETER,
         state_class=SensorStateClass.MEASUREMENT,
@@ -148,7 +148,7 @@ current_condition_sensor_descriptions = [
         value_fn=lambda data, _: cast(float, data),
     ),
     WeatherSensorEntityDescription(
-        key=FIELD_CONDITION_PRESSURE,
+        key=FIELD_PRESSURE,
         name="Pressure",
         icon="mdi:gauge",
         state_class=SensorStateClass.MEASUREMENT,
@@ -157,7 +157,7 @@ current_condition_sensor_descriptions = [
         value_fn=lambda data, _: cast(float, data),
     ),
     WeatherSensorEntityDescription(
-        key=FIELD_CONDITION_WINDGUST,
+        key=FIELD_WINDGUST,
         name="Wind Gust",
         icon=ICON_WIND,
         state_class=SensorStateClass.MEASUREMENT,
@@ -166,7 +166,7 @@ current_condition_sensor_descriptions = [
         value_fn=lambda data, _: cast(float, data),
     ),
     WeatherSensorEntityDescription(
-        key=FIELD_CONDITION_WINDSPEED,
+        key=FIELD_WINDSPEED,
         name="Wind Speed",
         icon=ICON_WIND,
         state_class=SensorStateClass.MEASUREMENT,

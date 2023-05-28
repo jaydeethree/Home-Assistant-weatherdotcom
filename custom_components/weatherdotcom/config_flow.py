@@ -12,8 +12,11 @@ from homeassistant.helpers.aiohttp_client import async_create_clientsession
 from .coordinator import InvalidApiKey
 
 from .const import (
-    DOMAIN, CONF_LANG,
-    DEFAULT_LANG, LANG_CODES
+    DOMAIN,
+
+    CONF_LANG,
+    DEFAULT_LANG,
+    LANG_CODES
 )
 
 _LOGGER = logging.getLogger(__name__)

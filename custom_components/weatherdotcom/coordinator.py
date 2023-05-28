@@ -21,16 +21,18 @@ from homeassistant.const import (
     PERCENTAGE, UnitOfPressure, UnitOfTemperature, UnitOfLength, UnitOfSpeed, UnitOfVolumetricFlux)
 from .const import (
     ICON_CONDITION_MAP,
-    FIELD_CONDITION_HUMIDITY,
-    FIELD_CONDITION_WINDDIR,
-    FIELD_CONDITION_WINDGUST,
-    FIELD_CONDITION_WINDSPEED,
     FIELD_DAYPART,
-    FIELD_FORECAST_VALIDTIMEUTC,
-    FIELD_FORECAST_TEMPERATUREMAX,
-    FIELD_FORECAST_TEMPERATUREMIN,
+    FIELD_HUMIDITY,
+    FIELD_TEMPERATUREMAX,
+    FIELD_TEMPERATUREMIN,
+    FIELD_VALIDTIMEUTC,
+    FIELD_WINDDIR,
+    FIELD_WINDGUST,
+    FIELD_WINDSPEED,
     DOMAIN,
-    RESULTS_CURRENT, RESULTS_FORECAST_DAILY, RESULTS_FORECAST_HOURLY
+    RESULTS_CURRENT,
+    RESULTS_FORECAST_DAILY,
+    RESULTS_FORECAST_HOURLY
 )
 
 _LOGGER = logging.getLogger(__name__)
@@ -190,9 +192,9 @@ class WeatherUpdateCoordinator(DataUpdateCoordinator):
     def get_forecast_daily(self, field, period=0):
         try:
             if field in [
-                FIELD_FORECAST_TEMPERATUREMAX,
-                FIELD_FORECAST_TEMPERATUREMIN,
-                FIELD_FORECAST_VALIDTIMEUTC,
+                FIELD_TEMPERATUREMAX,
+                FIELD_TEMPERATUREMIN,
+                FIELD_VALIDTIMEUTC,
             ]:
                 # Those fields exist per-day, rather than per dayPart, so the period is halved
                 return self.data[RESULTS_FORECAST_DAILY][field][int(period / 2)]
