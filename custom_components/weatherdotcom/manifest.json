@@ -1,12 +1,12 @@
 {
   "domain": "weatherdotcom",
   "name": "Weather.com",
-  "version": "1.0.0-RC2",
-  "documentation": "https://github.com/jaydeethree/Home-Assistant-weatherdotcom",
-  "issue_tracker": "https://github.com/jaydeethree/Home-Assistant-weatherdotcom/issues/",
-  "requirements": [],
-  "dependencies": [],
   "codeowners": ["@jaydeethree"],
   "config_flow": true,
-  "iot_class": "cloud_polling"
+  "dependencies": [],
+  "documentation": "https://github.com/jaydeethree/Home-Assistant-weatherdotcom",
+  "iot_class": "cloud_polling",
+  "issue_tracker": "https://github.com/jaydeethree/Home-Assistant-weatherdotcom/issues/",
+  "requirements": [],
+  "version": "1.0.0-RC2"
 }
