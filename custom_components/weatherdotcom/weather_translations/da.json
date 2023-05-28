@@ -1,14 +1,17 @@
 {
   "temperatureDewPoint": "Dugpunkt",
+  "temperatureFeelsLike": "Temperatur - føles som",
   "temperatureHeatIndex": "Varmeindeks",
   "relativeHumidity": "Relativ luftfugtighed",
   "validTimeLocal": "Lokal observationstid",
-  "precip1Hour": "Nedbørshastighed",
-  "precip24Hour": "Nedbør i dag",
+  "precip1Hour": "Nedbør - Sidste time",
+  "precip6Hour": "Nedbør - Sidste 6 timer",
+  "precip24Hour": "Nedbør - Sidste 24 timer",
   "pressureAltimeter": "Tryk",
   "temperature": "Temperatur",
   "uvIndex": "UV-indeks",
   "temperatureWindChill": "Vind Chill",
+  "visibility": "Sigtbarhed",
   "windDirectionCardinal": "Vindretning - kardinal",
   "windGust": "Vindstød",
   "windSpeed": "Vindhastighed",
@@ -16,11 +19,9 @@
   "narrative": "Vejroversigt",
   "qpfSnow": "Snemængde",
   "daypart": {
-    "expired": "I dag udløb",
-    "narrative": "Oversigt over prognosen",
     "precipChance": "Sandsynlighed for nedbør",
     "qpf": "Nedbørsmængde",
-    "temperature": "Prognose temperatur",
+    "temperature": "Prognostiseret temperatur",
     "windSpeed": "Gennemsnitlig vind"
   }
 }

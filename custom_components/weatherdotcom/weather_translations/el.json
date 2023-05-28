@@ -1,14 +1,17 @@
 {
   "temperatureDewPoint": "Σημείο δρόσου",
+  "temperatureFeelsLike": "Θερμοκρασία - Αισθάνεται σαν",
   "temperatureHeatIndex": "Δείκτης θερμότητας",
   "relativeHumidity": "Σχετική υγρασία",
   "validTimeLocal": "Τοπική ώρα παρατήρησης",
-  "precip1Hour": "Ρυθμός βροχόπτωσης",
-  "precip24Hour": "Υετός σήμερα",
+  "precip1Hour": "Υετός - Τελευταία ώρα",
+  "precip6Hour": "Υετός - Τελευταίες 6 ώρες",
+  "precip24Hour": "Υετός - Τελευταίο 24ωρο",
   "pressureAltimeter": "Πίεση",
   "temperature": "Θερμοκρασία",
   "uvIndex": "Δείκτης UV",
   "temperatureWindChill": "Δροσιά",
+  "visibility": "Ορατότητα",
   "windDirectionCardinal": "Κατεύθυνση Ανέμου - Καρδινάλιος",
   "windGust": "Ριπή ανέμου",
   "windSpeed": "ΤΑΧΥΤΗΤΑ ΑΝΕΜΟΥ",
@@ -16,11 +19,9 @@
   "narrative": "Περίληψη καιρού",
   "qpfSnow": "Ποσότητα χιονιού",
   "daypart": {
-    "expired": "Σήμερα έληξε",
-    "narrative": "Περίληψη Πρόβλεψης",
     "precipChance": "Πιθανότητα βροχόπτωσης",
     "qpf": "Ποσότητα βροχοπτώσεων",
     "temperature": "Προβλεπόμενη Θερμοκρασία",
-    "windSpeed": "Μέσος άνεμος"
+    "windSpeed": "Μέσος Άνεμος"
   }
 }
