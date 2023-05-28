@@ -47,6 +47,7 @@ Current conditions:
 - Barometric pressure
 - Wind speed
 - Wind bearing (cardinal direction)
+- Visibility
 
 Forecast (daily):
 - Date/time of forecast
@@ -77,10 +78,12 @@ In addition to the Weather entity, these additional sensors will be created by t
 * `sensor.<LOCATION_NAME>_heat_index` - the current heat index, which is what the current temperature "feels like" when combined with the current humidity
 * `sensor.<LOCATION_NAME>_local_observation_time` - the time that the Weather.com data was generated
 * `sensor.<LOCATION_NAME>_precipitation_last_hour` - the quantity of precipitation in the last hour
+* `sensor.<LOCATION_NAME>_precipitation_last_6_hours` - the quantity of precipitation in the last 6 hours
 * `sensor.<LOCATION_NAME>_precipitation_last_24_hours` - the quantity of precipitation in the last 24 hours
 * `sensor.<LOCATION_NAME>_pressure` - the current barometric pressure
 * `sensor.<LOCATION_NAME>_relative_humidity` - the current relative humidity
 * `sensor.<LOCATION_NAME>_temperature` - the current temperature
+* `sensor.<LOCATION_NAME>_temperature_feels_like` - what the current temperature "feels like" when combined with the current heat index and wind chill
 * `sensor.<LOCATION_NAME>_uv_index` - the current UV index, ranging from 0 (very low) to 10 (very high)
 * `sensor.<LOCATION_NAME>_wind_chill` - the current wind chill, which is what the current temperature "feels like" when combined with the current wind
 * `sensor.<LOCATION_NAME>_wind_direction_cardinal` - the current cardinal wind direction - for example: North
