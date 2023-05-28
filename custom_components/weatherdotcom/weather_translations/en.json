@@ -1,6 +1,6 @@
 {
   "temperatureDewPoint": "Dewpoint",
-  "temperatureFeelsLike": "Temperature - Feels Like"
+  "temperatureFeelsLike": "Temperature - Feels Like",
   "temperatureHeatIndex": "Heat Index",
   "relativeHumidity": "Relative Humidity",
   "validTimeLocal": "Local Observation Time",
