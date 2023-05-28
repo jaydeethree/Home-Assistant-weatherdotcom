@@ -34,7 +34,6 @@ Add this repository as a custom repository in HACS and install from there. Then:
 1. In Home Assistant Settings, select DEVICES & SERVICES, then ADD INTEGRATION.  
 2. Select the "Weather.com" integration.  
 3. Enter your Weather.com API key and submit.  
-4. After the integration setup is complete, you can select "Configure" to change language, latitude, and longitude.
 
 [Back to top](#top)
 
