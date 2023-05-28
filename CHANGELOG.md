@@ -1,3 +1,14 @@
+v1.0.0-RC2
+* Lots of refactoring/code clean-up - removed dead code, migrated strings to constants, renamed variables, and more
+* Actually fixed wind gust sensor
+* New sensors/data:
+  * Added temperature "feels like" sensor
+  * Added precipitation in last 6 hours sensor
+  * Added visibility data to weather entities
+* Current condition is now retrieved from the current data instead of the forecast data
+* Removed reconfiguration flow - it was broken and seems unnecessary since it makes more sense to set up the integration again if the location needs to be changed
+* Rewrote the README
+
 v1.0.0-RC1
 * Add hourly forecasts
 * Lots of refactoring/code clean-up to support hourly forecasts
