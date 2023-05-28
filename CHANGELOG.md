@@ -1,3 +1,6 @@
+v1.0.0
+* No real changes, just minor adjustments to get this ready to add to the default HACS repo
+
 v1.0.0-RC2
 * Lots of refactoring/code clean-up - removed dead code, migrated strings to constants, renamed variables, and more
 * Actually fixed wind gust sensor
