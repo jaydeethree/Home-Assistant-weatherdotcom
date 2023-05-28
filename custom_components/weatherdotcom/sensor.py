@@ -65,10 +65,10 @@ class WeatherSensor(CoordinatorEntity, SensorEntity):
 
         entity_id_format = description.key + ".{}"
 
-            self._attr_unique_id = f"{self.coordinator.location_name},{description.key}".lower()
-            self.entity_id = generate_entity_id(
-                entity_id_format, f"{self.coordinator.location_name}_{description.name}", hass=coordinator.hass
-            )
+        self._attr_unique_id = f"{self.coordinator.location_name},{description.key}".lower()
+        self.entity_id = generate_entity_id(
+            entity_id_format, f"{self.coordinator.location_name}_{description.name}", hass=coordinator.hass
+        )
         self._unit_system = coordinator.unit_system
         self._sensor_data = _get_sensor_data(
             coordinator.data, description.key, self._unit_system)
