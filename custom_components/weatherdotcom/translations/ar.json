@@ -13,8 +13,7 @@
           "latitude": "خط العرض",
           "longitude": "خط الطول"
         },
-        "description": "قم بإعداد تكامل Weather.com. ",
-        "title": "Weather.com"
+        "description": "قم بإعداد تكامل Weather.com. "
       }
     }
   }

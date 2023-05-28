@@ -13,8 +13,7 @@
           "latitude": "Latitude",
           "longitude": "Longitude"
         },
-        "description": "Configurez l'intégration de Weather.com. ",
-        "title": "Weather.com"
+        "description": "Configurez l'intégration de Weather.com. "
       }
     }
   }

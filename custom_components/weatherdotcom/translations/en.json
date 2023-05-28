@@ -13,8 +13,7 @@
           "latitude": "Latitude",
           "longitude": "Longitude"
         },
-        "description": "Set up Weather.com integration. To generate an API key, view the source of https://www.wunderground.com/ and search for apiKey",
-        "title": "Weather.com"
+        "description": "Set up Weather.com integration. To generate an API key, view the source of https://www.wunderground.com/ and search for apiKey"
       }
     }
   }

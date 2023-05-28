@@ -13,8 +13,7 @@
           "latitude": "緯度",
           "longitude": "経度"
         },
-        "description": "Weather.com 統合をセットアップします。 ",
-        "title": "Weather.com"
+        "description": "Weather.com 統合をセットアップします。 "
       }
     }
   }

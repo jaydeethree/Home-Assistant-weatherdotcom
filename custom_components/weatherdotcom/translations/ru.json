@@ -13,8 +13,7 @@
           "latitude": "Широта",
           "longitude": "Долгота"
         },
-        "description": "Настройте интеграцию с Weather.com. ",
-        "title": "Weather.com"
+        "description": "Настройте интеграцию с Weather.com. "
       }
     }
   }
