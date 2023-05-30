@@ -1,3 +1,7 @@
+v1.0.1
+* Icons: Map 'haze' (Weather.com) to 'fog' (Home Assistant), and map 'blizzard' (Weather.com) to 'snowy' (Home Assistant)
+* Add a new Weather Description sensor that contains a detailed description of the current weather conditions
+
 v1.0.0
 * No real changes, just minor adjustments to get this ready to add to the default HACS repo
 
