@@ -79,6 +79,7 @@ RESULTS_FORECAST_DAILY = 'daily'
 RESULTS_FORECAST_HOURLY = 'hourly'
 
 FIELD_DAYPART = 'daypart'
+FIELD_DESCRIPTION = 'wxPhraseLong'
 FIELD_HUMIDITY = 'relativeHumidity'
 FIELD_ICONCODE = 'iconCode'
 FIELD_PRECIPCHANCE = 'precipChance'

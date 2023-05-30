@@ -4,6 +4,7 @@ from dataclasses import dataclass
 from typing import Callable, Any, cast
 
 from .const import (
+    FIELD_DESCRIPTION,
     FIELD_HUMIDITY,
     FIELD_PRESSURE,
     FIELD_TEMP,
@@ -41,6 +42,12 @@ current_condition_sensor_descriptions = [
         key="validTimeLocal",
         name="Local Observation Time",
         icon="mdi:clock",
+        value_fn=lambda data, _: cast(str, data),
+    ),
+    WeatherSensorEntityDescription(
+        key=FIELD_DESCRIPTION,
+        name="Weather Description",
+        icon="mdi:note-text",
         value_fn=lambda data, _: cast(str, data),
     ),
     WeatherSensorEntityDescription(
