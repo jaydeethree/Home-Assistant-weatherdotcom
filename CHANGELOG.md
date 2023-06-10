@@ -1,3 +1,6 @@
+v1.0.2
+* Fix "has state class total_increasing, but its state is not strictly increasing" for precipitation sensors - they were using the wrong state class
+
 v1.0.1
 * Icons: Map 'haze' (Weather.com) to 'fog' (Home Assistant), and map 'blizzard' (Weather.com) to 'snowy' (Home Assistant)
 * Add a new Weather Description sensor that contains a detailed description of the current weather conditions
