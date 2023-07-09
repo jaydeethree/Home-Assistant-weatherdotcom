@@ -92,7 +92,7 @@ class WeatherDotCom(CoordinatorEntity, WeatherEntity):
         return self.coordinator.units_of_measurement[PRESSUREUNIT]
 
     @property
-    def relativeHumidity(self) -> float:
+    def humidity(self) -> float:
         """Return the relative humidity in native units."""
         return self.coordinator.get_current(FIELD_HUMIDITY)
 

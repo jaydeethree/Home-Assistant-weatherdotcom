@@ -1,3 +1,6 @@
+v1.0.3
+* Fix humidity in weather.<LOCATION_NAME> entities - the field was named incorrectly so it wasn't working
+
 v1.0.2
 * Fix "has state class total_increasing, but its state is not strictly increasing" for precipitation sensors - they were using the wrong state class
 
