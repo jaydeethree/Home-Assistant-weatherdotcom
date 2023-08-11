@@ -42,6 +42,7 @@ from homeassistant.components.weather import (
     ATTR_FORECAST_WIND_BEARING,
     ATTR_FORECAST_WIND_SPEED,
     WeatherEntity,
+    WeatherEntityFeature,
     Forecast,
     DOMAIN as WEATHER_DOMAIN
 )
@@ -149,6 +150,13 @@ class WeatherDotComDaily(WeatherDotCom):
         self._attr_unique_id = f"{coordinator.location_name},{WEATHER_DOMAIN}".lower()
 
     @property
+    def supported_features(self):
+        return WeatherEntityFeature.FORECAST_DAILY
+
+    async def async_forecast_daily(self) -> list[Forecast] | None:
+        return self.forecast
+
+    @property
     def forecast(self) -> list[Forecast]:
         """Return the forecast in native units."""
         days = [0, 2, 4, 6, 8]
@@ -202,6 +210,13 @@ class WeatherDotComHourly(WeatherDotCom):
             ENTITY_ID_FORMAT, f"{coordinator.location_name}_hourly", hass=coordinator.hass
         )
         self._attr_unique_id = f"{coordinator.location_name}_hourly,{WEATHER_DOMAIN}".lower()
+
+    @property
+    def supported_features(self):
+        return WeatherEntityFeature.FORECAST_HOURLY
+
+    async def async_forecast_hourly(self) -> list[Forecast] | None:
+        return self.forecast
 
     @property
     def forecast(self) -> list[Forecast]:
