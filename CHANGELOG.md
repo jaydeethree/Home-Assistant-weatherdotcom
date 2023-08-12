@@ -1,3 +1,6 @@
+v1.0.4
+* Fix hourly weather forecast for Home Assistant 2023.8. Thank you @klopyrev!
+
 v1.0.3
 * Fix humidity in weather.<LOCATION_NAME> entities - the field was named incorrectly so it wasn't working
 
