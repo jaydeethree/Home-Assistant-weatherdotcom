@@ -4,7 +4,7 @@ from __future__ import annotations
 
 import asyncio
 from dataclasses import dataclass
-from datetime import timedelta
+from datetime import datetime, timedelta
 import logging
 from typing import Any
 
@@ -215,6 +215,10 @@ class WeatherUpdateCoordinator(DataUpdateCoordinator):
                 return condition
         _LOGGER.warning(f'Unmapped iconCode from TWC Api. (44 is Not Available (N/A)) "{icon_code}". ')
         return None
+
+    @classmethod
+    def _format_timestamp(cls, timestamp_secs):
+        return datetime.utcfromtimestamp(timestamp_secs).isoformat('T') + 'Z'
 
     def get_tran_file(self):
         """get translation file for Weather.com sensor friendly_name"""
