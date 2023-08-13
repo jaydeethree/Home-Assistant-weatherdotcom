@@ -11,7 +11,7 @@ find this software useful, feel free to make a donation to them.
 Please review the minimum requirements below to determine whether you will be able to
 install and use the software.
 
-- This integration requires Home Assistant Version 2023.1 or greater
+- This integration requires Home Assistant Version 2023.8 or greater
 - A Weather.com API Key is required (see below for how to get this)
 
 [Back to top](#top) 
