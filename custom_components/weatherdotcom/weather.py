@@ -159,7 +159,7 @@ class WeatherDotComDaily(WeatherDotCom):
     @property
     def forecast(self) -> list[Forecast]:
         """Return the forecast in native units."""
-        days = [0, 2, 4, 6, 8]
+        days = [0, 2, 4, 6, 8, 10, 12, 14, 16, 18, 20]
         if self.coordinator.get_forecast_daily('temperature', 0) is None:
             days[0] += 1
         caldaytempmax = FIELD_TEMPERATUREMAX

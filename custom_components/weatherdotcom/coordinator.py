@@ -40,7 +40,7 @@ _LOGGER = logging.getLogger(__name__)
 _RESOURCESHARED = '&format=json&apiKey={apiKey}&units={units}'
 _RESOURCECURRENT = ('https://api.weather.com/v3/wx/observations/current'
                     '?geocode={latitude},{longitude}')
-_RESOURCEFORECASTDAILY = ('https://api.weather.com/v3/wx/forecast/daily/5day'
+_RESOURCEFORECASTDAILY = ('https://api.weather.com/v3/wx/forecast/daily/10day'
                           '?geocode={latitude},{longitude}')
 _RESOURCEFORECASTHOURLY = ('https://api.weather.com/v3/wx/forecast/hourly/2day'
                            '?geocode={latitude},{longitude}')

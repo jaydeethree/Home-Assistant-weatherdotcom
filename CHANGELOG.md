@@ -1,3 +1,6 @@
+v1.0.5
+* Switch from 5-day forecasts to 10-day forecasts
+
 v1.0.4
 * Fix hourly weather forecast for Home Assistant 2023.8. Thank you @klopyrev!
 
