@@ -1,3 +1,6 @@
+v1.0.6
+* Add cloud cover information to forecasts
+
 v1.0.5
 * Switch from 5-day forecasts to 10-day forecasts
 

@@ -78,6 +78,7 @@ RESULTS_CURRENT = 'current'
 RESULTS_FORECAST_DAILY = 'daily'
 RESULTS_FORECAST_HOURLY = 'hourly'
 
+FIELD_CLOUD_COVER = 'cloudCover'
 FIELD_DAYPART = 'daypart'
 FIELD_DESCRIPTION = 'wxPhraseLong'
 FIELD_HUMIDITY = 'relativeHumidity'

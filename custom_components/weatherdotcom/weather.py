@@ -15,6 +15,7 @@ from .const import (
     SPEEDUNIT,
     PRESSUREUNIT,
 
+    FIELD_CLOUD_COVER,
     FIELD_HUMIDITY,
     FIELD_ICONCODE,
     FIELD_PRECIPCHANCE,
@@ -33,6 +34,7 @@ from .const import (
 import logging
 
 from homeassistant.components.weather import (
+    ATTR_FORECAST_CLOUD_COVERAGE,
     ATTR_FORECAST_CONDITION,
     ATTR_FORECAST_PRECIPITATION,
     ATTR_FORECAST_PRECIPITATION_PROBABILITY,
@@ -168,6 +170,8 @@ class WeatherDotComDaily(WeatherDotCom):
         forecast = []
         for period in days:
             forecast.append(Forecast({
+                ATTR_FORECAST_CLOUD_COVERAGE:
+                    self.coordinator.get_forecast_daily(FIELD_CLOUD_COVER, period),
                 ATTR_FORECAST_CONDITION:
                     self.coordinator._iconcode_to_condition(
                         self.coordinator.get_forecast_daily(
@@ -226,6 +230,8 @@ class WeatherDotComHourly(WeatherDotCom):
         forecast = []
         for hour in range(0, 48, 1):
             forecast.append(Forecast({
+                ATTR_FORECAST_CLOUD_COVERAGE:
+                    self.coordinator.get_forecast_daily(FIELD_CLOUD_COVER, hour),
                 ATTR_FORECAST_CONDITION:
                     self.coordinator._iconcode_to_condition(
                         self.coordinator.get_forecast_hourly(
