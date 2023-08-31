@@ -1,3 +1,6 @@
+v1.0.6.1
+* Add Portuguese translation. Thank you @ViPeR5000!
+
 v1.0.6
 * Add cloud cover information to forecasts
 
