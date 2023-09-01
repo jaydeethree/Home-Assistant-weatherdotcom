@@ -29,7 +29,7 @@ Important notes:
 
 # Installation
 
-Add this repository as a custom repository in HACS and install from there. Then:
+This integration is available in HACS, so just install it from there and then:
 
 1. In Home Assistant Settings, select DEVICES & SERVICES, then ADD INTEGRATION.  
 2. Select the "Weather.com" integration.  
