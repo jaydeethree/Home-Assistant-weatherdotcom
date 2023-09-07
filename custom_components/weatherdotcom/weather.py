@@ -122,7 +122,7 @@ class WeatherDotCom(CoordinatorEntity, WeatherEntity):
     @property
     def native_visibility_unit(self) -> str:
         """Return the native unit of measurement for visibility."""
-        return self._attr_visibility_unit
+        return self.coordinator.visibility_unit
 
     @property
     def native_precipitation_unit(self) -> str:

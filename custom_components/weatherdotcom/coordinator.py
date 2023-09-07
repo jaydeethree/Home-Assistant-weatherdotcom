@@ -87,10 +87,12 @@ class WeatherUpdateCoordinator(DataUpdateCoordinator):
             self.units_of_measurement = (UnitOfTemperature.CELSIUS, UnitOfLength.MILLIMETERS, UnitOfLength.METERS,
                                          UnitOfSpeed.KILOMETERS_PER_HOUR, UnitOfPressure.MBAR,
                                          UnitOfVolumetricFlux.MILLIMETERS_PER_HOUR, PERCENTAGE)
+            self.visibility_unit = UnitOfLength.KILOMETERS
         else:
             self.units_of_measurement = (UnitOfTemperature.FAHRENHEIT, UnitOfLength.INCHES, UnitOfLength.FEET,
                                          UnitOfSpeed.MILES_PER_HOUR, UnitOfPressure.INHG,
                                          UnitOfVolumetricFlux.INCHES_PER_HOUR, PERCENTAGE)
+            self.visibility_unit = UnitOfLength.MILES
 
         super().__init__(
             hass,
