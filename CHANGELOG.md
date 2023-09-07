@@ -1,3 +1,6 @@
+v1.0.7
+* Fix the integration not working with Home Assistant 2023.9
+
 v1.0.6.1
 * Add Portuguese translation. Thank you @ViPeR5000!
 
