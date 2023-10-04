@@ -81,7 +81,7 @@ class WeatherFlowHandler(config_entries.ConfigFlow, domain=DOMAIN):
             return await self._show_setup_form(errors=errors)
 
         if not errors:
-            result_current = await response.json()
+            result_current = await response.json(content_type=None)
 
             unique_id = str(f"{DOMAIN}-{location_name}")
             await self.async_set_unique_id(unique_id)

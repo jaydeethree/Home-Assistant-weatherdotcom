@@ -1,3 +1,6 @@
+v1.0.8
+* Fix the integration not working when the Weather.com API returns a Content-Type other than `application/json`
+
 v1.0.7
 * Fix the integration not working with Home Assistant 2023.9
 
