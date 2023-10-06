@@ -1,3 +1,6 @@
+v1.0.8.1
+* Add Slovak translation. Thank you @misa1515!
+
 v1.0.8
 * Fix the integration not working when the Weather.com API returns a Content-Type other than `application/json`
 
