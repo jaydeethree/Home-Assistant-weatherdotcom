@@ -6,7 +6,6 @@ https://github.com/jaydeethree/Home-Assistant-weatherdotcom
 
 from . import WeatherUpdateCoordinator
 from homeassistant.config_entries import ConfigEntry
-from homeassistant.helpers.update_coordinator import CoordinatorEntity
 from .const import (
     DOMAIN,
 
@@ -43,7 +42,7 @@ from homeassistant.components.weather import (
     ATTR_FORECAST_TIME,
     ATTR_FORECAST_WIND_BEARING,
     ATTR_FORECAST_WIND_SPEED,
-    WeatherEntity,
+    SingleCoordinatorWeatherEntity,
     WeatherEntityFeature,
     Forecast,
     DOMAIN as WEATHER_DOMAIN
@@ -64,12 +63,11 @@ async def async_setup_entry(
     """Add weather entity."""
     coordinator: WeatherUpdateCoordinator = hass.data[DOMAIN][entry.entry_id]
     async_add_entities([
-        WeatherDotComDaily(coordinator),
-        WeatherDotComHourly(coordinator),
+        WeatherDotComForecast(coordinator),
     ])
 
 
-class WeatherDotCom(CoordinatorEntity, WeatherEntity):
+class WeatherDotCom(SingleCoordinatorWeatherEntity):
 
     @property
     def native_temperature(self) -> float:
@@ -138,7 +136,7 @@ class WeatherDotCom(CoordinatorEntity, WeatherEntity):
         return self.coordinator._iconcode_to_condition(icon)
 
 
-class WeatherDotComDaily(WeatherDotCom):
+class WeatherDotComForecast(WeatherDotCom):
 
     def __init__(
             self,
@@ -152,15 +150,18 @@ class WeatherDotComDaily(WeatherDotCom):
         self._attr_unique_id = f"{coordinator.location_name},{WEATHER_DOMAIN}".lower()
 
     @property
-    def supported_features(self):
-        return WeatherEntityFeature.FORECAST_DAILY
+    def supported_features(self) -> WeatherEntityFeature:
+        return (WeatherEntityFeature.FORECAST_DAILY | WeatherEntityFeature.FORECAST_HOURLY)
 
     async def async_forecast_daily(self) -> list[Forecast] | None:
-        return self.forecast
+        return self.forecast_daily
+
+    async def async_forecast_hourly(self) -> list[Forecast] | None:
+        return self.forecast_hourly
 
     @property
-    def forecast(self) -> list[Forecast]:
-        """Return the forecast in native units."""
+    def forecast_daily(self) -> list[Forecast]:
+        """Return the daily forecast in native units."""
         days = [0, 2, 4, 6, 8, 10, 12, 14, 16, 18, 20]
         if self.coordinator.get_forecast_daily('temperature', 0) is None:
             days[0] += 1
@@ -199,33 +200,11 @@ class WeatherDotComDaily(WeatherDotCom):
                 ATTR_FORECAST_WIND_SPEED: self.coordinator.get_forecast_daily(
                     FIELD_WINDSPEED, period)
             }))
-        # _LOGGER.debug(f'{forecast=}')
         return forecast
 
-
-class WeatherDotComHourly(WeatherDotCom):
-
-    def __init__(
-            self,
-            coordinator: WeatherUpdateCoordinator
-    ):
-        super().__init__(coordinator)
-        """Initialize the sensor."""
-        self.entity_id = generate_entity_id(
-            ENTITY_ID_FORMAT, f"{coordinator.location_name}_hourly", hass=coordinator.hass
-        )
-        self._attr_unique_id = f"{coordinator.location_name}_hourly,{WEATHER_DOMAIN}".lower()
-
     @property
-    def supported_features(self):
-        return WeatherEntityFeature.FORECAST_HOURLY
-
-    async def async_forecast_hourly(self) -> list[Forecast] | None:
-        return self.forecast
-
-    @property
-    def forecast(self) -> list[Forecast]:
-        """Return the forecast in native units."""
+    def forecast_hourly(self) -> list[Forecast]:
+        """Return the hourly forecast in native units."""
 
         forecast = []
         for hour in range(0, 48, 1):
