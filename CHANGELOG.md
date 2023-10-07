@@ -1,3 +1,6 @@
+v1.1.0
+* BREAKING CHANGE: Switch to [new Home Assistant weather entity format](https://developers.home-assistant.io/blog/2023/08/07/weather_entity_forecast_types/). This has been tested with Home Assistant 2023.9 and 2023.10, but probably will not work with older versions of Home Assistant. This also removes the weather.LOCATION_hourly sensor, as all forecast data has been combined into a single sensor.
+
 v1.0.8.1
 * Add Slovak translation. Thank you @misa1515!
 
