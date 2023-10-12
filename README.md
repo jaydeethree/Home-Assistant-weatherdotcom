@@ -11,7 +11,7 @@ find this software useful, feel free to make a donation to them.
 Please review the minimum requirements below to determine whether you will be able to
 install and use the software.
 
-- This integration requires Home Assistant Version 2023.8 or greater
+- This integration requires Home Assistant Version 2023.9 or greater
 - A Weather.com API Key is required (see below for how to get this)
 
 [Back to top](#top) 
@@ -60,18 +60,7 @@ Forecast (daily):
 - Wind speed
 - Wind bearing (cardinal direction)
 
-Additionally, a `weather.<LOCATION_NAME>_hourly` entity will be created that contains hourly forecast data.
-
-Templates can be created to access these values such as:
-```
-{% for state in states.weather -%}
-  {%- if loop.first %}The {% elif loop.last %} and the {% else %}, the {% endif -%}
-  {{ state.name | lower }} is {{state.state_with_unit}}
-{%- endfor %}.
-
-Wind is {{ states.weather.<LOCATION_NAME>.attributes.forecast[0].wind_bearing }} at {{ states.weather.<LOCATION_NAME>.attributes.forecast[0].wind_speed }} {{ states.weather.<LOCATION_NAME>.attributes.wind_speed_unit }}
-
-```
+To access these values in automations, scripts, etc. you will need to create triggered template sensors for them. [This post](https://community.home-assistant.io/t/customising-the-bom-weather-and-lovelace-now-in-hacs/123549/1465) on the Home Assistant forums provides details about how to do that.
 
 In addition to the Weather entity, these additional sensors will be created by this integration:
 
