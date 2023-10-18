@@ -1,3 +1,6 @@
+v1.1.1
+* Add two new current conditions sensors - cloud ceiling and pressure tendency trend (see the README for details of what these sensors are measuring)
+
 v1.1.0
 * BREAKING CHANGE: Switch to [new Home Assistant weather entity format](https://developers.home-assistant.io/blog/2023/08/07/weather_entity_forecast_types/). This has been tested with Home Assistant 2023.9 and 2023.10, but probably will not work with older versions of Home Assistant. This also removes the weather.LOCATION_hourly sensor, as all forecast data has been combined into a single sensor.
 
