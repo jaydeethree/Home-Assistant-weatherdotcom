@@ -64,6 +64,7 @@ To access these values in automations, scripts, etc. you will need to create tri
 
 In addition to the Weather entity, these additional sensors will be created by this integration:
 
+* `sensor.<LOCATION_NAME>_cloud_ceiling` - distance to the lowest cloud layer, or 0 if there are no clouds
 * `sensor.<LOCATION_NAME>_dewpoint` - the current dew point
 * `sensor.<LOCATION_NAME>_heat_index` - the current heat index, which is what the current temperature "feels like" when combined with the current humidity
 * `sensor.<LOCATION_NAME>_local_observation_time` - the time that the Weather.com data was generated
@@ -71,6 +72,7 @@ In addition to the Weather entity, these additional sensors will be created by t
 * `sensor.<LOCATION_NAME>_precipitation_last_6_hours` - the quantity of precipitation in the last 6 hours
 * `sensor.<LOCATION_NAME>_precipitation_last_24_hours` - the quantity of precipitation in the last 24 hours
 * `sensor.<LOCATION_NAME>_pressure` - the current barometric pressure
+* `sensor.<LOCATION_NAME>_pressure_tendency_trend` - the current trend for barometric pressure, e.g. "Rising" or "Falling"
 * `sensor.<LOCATION_NAME>_relative_humidity` - the current relative humidity
 * `sensor.<LOCATION_NAME>_temperature` - the current temperature
 * `sensor.<LOCATION_NAME>_temperature_feels_like` - what the current temperature "feels like" when combined with the current heat index and wind chill

@@ -181,4 +181,19 @@ current_condition_sensor_descriptions = [
         unit_fn=lambda metric: UnitOfSpeed.KILOMETERS_PER_HOUR if metric else UnitOfSpeed.MILES_PER_HOUR,
         value_fn=lambda data, _: cast(float, data),
     ),
+    WeatherSensorEntityDescription(
+        key="cloudCeiling",
+        name="Cloud Ceiling",
+        icon="mdi:clouds",
+        state_class=SensorStateClass.MEASUREMENT,
+        device_class=SensorDeviceClass.DISTANCE,
+        unit_fn=lambda metric: UnitOfLength.METERS if metric else UnitOfLength.FEET,
+        value_fn=lambda data, _: cast(int, data) or 0,
+    ),
+    WeatherSensorEntityDescription(
+        key="pressureTendencyTrend",
+        name="Pressure Tendency Trend",
+        icon="mdi:gauge",
+        value_fn=lambda data, _: cast(str, data),
+    ),
 ]
