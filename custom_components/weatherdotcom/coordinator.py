@@ -14,7 +14,7 @@ import async_timeout
 from homeassistant.core import HomeAssistant
 from homeassistant.exceptions import HomeAssistantError
 from homeassistant.helpers.aiohttp_client import async_get_clientsession
-from homeassistant.helpers.update_coordinator import DataUpdateCoordinator
+from homeassistant.helpers.update_coordinator import DataUpdateCoordinator, UpdateFailed
 from homeassistant.util import json
 from homeassistant.util.unit_system import METRIC_SYSTEM
 from homeassistant.const import (
@@ -159,8 +159,10 @@ class WeatherUpdateCoordinator(DataUpdateCoordinator):
 
         except ValueError as err:
             _LOGGER.error("Check Weather.com API %s", err.args)
+            raise UpdateFailed(err)
         except (asyncio.TimeoutError, aiohttp.ClientError) as err:
             _LOGGER.error("Error fetching Weather.com data: %s", repr(err))
+            raise UpdateFailed(err)
         # _LOGGER.debug(f'Weather.com data {self.data}')
 
     def _build_url(self, baseurl):
