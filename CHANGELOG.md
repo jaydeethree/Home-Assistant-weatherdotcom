@@ -1,3 +1,7 @@
+v1.1.2
+* Hopefully improve error handling so that if we fail to retrieve data from Weather.com, we'll just keep using the previous data
+* Fix a unit of measurement issue that was causing errors to be logged and some long-term statistics problems
+
 v1.1.1
 * Add two new current conditions sensors - cloud ceiling and pressure tendency trend (see the README for details of what these sensors are measuring)
 
