@@ -134,7 +134,7 @@ current_condition_sensor_descriptions = [
         state_class=SensorStateClass.MEASUREMENT,
         device_class=SensorDeviceClass.PRECIPITATION,
         unit_fn=lambda metric: UnitOfLength.MILLIMETERS if metric else UnitOfLength.INCHES,
-        value_fn=lambda data, _: cast(float, data),
+        value_fn=lambda data, _: cast(float, data) or 0,
     ),
     WeatherSensorEntityDescription(
         key="precip6Hour",
@@ -143,7 +143,7 @@ current_condition_sensor_descriptions = [
         state_class=SensorStateClass.MEASUREMENT,
         device_class=SensorDeviceClass.PRECIPITATION,
         unit_fn=lambda metric: UnitOfLength.MILLIMETERS if metric else UnitOfLength.INCHES,
-        value_fn=lambda data, _: cast(float, data),
+        value_fn=lambda data, _: cast(float, data) or 0,
     ),
     WeatherSensorEntityDescription(
         key="precip24Hour",
@@ -152,7 +152,7 @@ current_condition_sensor_descriptions = [
         state_class=SensorStateClass.MEASUREMENT,
         device_class=SensorDeviceClass.PRECIPITATION,
         unit_fn=lambda metric: UnitOfLength.MILLIMETERS if metric else UnitOfLength.INCHES,
-        value_fn=lambda data, _: cast(float, data),
+        value_fn=lambda data, _: cast(float, data) or 0,
     ),
     WeatherSensorEntityDescription(
         key=FIELD_PRESSURE,

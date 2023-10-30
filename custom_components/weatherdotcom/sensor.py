@@ -73,7 +73,7 @@ class WeatherSensor(CoordinatorEntity, SensorEntity):
         self._sensor_data = _get_sensor_data(
             coordinator.data, description.key, self._unit_system)
         self._attr_native_unit_of_measurement = self.entity_description.unit_fn(
-            self.coordinator.hass.config.units is METRIC_SYSTEM) if self._sensor_data is not None else ""
+            self.coordinator.hass.config.units is METRIC_SYSTEM)
 
     @property
     def available(self) -> bool:
