@@ -50,7 +50,7 @@ Current conditions:
 - Wind bearing (cardinal direction)
 - Visibility
 
-Forecast (daily):
+Forecast (daily and hourly):
 - Date/time of forecast
 - Temperature (high)
 - Temperature (low)
