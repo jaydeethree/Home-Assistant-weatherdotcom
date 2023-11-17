@@ -196,4 +196,10 @@ current_condition_sensor_descriptions = [
         icon="mdi:gauge",
         value_fn=lambda data, _: cast(str, data),
     ),
+    WeatherSensorEntityDescription(
+        key="cloudCoverPhrase",
+        name="Cloud Cover Phrase",
+        icon="mdi:clouds",
+        value_fn=lambda data, _: cast(str, data),
+    ),
 ]

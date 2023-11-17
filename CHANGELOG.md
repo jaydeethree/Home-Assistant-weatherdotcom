@@ -1,3 +1,6 @@
+v1.1.3
+* Add one new sensor for current conditions - cloud cover phrase (see README for details of what this is)
+
 v1.1.2
 * Hopefully improve error handling so that if we fail to retrieve data from Weather.com, we'll just keep using the previous data
 * Fix a unit of measurement issue that was causing errors to be logged and some long-term statistics problems

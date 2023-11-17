@@ -65,6 +65,7 @@ To access these values in automations, scripts, etc. you will need to create tri
 In addition to the Weather entity, these additional sensors will be created by this integration:
 
 * `sensor.<LOCATION_NAME>_cloud_ceiling` - distance to the lowest cloud layer, or 0 if there are no clouds
+* `sensor.<LOCATION_NAME>_cloud_cover_phrase` - a description of the current cloud cover, e.g. "Clear" or "Mostly Cloudy"
 * `sensor.<LOCATION_NAME>_dewpoint` - the current dew point
 * `sensor.<LOCATION_NAME>_heat_index` - the current heat index, which is what the current temperature "feels like" when combined with the current humidity
 * `sensor.<LOCATION_NAME>_local_observation_time` - the time that the Weather.com data was generated
