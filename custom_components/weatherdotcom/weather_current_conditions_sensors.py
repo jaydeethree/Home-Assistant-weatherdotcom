@@ -202,4 +202,16 @@ current_condition_sensor_descriptions = [
         icon="mdi:clouds",
         value_fn=lambda data, _: cast(str, data),
     ),
+    WeatherSensorEntityDescription(
+        key="latitude",
+        name="Latitude",
+        icon="mdi:latitude",
+        value_fn=lambda data, _: cast(float, data),
+    ),
+    WeatherSensorEntityDescription(
+        key="longitude",
+        name="Longitude",
+        icon="mdi:longitude",
+        value_fn=lambda data, _: cast(float, data),
+    ),
 ]
