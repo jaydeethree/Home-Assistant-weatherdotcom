@@ -1,3 +1,6 @@
+v1.1.4
+* Add sensors for latitude/longitude - these make it easier to figure out which exact location is being used by a given set of weather sensors
+
 v1.1.3
 * Add one new sensor for current conditions - cloud cover phrase (see README for details of what this is)
 

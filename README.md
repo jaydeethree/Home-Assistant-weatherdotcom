@@ -68,7 +68,9 @@ In addition to the Weather entity, these additional sensors will be created by t
 * `sensor.<LOCATION_NAME>_cloud_cover_phrase` - a description of the current cloud cover, e.g. "Clear" or "Mostly Cloudy"
 * `sensor.<LOCATION_NAME>_dewpoint` - the current dew point
 * `sensor.<LOCATION_NAME>_heat_index` - the current heat index, which is what the current temperature "feels like" when combined with the current humidity
+* `sensor.<LOCATION_NAME>_latitude` - the latitude that is configured for this location
 * `sensor.<LOCATION_NAME>_local_observation_time` - the time that the Weather.com data was generated
+* `sensor.<LOCATION_NAME>_longitude` - the longitude that is configured for this location
 * `sensor.<LOCATION_NAME>_precipitation_last_hour` - the quantity of precipitation in the last hour
 * `sensor.<LOCATION_NAME>_precipitation_last_6_hours` - the quantity of precipitation in the last 6 hours
 * `sensor.<LOCATION_NAME>_precipitation_last_24_hours` - the quantity of precipitation in the last 24 hours
