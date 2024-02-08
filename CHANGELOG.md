@@ -1,3 +1,6 @@
+v1.1.4.1
+* Fix "Error doing job: Task exception was never retrieved" error for latitude/longitude sensors
+
 v1.1.4
 * Add sensors for latitude/longitude - these make it easier to figure out which exact location is being used by a given set of weather sensors
 
