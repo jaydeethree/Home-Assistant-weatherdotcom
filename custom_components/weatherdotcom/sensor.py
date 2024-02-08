@@ -107,9 +107,14 @@ class WeatherSensor(CoordinatorEntity, SensorEntity):
     @callback
     def _handle_coordinator_update(self) -> None:
         """Handle data update."""
-        self._sensor_data = _get_sensor_data(
-            self.coordinator.data, self.entity_description.key, self._unit_system
-        )
+        if self.entity_description.key == 'latitude':
+            self._sensor_data = self.coordinator._latitude
+        elif self.entity_description.key == 'longitude':
+            self._sensor_data = self.coordinator._longitude
+        else:
+            self._sensor_data = _get_sensor_data(
+                self.coordinator.data, self.entity_description.key, self._unit_system
+            )
         self.async_write_ha_state()
 
 
