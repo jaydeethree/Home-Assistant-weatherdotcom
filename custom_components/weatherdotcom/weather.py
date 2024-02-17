@@ -15,6 +15,8 @@ from .const import (
     PRESSUREUNIT,
 
     FIELD_CLOUD_COVER,
+    FIELD_DEW_POINT,
+    FIELD_FEELS_LIKE,
     FIELD_HUMIDITY,
     FIELD_ICONCODE,
     FIELD_PRECIPCHANCE,
@@ -23,10 +25,12 @@ from .const import (
     FIELD_TEMP,
     FIELD_TEMPERATUREMAX,
     FIELD_TEMPERATUREMIN,
+    FIELD_UV_INDEX,
     FIELD_VALIDTIMEUTC,
     FIELD_VISIBILITY,
     FIELD_WINDDIR,
     FIELD_WINDDIRECTIONCARDINAL,
+    FIELD_WINDGUST,
     FIELD_WINDSPEED
 )
 
@@ -134,6 +138,26 @@ class WeatherDotCom(SingleCoordinatorWeatherEntity):
         """Return the current condition."""
         icon = self.coordinator.get_current(FIELD_ICONCODE)
         return self.coordinator._iconcode_to_condition(icon)
+
+    @property
+    def native_apparent_temperature(self) -> float:
+        """Return the 'feels like' temperature."""
+        return self.coordinator.get_current(FIELD_FEELS_LIKE)
+
+    @property
+    def native_dew_point(self) -> float:
+        """Return the dew point."""
+        return self.coordinator.get_current(FIELD_DEW_POINT)
+
+    @property
+    def native_wind_gust_speed(self) -> float:
+        """Return the wind gust speed."""
+        return self.coordinator.get_current(FIELD_WINDGUST)
+
+    @property
+    def uv_index(self) -> float:
+        """Return the UV index."""
+        return self.coordinator.get_current(FIELD_UV_INDEX)
 
 
 class WeatherDotComForecast(WeatherDotCom):

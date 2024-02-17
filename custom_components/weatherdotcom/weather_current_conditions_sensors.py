@@ -5,9 +5,12 @@ from typing import Callable, Any, cast
 
 from .const import (
     FIELD_DESCRIPTION,
+    FIELD_DEW_POINT,
+    FIELD_FEELS_LIKE,
     FIELD_HUMIDITY,
     FIELD_PRESSURE,
     FIELD_TEMP,
+    FIELD_UV_INDEX,
     FIELD_WINDDIR,
     FIELD_WINDDIRECTIONCARDINAL,
     FIELD_WINDGUST,
@@ -60,7 +63,7 @@ current_condition_sensor_descriptions = [
         value_fn=lambda data, _: cast(int, data) or 0,
     ),
     WeatherSensorEntityDescription(
-        key="uvIndex",
+        key=FIELD_UV_INDEX,
         name="UV Index",
         icon="mdi:sunglasses",
         state_class=SensorStateClass.MEASUREMENT,
@@ -83,7 +86,7 @@ current_condition_sensor_descriptions = [
         value_fn=lambda data, _: cast(str, data) or "",
     ),
     WeatherSensorEntityDescription(
-        key="temperatureDewPoint",
+        key=FIELD_DEW_POINT,
         name="Dewpoint",
         icon="mdi:water",
         state_class=SensorStateClass.MEASUREMENT,
@@ -92,7 +95,7 @@ current_condition_sensor_descriptions = [
         value_fn=lambda data, _: cast(float, data),
     ),
     WeatherSensorEntityDescription(
-        key="temperatureFeelsLike",
+        key=FIELD_FEELS_LIKE,
         name="Temperature - Feels Like",
         icon=ICON_THERMOMETER,
         state_class=SensorStateClass.MEASUREMENT,
