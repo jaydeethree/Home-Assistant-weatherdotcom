@@ -1,3 +1,6 @@
+v1.1.5
+* Add the following properties to the weather.LOCATION_NAME entity: native_apparent_temperature, native_dew_point, native_wind_gust_speed, and uv_index
+
 v1.1.4.1
 * Fix "Error doing job: Task exception was never retrieved" error for latitude/longitude sensors
 
