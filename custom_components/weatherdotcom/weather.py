@@ -242,7 +242,7 @@ class WeatherDotComForecast(WeatherDotCom):
         for hour in range(0, 48, 1):
             forecast.append(Forecast({
                 ATTR_FORECAST_CLOUD_COVERAGE:
-                    self.coordinator.get_forecast_daily(FIELD_CLOUD_COVER, hour),
+                    self.coordinator.get_forecast_hourly(FIELD_CLOUD_COVER, hour),
                 ATTR_FORECAST_CONDITION:
                     self.coordinator._iconcode_to_condition(
                         self.coordinator.get_forecast_hourly(
