@@ -39,11 +39,16 @@ import logging
 from homeassistant.components.weather import (
     ATTR_FORECAST_CLOUD_COVERAGE,
     ATTR_FORECAST_CONDITION,
+    ATTR_FORECAST_HUMIDITY,
+    ATTR_FORECAST_NATIVE_APPARENT_TEMP,
+    ATTR_FORECAST_NATIVE_DEW_POINT,
+    ATTR_FORECAST_NATIVE_WIND_GUST_SPEED,
     ATTR_FORECAST_PRECIPITATION,
     ATTR_FORECAST_PRECIPITATION_PROBABILITY,
     ATTR_FORECAST_TEMP,
     ATTR_FORECAST_TEMP_LOW,
     ATTR_FORECAST_TIME,
+    ATTR_FORECAST_UV_INDEX,
     ATTR_FORECAST_WIND_BEARING,
     ATTR_FORECAST_WIND_SPEED,
     SingleCoordinatorWeatherEntity,
@@ -202,6 +207,8 @@ class WeatherDotComForecast(WeatherDotCom):
                         self.coordinator.get_forecast_daily(
                             FIELD_ICONCODE, period)
                     ),
+                ATTR_FORECAST_HUMIDITY:
+                    self.coordinator.get_forecast_daily(FIELD_HUMIDITY, period),
                 ATTR_FORECAST_PRECIPITATION:
                     self.coordinator.get_forecast_daily(FIELD_QPF, period),
                 ATTR_FORECAST_PRECIPITATION_PROBABILITY:
@@ -217,7 +224,8 @@ class WeatherDotComForecast(WeatherDotCom):
                     self.coordinator._format_timestamp(
                         self.coordinator.get_forecast_daily(
                             FIELD_VALIDTIMEUTC, period)),
-
+                ATTR_FORECAST_UV_INDEX:
+                    self.coordinator.get_forecast_daily(FIELD_UV_INDEX, period),
                 ATTR_FORECAST_WIND_BEARING:
                     self.coordinator.get_forecast_daily(
                         FIELD_WINDDIRECTIONCARDINAL, period),
@@ -240,6 +248,14 @@ class WeatherDotComForecast(WeatherDotCom):
                         self.coordinator.get_forecast_hourly(
                             FIELD_ICONCODE, hour)
                     ),
+                ATTR_FORECAST_HUMIDITY:
+                    self.coordinator.get_forecast_hourly(FIELD_HUMIDITY, hour),
+                ATTR_FORECAST_NATIVE_APPARENT_TEMP:
+                    self.coordinator.get_forecast_hourly(FIELD_FEELS_LIKE, hour),
+                ATTR_FORECAST_NATIVE_DEW_POINT:
+                    self.coordinator.get_forecast_hourly(FIELD_DEW_POINT, hour),
+                ATTR_FORECAST_NATIVE_WIND_GUST_SPEED:
+                    self.coordinator.get_forecast_hourly(FIELD_WINDGUST, hour),
                 ATTR_FORECAST_PRECIPITATION:
                     self.coordinator.get_forecast_hourly(FIELD_QPF, hour),
                 ATTR_FORECAST_PRECIPITATION_PROBABILITY:
@@ -250,6 +266,8 @@ class WeatherDotComForecast(WeatherDotCom):
                     self.coordinator._format_timestamp(
                         self.coordinator.get_forecast_hourly(
                             FIELD_VALIDTIMEUTC, hour)),
+                ATTR_FORECAST_UV_INDEX:
+                    self.coordinator.get_forecast_hourly(FIELD_UV_INDEX, hour),
                 ATTR_FORECAST_WIND_BEARING:
                     self.coordinator.get_forecast_hourly(
                         FIELD_WINDDIRECTIONCARDINAL, hour),
