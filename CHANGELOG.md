@@ -1,3 +1,7 @@
+v1.1.6
+* Fix bug where cloud coverage data was incorrect for hourly forecasts
+* Add more data to daily and hourly forecasts - see [this feature request](https://github.com/jaydeethree/Home-Assistant-weatherdotcom/issues/27) for details
+
 v1.1.5
 * Add the following properties to the weather.LOCATION_NAME entity: native_apparent_temperature, native_dew_point, native_wind_gust_speed, and uv_index
 
