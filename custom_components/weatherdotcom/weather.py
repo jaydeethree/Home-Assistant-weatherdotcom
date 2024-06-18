@@ -191,7 +191,7 @@ class WeatherDotComForecast(WeatherDotCom):
     @property
     def forecast_daily(self) -> list[Forecast]:
         """Return the daily forecast in native units."""
-        days = [0, 2, 4, 6, 8, 10, 12, 14, 16, 18, 20]
+        days = [0, 2, 4, 6, 8, 10, 12, 14, 16, 18, 20, 22, 24, 26, 28]
         if self.coordinator.get_forecast_daily('temperature', 0) is None:
             days[0] += 1
         caldaytempmax = FIELD_TEMPERATUREMAX
@@ -239,7 +239,7 @@ class WeatherDotComForecast(WeatherDotCom):
         """Return the hourly forecast in native units."""
 
         forecast = []
-        for hour in range(0, 48, 1):
+        for hour in range(0, 360, 1):
             forecast.append(Forecast({
                 ATTR_FORECAST_CLOUD_COVERAGE:
                     self.coordinator.get_forecast_hourly(FIELD_CLOUD_COVER, hour),
