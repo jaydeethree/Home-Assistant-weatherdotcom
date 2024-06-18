@@ -1,3 +1,6 @@
+v1.1.7
+* Change forecast API endpoints so that we have 15 days of forecast data (this applies to both hourly and daily forecasts)
+
 v1.1.6
 * Fix bug where cloud coverage data was incorrect for hourly forecasts
 * Add more data to daily and hourly forecasts - see [this feature request](https://github.com/jaydeethree/Home-Assistant-weatherdotcom/issues/27) for details
