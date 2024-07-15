@@ -1,5 +1,6 @@
 """The weather.com component."""
 import logging
+import os.path
 from typing import Final
 from homeassistant.config_entries import ConfigEntry
 from homeassistant.const import (
@@ -8,6 +9,7 @@ from homeassistant.const import (
 )
 from homeassistant.core import HomeAssistant
 from homeassistant.util.unit_system import METRIC_SYSTEM
+from homeassistant.util import json
 from .coordinator import WeatherUpdateCoordinator, WeatherUpdateCoordinatorConfig
 from .const import (
     CONF_LANG,
@@ -42,8 +44,18 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry):
         unit_system=unit_system,
         lang=entry.data[CONF_LANG],
         latitude=entry.data[CONF_LATITUDE],
-        longitude=entry.data[CONF_LONGITUDE]
+        longitude=entry.data[CONF_LONGITUDE],
+        tranfile='',
     )
+
+    tfiledir = f'{hass.config.config_dir}/custom_components/{DOMAIN}/weather_translations/'
+    tfilename = config.lang.split('-', 1)[0]
+
+    if os.path.isfile(f'{tfiledir}{tfilename}.json'):
+        config.tranfile = await hass.async_add_executor_job(json.load_json, f'{tfiledir}{tfilename}.json')
+    else:
+        config.tranfile = await hass.async_add_executor_job(json.load_json, f'{tfiledir}en.json')
+        _LOGGER.warning(f'Sensor translation file {tfilename}.json does not exist. Defaulting to en-US.')
 
     weathercoordinator = WeatherUpdateCoordinator(hass, config)
     await weathercoordinator.async_config_entry_first_refresh()

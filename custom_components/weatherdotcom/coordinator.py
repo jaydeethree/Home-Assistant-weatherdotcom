@@ -15,7 +15,6 @@ from homeassistant.core import HomeAssistant
 from homeassistant.exceptions import HomeAssistantError
 from homeassistant.helpers.aiohttp_client import async_get_clientsession
 from homeassistant.helpers.update_coordinator import DataUpdateCoordinator, UpdateFailed
-from homeassistant.util import json
 from homeassistant.util.unit_system import METRIC_SYSTEM
 from homeassistant.const import (
     PERCENTAGE, UnitOfPressure, UnitOfTemperature, UnitOfLength, UnitOfSpeed, UnitOfVolumetricFlux)
@@ -29,7 +28,6 @@ from .const import (
     FIELD_WINDDIR,
     FIELD_WINDGUST,
     FIELD_WINDSPEED,
-    DOMAIN,
     RESULTS_CURRENT,
     RESULTS_FORECAST_DAILY,
     RESULTS_FORECAST_HOURLY
@@ -60,6 +58,7 @@ class WeatherUpdateCoordinatorConfig:
     latitude: str
     longitude: str
     update_interval = MIN_TIME_BETWEEN_UPDATES
+    tranfile: str
 
 
 class WeatherUpdateCoordinator(DataUpdateCoordinator):
@@ -81,7 +80,7 @@ class WeatherUpdateCoordinator(DataUpdateCoordinator):
         self._longitude = config.longitude
         self.data = None
         self._session = async_get_clientsession(self._hass)
-        self._tranfile = self.get_tran_file()
+        self._tranfile = config.tranfile
 
         if self._unit_system_api == 'm':
             self.units_of_measurement = (UnitOfTemperature.CELSIUS, UnitOfLength.MILLIMETERS, UnitOfLength.METERS,
@@ -223,17 +222,6 @@ class WeatherUpdateCoordinator(DataUpdateCoordinator):
     @classmethod
     def _format_timestamp(cls, timestamp_secs):
         return datetime.utcfromtimestamp(timestamp_secs).isoformat('T') + 'Z'
-
-    def get_tran_file(self):
-        """get translation file for Weather.com sensor friendly_name"""
-        tfiledir = f'{self._hass.config.config_dir}/custom_components/{DOMAIN}/weather_translations/'
-        tfilename = self._lang.split('-', 1)[0]
-        try:
-            tfiledata = json.load_json(f'{tfiledir}{tfilename}.json')
-        except Exception:  # pylint: disable=broad-except
-            tfiledata = json.load_json(f'{tfiledir}en.json')
-            _LOGGER.warning(f'Sensor translation file {tfilename}.json does not exist. Defaulting to en-US.')
-        return tfiledata
 
 
 class InvalidApiKey(HomeAssistantError):
