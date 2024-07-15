@@ -1,3 +1,6 @@
+v1.1.8
+* Merge https://github.com/cytech/Home-Assistant-wundergroundpws/commit/36e33bf17e07fa342e1e66d9ab007382d5b1b9ea to fix "Detected blocking call" error
+
 v1.1.7
 * Change forecast API endpoints so that we have 15 days of forecast data (this applies to both hourly and daily forecasts)
 
