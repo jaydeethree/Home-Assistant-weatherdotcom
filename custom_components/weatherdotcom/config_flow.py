@@ -48,7 +48,7 @@ class WeatherFlowHandler(config_entries.ConfigFlow, domain=DOMAIN):
                 errors["base"] = "invalid_api_key"
                 raise InvalidApiKey
 
-            with async_timeout.timeout(10):
+            async with async_timeout.timeout(10):
                 # Use English and US units for the initial test API call. User-supplied units and language will be used for
                 # the created entities.
                 url = f'https://api.weather.com/v3/wx/observations/current?geocode={latitude},{longitude}&format=json&units=e' \

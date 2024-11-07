@@ -120,7 +120,7 @@ class WeatherUpdateCoordinator(DataUpdateCoordinator):
             "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/111.0.0.0 Safari/537.36"
         }
         try:
-            with async_timeout.timeout(10):
+            async with async_timeout.timeout(10):
                 url = self._build_url(_RESOURCECURRENT)
                 response = await self._session.get(url, headers=headers)
                 result_current = await response.json(content_type=None)
@@ -128,7 +128,7 @@ class WeatherUpdateCoordinator(DataUpdateCoordinator):
                     raise ValueError('NO CURRENT RESULT')
                 self._check_errors(url, result_current)
 
-            with async_timeout.timeout(10):
+            async with async_timeout.timeout(10):
                 url = self._build_url(_RESOURCEFORECASTDAILY)
                 response = await self._session.get(url, headers=headers)
                 result_forecast_daily = await response.json(content_type=None)
@@ -137,7 +137,7 @@ class WeatherUpdateCoordinator(DataUpdateCoordinator):
                     raise ValueError('NO DAILY FORECAST RESULT')
                 self._check_errors(url, result_forecast_daily)
 
-            with async_timeout.timeout(10):
+            async with async_timeout.timeout(10):
                 url = self._build_url(_RESOURCEFORECASTHOURLY)
                 response = await self._session.get(url, headers=headers)
                 result_forecast_hourly = await response.json(content_type=None)
