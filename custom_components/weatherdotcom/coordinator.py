@@ -117,52 +117,79 @@ class WeatherUpdateCoordinator(DataUpdateCoordinator):
         """Get weather data."""
         headers = {
             'Accept-Encoding': 'gzip',
-            "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/111.0.0.0 Safari/537.36"
+            "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36"
         }
-        try:
-            async with async_timeout.timeout(10):
-                url = self._build_url(_RESOURCECURRENT)
-                response = await self._session.get(url, headers=headers)
-                result_current = await response.json(content_type=None)
-                if result_current is None:
-                    raise ValueError('NO CURRENT RESULT')
-                self._check_errors(url, result_current)
+        current_error = False
+        daily_error = False
+        hourly_error = False
+        result_current = None
+        result_forecast_daily = None
+        result_forecast_hourly = None
 
-            async with async_timeout.timeout(10):
-                url = self._build_url(_RESOURCEFORECASTDAILY)
-                response = await self._session.get(url, headers=headers)
-                result_forecast_daily = await response.json(content_type=None)
+        for attempt in range(2):
+            try:
+                async with async_timeout.timeout(10):
+                    url = self._build_url(_RESOURCECURRENT)
+                    response = await self._session.get(url, headers=headers)
+                    result_current = await response.json(content_type=None)
+                    if result_current is None:
+                        raise ValueError('No weather data found')
+                    self._check_errors(url, result_current)
+                    break
+            except (ValueError, asyncio.TimeoutError, aiohttp.ClientError) as err:
+                if attempt == 1:
+                    _LOGGER.error('Error getting current weather: %s', err)
+                    current_error = True
+                else:
+                    _LOGGER.error('Error getting current weather, will retry: %s', err)
+                    await asyncio.sleep(5)
 
-                if result_forecast_daily is None:
-                    raise ValueError('NO DAILY FORECAST RESULT')
-                self._check_errors(url, result_forecast_daily)
+        for attempt in range(2):
+            try:
+                async with async_timeout.timeout(10):
+                    url = self._build_url(_RESOURCEFORECASTDAILY)
+                    response = await self._session.get(url, headers=headers)
+                    result_forecast_daily = await response.json(content_type=None)
+                    if result_forecast_daily is None:
+                        raise ValueError('No weather data found')
+                    self._check_errors(url, result_forecast_daily)
+                    break
+            except (ValueError, asyncio.TimeoutError, aiohttp.ClientError) as err:
+                if attempt == 1:
+                    _LOGGER.error('Error getting daily weather: %s', err)
+                    daily_error = True
+                else:
+                    _LOGGER.error('Error getting daily weather, will retry: %s', err)
+                    await asyncio.sleep(5)
 
-            async with async_timeout.timeout(10):
-                url = self._build_url(_RESOURCEFORECASTHOURLY)
-                response = await self._session.get(url, headers=headers)
-                result_forecast_hourly = await response.json(content_type=None)
+        for attempt in range(2):
+            try:
+                async with async_timeout.timeout(10):
+                    url = self._build_url(_RESOURCEFORECASTHOURLY)
+                    response = await self._session.get(url, headers=headers)
+                    result_forecast_hourly = await response.json(content_type=None)
+                    if result_forecast_hourly is None:
+                        raise ValueError('No weather data found')
+                    self._check_errors(url, result_forecast_hourly)
+                    break
+            except (ValueError, asyncio.TimeoutError, aiohttp.ClientError) as err:
+                if attempt == 1:
+                    _LOGGER.error('Error getting hourly weather: %s', err)
+                    hourly_error = True
+                else:
+                    _LOGGER.error('Error getting hourly weather, will retry: %s', err)
+                    await asyncio.sleep(5)
 
-                if result_forecast_hourly is None:
-                    raise ValueError('NO HOURLY FORECAST RESULT')
-                self._check_errors(url, result_forecast_hourly)
-
+        if current_error and daily_error and hourly_error:
+            raise UpdateFailed('Failed to get weather data')
+        else:
             result = {
                 RESULTS_CURRENT: result_current,
                 RESULTS_FORECAST_DAILY: result_forecast_daily,
                 RESULTS_FORECAST_HOURLY: result_forecast_hourly,
             }
-
             self.data = result
-
             return result
-
-        except ValueError as err:
-            _LOGGER.error("Check Weather.com API %s", err.args)
-            raise UpdateFailed(err)
-        except (asyncio.TimeoutError, aiohttp.ClientError) as err:
-            _LOGGER.error("Error fetching Weather.com data: %s", repr(err))
-            raise UpdateFailed(err)
-        # _LOGGER.debug(f'Weather.com data {self.data}')
 
     def _build_url(self, baseurl):
         baseurl += '&language={language}'
@@ -190,6 +217,8 @@ class WeatherUpdateCoordinator(DataUpdateCoordinator):
             )
 
     def get_current(self, field):
+        if self.data[RESULTS_CURRENT] == None:
+            return None
         return self.data[RESULTS_CURRENT][field]
 
     def get_forecast_daily(self, field, period=0):

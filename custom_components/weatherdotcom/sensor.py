@@ -125,6 +125,8 @@ def _get_sensor_data(
 ) -> Any:
     """Get sensor data."""
     # windGust is often null. When it is, set it to windSpeed instead.
+    if sensors[RESULTS_CURRENT] == None:
+        return None
     if kind == FIELD_WINDGUST and sensors[RESULTS_CURRENT][kind] == None:
         return sensors[RESULTS_CURRENT][FIELD_WINDSPEED]
     else:
