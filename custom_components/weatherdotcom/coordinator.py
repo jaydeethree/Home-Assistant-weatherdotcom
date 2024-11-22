@@ -138,10 +138,10 @@ class WeatherUpdateCoordinator(DataUpdateCoordinator):
                     break
             except (ValueError, asyncio.TimeoutError, aiohttp.ClientError) as err:
                 if attempt == 1:
-                    _LOGGER.error('Error getting current weather: %s', err)
+                    _LOGGER.error('Error getting current weather. Exception: %s. Details: %s', type(err), err)
                     current_error = True
                 else:
-                    _LOGGER.error('Error getting current weather, will retry: %s', err)
+                    _LOGGER.error('Error getting current weather, will retry. Exception: %s. Details: %s', type(err), err)
                     await asyncio.sleep(5)
 
         for attempt in range(2):
@@ -156,10 +156,10 @@ class WeatherUpdateCoordinator(DataUpdateCoordinator):
                     break
             except (ValueError, asyncio.TimeoutError, aiohttp.ClientError) as err:
                 if attempt == 1:
-                    _LOGGER.error('Error getting daily weather: %s', err)
+                    _LOGGER.error('Error getting daily weather. Exception: %s. Details: %s', type(err), err)
                     daily_error = True
                 else:
-                    _LOGGER.error('Error getting daily weather, will retry: %s', err)
+                    _LOGGER.error('Error getting daily weather, will retry. Exception: %s. Details: %s', type(err), err)
                     await asyncio.sleep(5)
 
         for attempt in range(2):
@@ -174,10 +174,10 @@ class WeatherUpdateCoordinator(DataUpdateCoordinator):
                     break
             except (ValueError, asyncio.TimeoutError, aiohttp.ClientError) as err:
                 if attempt == 1:
-                    _LOGGER.error('Error getting hourly weather: %s', err)
+                    _LOGGER.error('Error getting hourly weather. Exception: %s. Details: %s', type(err), err)
                     hourly_error = True
                 else:
-                    _LOGGER.error('Error getting hourly weather, will retry: %s', err)
+                    _LOGGER.error('Error getting hourly weather, will retry. Exception: %s. Details: %s', type(err), err)
                     await asyncio.sleep(5)
 
         if current_error and daily_error and hourly_error:
