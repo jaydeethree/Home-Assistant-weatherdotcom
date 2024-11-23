@@ -1,3 +1,9 @@
+v1.2.0
+* Reliability improvements - if the Weather.com API is down then there's nothing we can do, but these will hopefully help with network glitches and other temporary issues:
+  * Retry API calls that fail
+  * Only mark entities unavailable if they're from an API call that failed - this way if some of the API calls succeed but others fail, we will still get data from the ones that succeeded
+  * Update user agent to a current version of Chrome (I doubt this actually matters but it's worth a try)
+
 v1.1.9
 * Fix bug where "async" keyword was missing from some async calls
 
