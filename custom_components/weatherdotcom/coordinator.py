@@ -245,7 +245,8 @@ class WeatherUpdateCoordinator(DataUpdateCoordinator):
         for condition, iconcodes in cls.icon_condition_map.items():
             if icon_code in iconcodes:
                 return condition
-        _LOGGER.warning(f'Unmapped iconCode from TWC Api. (44 is Not Available (N/A)) "{icon_code}". ')
+        if icon_code != None:
+            _LOGGER.warning(f'Unmapped icon code from Weather.com API: {icon_code}')
         return None
 
     @classmethod
