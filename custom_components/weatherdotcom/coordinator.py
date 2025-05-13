@@ -14,11 +14,13 @@ import async_timeout
 from homeassistant.core import HomeAssistant
 from homeassistant.exceptions import HomeAssistantError
 from homeassistant.helpers.aiohttp_client import async_get_clientsession
+from homeassistant.helpers.device_registry import DeviceEntryType, DeviceInfo
 from homeassistant.helpers.update_coordinator import DataUpdateCoordinator, UpdateFailed
 from homeassistant.util.unit_system import METRIC_SYSTEM
 from homeassistant.const import (
     PERCENTAGE, UnitOfPressure, UnitOfTemperature, UnitOfLength, UnitOfSpeed, UnitOfVolumetricFlux)
 from .const import (
+    DOMAIN,
     ICON_CONDITION_MAP,
     FIELD_DAYPART,
     FIELD_HUMIDITY,
@@ -81,6 +83,8 @@ class WeatherUpdateCoordinator(DataUpdateCoordinator):
         self.data = None
         self._session = async_get_clientsession(self._hass)
         self._tranfile = config.tranfile
+
+        self.device_info = _get_device_info(self._location_name)
 
         if self._unit_system_api == 'm':
             self.units_of_measurement = (UnitOfTemperature.CELSIUS, UnitOfLength.MILLIMETERS, UnitOfLength.METERS,
@@ -256,3 +260,13 @@ class WeatherUpdateCoordinator(DataUpdateCoordinator):
 
 class InvalidApiKey(HomeAssistantError):
     """Error to indicate there is an invalid api key."""
+
+
+def _get_device_info(name: str) -> DeviceInfo:
+    """Get device info."""
+    return DeviceInfo(
+        entry_type=DeviceEntryType.SERVICE,
+        identifiers={(DOMAIN, name)},
+        manufacturer="Weather.com"",
+        name=name,
+    )

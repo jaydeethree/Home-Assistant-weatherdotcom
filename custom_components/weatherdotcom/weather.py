@@ -177,6 +177,7 @@ class WeatherDotComForecast(WeatherDotCom):
             ENTITY_ID_FORMAT, f"{coordinator.location_name}", hass=coordinator.hass
         )
         self._attr_unique_id = f"{coordinator.location_name},{WEATHER_DOMAIN}".lower()
+        self._attr_device_info = coordinator.device_info
 
     @property
     def supported_features(self) -> WeatherEntityFeature:

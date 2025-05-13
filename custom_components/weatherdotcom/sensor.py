@@ -70,6 +70,7 @@ class WeatherSensor(CoordinatorEntity, SensorEntity):
             entity_id_format, f"{self.coordinator.location_name}_{description.name}", hass=coordinator.hass
         )
         self._unit_system = coordinator.unit_system
+        self._attr_device_info = coordinator.device_info
         if description.key == 'latitude':
             self._sensor_data = coordinator._latitude
         elif description.key == 'longitude':
