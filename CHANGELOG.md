@@ -1,3 +1,6 @@
+v1.2.1.1
+* Bump version number to try to fix an issue where HACS seems to have cached a bad release
+
 v1.2.1
 * Bind all entities to a service (see [issue #50](https://github.com/jaydeethree/Home-Assistant-weatherdotcom/issues/50))
 
