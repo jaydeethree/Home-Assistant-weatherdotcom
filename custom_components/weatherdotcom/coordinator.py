@@ -267,6 +267,6 @@ def _get_device_info(name: str) -> DeviceInfo:
     return DeviceInfo(
         entry_type=DeviceEntryType.SERVICE,
         identifiers={(DOMAIN, name)},
-        manufacturer="Weather.com"",
+        manufacturer="Weather.com",
         name=name,
     )
