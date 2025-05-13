@@ -1,3 +1,6 @@
+v1.2.1
+* Bind all entities to a service (see [issue #50](https://github.com/jaydeethree/Home-Assistant-weatherdotcom/issues/50))
+
 v1.2.0
 * Reliability improvements - if the Weather.com API is down then there's nothing we can do, but these will hopefully help with network glitches and other temporary issues:
   * Retry API calls that fail
