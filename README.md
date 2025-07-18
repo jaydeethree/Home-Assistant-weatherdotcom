@@ -1,5 +1,3 @@
-**This integration is not dead/abandoned** (this message was last updated on 2025-05-12). I personally use this integration every day and I plan to continue maintaining it. However I am not aware of any remaining bugs and I currently do not plan to add more features - this is why there have not been any commits or releases lately. If a bug/problem is discovered then I will take care of that, otherwise don't expect to see very many changes to this integration as I feel that it is feature-complete.
-
 # Home-Assistant-Weather.com
 Home Assistant custom integration for Weather.com.
 Includes a native Home Assistant Weather Entity and a variety of weather sensors.  
