@@ -1,3 +1,6 @@
+v1.3.0
+* Add a cache for forecast temperature data as a workaround for the API not returning that data after 15:00 local time
+
 v1.2.1.1
 * Bump version number to try to fix an issue where HACS seems to have cached a bad release
 
