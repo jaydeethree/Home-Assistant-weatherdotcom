@@ -6,6 +6,7 @@ import asyncio
 from dataclasses import dataclass
 from datetime import datetime, timedelta
 import logging
+import time
 from typing import Any
 
 import aiohttp
@@ -34,6 +35,7 @@ from .const import (
     RESULTS_FORECAST_DAILY,
     RESULTS_FORECAST_HOURLY
 )
+from .store import WeatherDotComStorage
 
 _LOGGER = logging.getLogger(__name__)
 
@@ -83,6 +85,7 @@ class WeatherUpdateCoordinator(DataUpdateCoordinator):
         self.data = None
         self._session = async_get_clientsession(self._hass)
         self._tranfile = config.tranfile
+        self._store = WeatherDotComStorage(self._hass, self._location_name)
 
         self.device_info = _get_device_info(self._location_name)
 
@@ -157,6 +160,11 @@ class WeatherUpdateCoordinator(DataUpdateCoordinator):
                     if result_forecast_daily is None:
                         raise ValueError('No weather data found')
                     self._check_errors(url, result_forecast_daily)
+                    # If the result includes max temperature data for today,
+                    # update that data in storage.
+                    temperature_max = result_forecast_daily[FIELD_TEMPERATUREMAX][0]
+                    if temperature_max != None:
+                        await self._store.async_save(temperature_max, round(time.time()))
                     break
             except (ValueError, asyncio.TimeoutError, aiohttp.ClientError) as err:
                 if attempt == 1:

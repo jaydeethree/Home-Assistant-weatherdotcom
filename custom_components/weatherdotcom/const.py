@@ -102,3 +102,6 @@ FIELD_WINDSPEED = 'windSpeed'
 ICON_THERMOMETER = 'mdi:thermometer'
 ICON_UMBRELLA = 'mdi:umbrella'
 ICON_WIND = 'mdi:weather-windy'
+
+HIGH_TEMP_TODAY_STORAGE = 'high_temp_today'
+HIGH_TEMP_TODAY_TIMESTAMP_STORAGE = 'high_temp_today_timestamp'

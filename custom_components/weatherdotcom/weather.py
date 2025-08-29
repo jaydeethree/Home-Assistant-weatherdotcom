@@ -4,6 +4,8 @@ For more details about this platform, please refer to the documentation at
 https://github.com/jaydeethree/Home-Assistant-weatherdotcom
 """
 
+import time
+
 from . import WeatherUpdateCoordinator
 from homeassistant.config_entries import ConfigEntry
 from .const import (
@@ -31,8 +33,12 @@ from .const import (
     FIELD_WINDDIR,
     FIELD_WINDDIRECTIONCARDINAL,
     FIELD_WINDGUST,
-    FIELD_WINDSPEED
+    FIELD_WINDSPEED,
+
+    HIGH_TEMP_TODAY_STORAGE,
+    HIGH_TEMP_TODAY_TIMESTAMP_STORAGE
 )
+from .store import WeatherDotComStorage
 
 import logging
 
@@ -173,17 +179,21 @@ class WeatherDotComForecast(WeatherDotCom):
     ):
         super().__init__(coordinator)
         """Initialize the sensor."""
+        self.hass = coordinator.hass
         self.entity_id = generate_entity_id(
-            ENTITY_ID_FORMAT, f"{coordinator.location_name}", hass=coordinator.hass
+            ENTITY_ID_FORMAT, f"{coordinator.location_name}", hass=self.hass
         )
         self._attr_unique_id = f"{coordinator.location_name},{WEATHER_DOMAIN}".lower()
         self._attr_device_info = coordinator.device_info
+        self._store = WeatherDotComStorage(self.hass, coordinator.location_name)
+        self._stored_data = {}
 
     @property
     def supported_features(self) -> WeatherEntityFeature:
         return (WeatherEntityFeature.FORECAST_DAILY | WeatherEntityFeature.FORECAST_HOURLY)
 
     async def async_forecast_daily(self) -> list[Forecast] | None:
+        self._stored_data = await self._store.async_load()
         return self.forecast_daily
 
     async def async_forecast_hourly(self) -> list[Forecast] | None:
@@ -195,11 +205,33 @@ class WeatherDotComForecast(WeatherDotCom):
         days = [0, 2, 4, 6, 8, 10, 12, 14, 16, 18, 20, 22, 24, 26, 28]
         if self.coordinator.get_forecast_daily('temperature', 0) is None:
             days[0] += 1
-        caldaytempmax = FIELD_TEMPERATUREMAX
-        caldaytempmin = FIELD_TEMPERATUREMIN
 
         forecast = []
         for period in days:
+            # After 15:00 local time the Weather.com API returns None for the
+            # high temperature. When this happens, return the last known high
+            # temperature instead of None.
+            temperature_max = self.coordinator.get_forecast_daily(FIELD_TEMPERATUREMAX, period)
+            if period in [0, 1] and temperature_max == None:
+                # This is 14 hours in seconds.
+                max_time_difference = 14 * 60 * 60
+                # If the API returns None, attempt to use the value that's in
+                # storage.
+                if (
+                    HIGH_TEMP_TODAY_TIMESTAMP_STORAGE in self._stored_data
+                    and
+                    HIGH_TEMP_TODAY_STORAGE in self._stored_data
+                    and
+                    round(time.time()) - self._stored_data[HIGH_TEMP_TODAY_TIMESTAMP_STORAGE] < max_time_difference
+                ):
+                    temperature_max = self._stored_data[HIGH_TEMP_TODAY_STORAGE]
+                else:
+                    _LOGGER.debug(
+                        'Stored value for maximum temperature is old or missing'
+                        ' and the API is not returning this data - maximum'
+                        ' temperature data in the daily forecast will be'
+                        ' missing for today for: %s', self.entity_id)
+
             forecast.append(Forecast({
                 ATTR_FORECAST_CLOUD_COVERAGE:
                     self.coordinator.get_forecast_daily(FIELD_CLOUD_COVER, period),
@@ -216,10 +248,10 @@ class WeatherDotComForecast(WeatherDotCom):
                     self.coordinator.get_forecast_daily(FIELD_PRECIPCHANCE, period),
 
                 ATTR_FORECAST_TEMP:
-                    self.coordinator.get_forecast_daily(caldaytempmax, period),
+                    temperature_max,
                 ATTR_FORECAST_TEMP_LOW:
                     self.coordinator.get_forecast_daily(
-                        caldaytempmin, period),
+                        FIELD_TEMPERATUREMIN, period),
 
                 ATTR_FORECAST_TIME:
                     self.coordinator._format_timestamp(
