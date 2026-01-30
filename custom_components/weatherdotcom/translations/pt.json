@@ -13,7 +13,7 @@
           "latitude": "Latitude",
           "longitude": "Longitude"
         },
-        "description": "Configurar a integração Weather.com .Para gerar uma chave de api consultador https://www.wunderground.com/ e procurar por apiKey"
+        "description": "Configurar a integração Weather.com"
       }
     }
   }
