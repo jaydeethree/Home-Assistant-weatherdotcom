@@ -1,3 +1,6 @@
+v1.3.1
+* Fix issue with how entity IDs are generated that caused the integration to stop working in Home Assistant 2026.2
+
 v1.3.0
 * Add a cache for forecast temperature data as a workaround for the API not returning that data after 15:00 local time
 

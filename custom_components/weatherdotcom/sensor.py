@@ -63,7 +63,9 @@ class WeatherSensor(CoordinatorEntity, SensorEntity):
         super().__init__(coordinator)
         self.entity_description = description
 
-        entity_id_format = description.key + ".{}"
+        # This will cause problems if we ever add another type of entity, but
+        # for now all entities are of type 'sensor' so this is okay.
+        entity_id_format = "sensor.{}"
 
         self._attr_unique_id = f"{self.coordinator.location_name},{description.key}".lower()
         self.entity_id = generate_entity_id(
