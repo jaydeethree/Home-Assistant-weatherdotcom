@@ -1,0 +1,20 @@
+{
+  "config": {
+    "error": {
+      "invalid_api_key": "Μη έγκυρο κλειδί API",
+      "unknown_error": "Αγνωστο σφάλμα"
+    },
+    "step": {
+      "user": {
+        "data": {
+          "api_key": "Κλειδί API",
+          "name": "Ονομα",
+          "lang": "Γλώσσα",
+          "latitude": "Γεωγραφικό πλάτος",
+          "longitude": "Γεωγραφικό μήκος"
+        },
+        "description": "Ρυθμίστε την ενσωμάτωση του Weather.com. Ακολουθήστε τις οδηγίες στο GitHub README για να λάβετε ένα κλειδί API."
+      }
+    }
+  }
+}
