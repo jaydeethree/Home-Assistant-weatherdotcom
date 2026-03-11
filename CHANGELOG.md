@@ -1,3 +1,7 @@
+v1.3.2
+* Add Greek translation. Thank you @Thunderstrike116!
+* Adjust error logging - retriable errors will now be logged as warnings, not errors
+
 v1.3.1
 * Fix issue with how entity IDs are generated that caused the integration to stop working in Home Assistant 2026.2
 
