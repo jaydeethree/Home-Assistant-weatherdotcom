@@ -148,7 +148,7 @@ class WeatherUpdateCoordinator(DataUpdateCoordinator):
                     _LOGGER.error('Error getting current weather. Exception: %s. Details: %s', type(err), err)
                     current_error = True
                 else:
-                    _LOGGER.error('Error getting current weather, will retry. Exception: %s. Details: %s', type(err), err)
+                    _LOGGER.warning('Error getting current weather, will retry. Exception: %s. Details: %s', type(err), err)
                     await asyncio.sleep(5)
 
         for attempt in range(2):
@@ -171,7 +171,7 @@ class WeatherUpdateCoordinator(DataUpdateCoordinator):
                     _LOGGER.error('Error getting daily weather. Exception: %s. Details: %s', type(err), err)
                     daily_error = True
                 else:
-                    _LOGGER.error('Error getting daily weather, will retry. Exception: %s. Details: %s', type(err), err)
+                    _LOGGER.warning('Error getting daily weather, will retry. Exception: %s. Details: %s', type(err), err)
                     await asyncio.sleep(5)
 
         for attempt in range(2):
@@ -189,7 +189,7 @@ class WeatherUpdateCoordinator(DataUpdateCoordinator):
                     _LOGGER.error('Error getting hourly weather. Exception: %s. Details: %s', type(err), err)
                     hourly_error = True
                 else:
-                    _LOGGER.error('Error getting hourly weather, will retry. Exception: %s. Details: %s', type(err), err)
+                    _LOGGER.warning('Error getting hourly weather, will retry. Exception: %s. Details: %s', type(err), err)
                     await asyncio.sleep(5)
 
         if current_error and daily_error and hourly_error:
