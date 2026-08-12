@@ -217,4 +217,22 @@ current_condition_sensor_descriptions = [
         icon="mdi:longitude",
         value_fn=lambda data, _: cast(float, data),
     ),
+    WeatherSensorEntityDescription(
+        key="iconCode",
+        name="Icon Code",
+        icon="mdi:image",
+        unit_fn=lambda _: None,
+        value_fn=lambda data, _: cast(int, data) or 44,
+    ),
+    WeatherSensorEntityDescription(
+        key="snow24Hour",
+        name="Snow Fall - Last 24 hours",
+        icon="mdi:snowflake",
+        state_class=SensorStateClass.MEASUREMENT,
+        device_class=SensorDeviceClass.PRECIPITATION,
+        unit_fn=lambda metric: (
+            UnitOfLength.MILLIMETERS if metric else UnitOfLength.INCHES
+        ),
+        value_fn=lambda data, _: cast(float, data) or 0,
+    ),
 ]
