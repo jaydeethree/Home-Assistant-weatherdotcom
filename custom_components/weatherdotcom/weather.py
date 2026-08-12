@@ -200,6 +200,15 @@ class WeatherDotComForecast(WeatherDotCom):
         return self.forecast_hourly
 
     @property
+    def extra_state_attributes(self):
+        """Return predicted preciptitation for rain and snow."""
+        daily_data = self.coordinator.data.get("daily", {})
+        return {
+            "snow_list": daily_data.get("qpfSnow", [0] * 15),
+            "rain_list": daily_data.get("qpfRain", [0] * 15)
+        }
+    
+    @property
     def forecast_daily(self) -> list[Forecast]:
         """Return the daily forecast in native units."""
         days = [0, 2, 4, 6, 8, 10, 12, 14, 16, 18, 20, 22, 24, 26, 28]
@@ -261,7 +270,7 @@ class WeatherDotComForecast(WeatherDotCom):
                     self.coordinator.get_forecast_daily(FIELD_UV_INDEX, period),
                 ATTR_FORECAST_WIND_BEARING:
                     self.coordinator.get_forecast_daily(
-                        FIELD_WINDDIRECTIONCARDINAL, period),
+                        FIELD_WINDDIR, period),
                 ATTR_FORECAST_WIND_SPEED: self.coordinator.get_forecast_daily(
                     FIELD_WINDSPEED, period)
             }))
@@ -303,7 +312,7 @@ class WeatherDotComForecast(WeatherDotCom):
                     self.coordinator.get_forecast_hourly(FIELD_UV_INDEX, hour),
                 ATTR_FORECAST_WIND_BEARING:
                     self.coordinator.get_forecast_hourly(
-                        FIELD_WINDDIRECTIONCARDINAL, hour),
+                        FIELD_WINDDIR, hour),
                 ATTR_FORECAST_WIND_SPEED: self.coordinator.get_forecast_hourly(
                     FIELD_WINDSPEED, hour)
             }))
