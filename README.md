@@ -91,7 +91,11 @@ In addition to the Weather entity, these additional sensors will be created by t
 
 All of the data listed above will be updated every 20 minutes.  
 
-Additional details about the API are available [here](https://docs.google.com/document/d/14OK6NG5GRwezb6-5C1vQJoRdStrGnXUiXBDCmQP9T9s/edit).  
+Additional details about the APIs used by this integration are available through these links:
+
+* [Current weather](https://developer.weather.com/docs/openapi/currents-on-demand-3-0/get-wx-observations-current-by-geocode)
+* [Forecast (Daily)](https://developer.weather.com/docs/openapi/daily-forecast-3-0-0/get-wx-forecast-daily-duration-by-geocode)
+* [Forecast (Hourly)](https://developer.weather.com/docs/openapi/hourly-forecast-3-0/get-v3-wx-forecast-hourly-duration-by-geocode)
 
 [Back to top](#top)
 
