@@ -198,15 +198,6 @@ class WeatherDotComForecast(WeatherDotCom):
 
     async def async_forecast_hourly(self) -> list[Forecast] | None:
         return self.forecast_hourly
-
-    @property
-    def extra_state_attributes(self):
-        """Return predicted preciptitation for rain and snow."""
-        daily_data = self.coordinator.data.get("daily", {})
-        return {
-            "snow_list": daily_data.get("qpfSnow", [0] * 15),
-            "rain_list": daily_data.get("qpfRain", [0] * 15)
-        }
     
     @property
     def forecast_daily(self) -> list[Forecast]:
