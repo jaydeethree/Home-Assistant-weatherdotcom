@@ -198,7 +198,7 @@ class WeatherDotComForecast(WeatherDotCom):
 
     async def async_forecast_hourly(self) -> list[Forecast] | None:
         return self.forecast_hourly
-
+    
     @property
     def forecast_daily(self) -> list[Forecast]:
         """Return the daily forecast in native units."""
@@ -261,7 +261,7 @@ class WeatherDotComForecast(WeatherDotCom):
                     self.coordinator.get_forecast_daily(FIELD_UV_INDEX, period),
                 ATTR_FORECAST_WIND_BEARING:
                     self.coordinator.get_forecast_daily(
-                        FIELD_WINDDIRECTIONCARDINAL, period),
+                        FIELD_WINDDIR, period),
                 ATTR_FORECAST_WIND_SPEED: self.coordinator.get_forecast_daily(
                     FIELD_WINDSPEED, period)
             }))
@@ -303,7 +303,7 @@ class WeatherDotComForecast(WeatherDotCom):
                     self.coordinator.get_forecast_hourly(FIELD_UV_INDEX, hour),
                 ATTR_FORECAST_WIND_BEARING:
                     self.coordinator.get_forecast_hourly(
-                        FIELD_WINDDIRECTIONCARDINAL, hour),
+                        FIELD_WINDDIR, hour),
                 ATTR_FORECAST_WIND_SPEED: self.coordinator.get_forecast_hourly(
                     FIELD_WINDSPEED, hour)
             }))
