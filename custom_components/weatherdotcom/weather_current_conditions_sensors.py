@@ -15,6 +15,7 @@ from .const import (
     FIELD_WINDDIRECTIONCARDINAL,
     FIELD_WINDGUST,
     FIELD_WINDSPEED,
+    ICON_SNOWFLAKE,
     ICON_THERMOMETER,
     ICON_UMBRELLA,
     ICON_WIND
@@ -132,7 +133,7 @@ current_condition_sensor_descriptions = [
     ),
     WeatherSensorEntityDescription(
         key="precip1Hour",
-        name="Precipitation - Last hour",
+        name="Precipitation - Last 1 hour",
         icon=ICON_UMBRELLA,
         state_class=SensorStateClass.MEASUREMENT,
         device_class=SensorDeviceClass.PRECIPITATION,
@@ -227,8 +228,8 @@ current_condition_sensor_descriptions = [
     ),
     WeatherSensorEntityDescription(
         key="snow1Hour",
-        name="Snow Fall - Last 1 hour",
-        icon="mdi:snowflake",
+        name="Snowfall - Last 1 hour",
+        icon=ICON_SNOWFLAKE,
         state_class=SensorStateClass.MEASUREMENT,
         device_class=SensorDeviceClass.PRECIPITATION,
         unit_fn=lambda metric: UnitOfLength.MILLIMETERS if metric else UnitOfLength.INCHES,
@@ -236,8 +237,8 @@ current_condition_sensor_descriptions = [
     ),
     WeatherSensorEntityDescription(
         key="snow6Hour",
-        name="Snow Fall - Last 6 hours",
-        icon="mdi:snowflake",
+        name="Snowfall - Last 6 hours",
+        icon=ICON_SNOWFLAKE,
         state_class=SensorStateClass.MEASUREMENT,
         device_class=SensorDeviceClass.PRECIPITATION,
         unit_fn=lambda metric: UnitOfLength.MILLIMETERS if metric else UnitOfLength.INCHES,
@@ -245,8 +246,8 @@ current_condition_sensor_descriptions = [
     ),
     WeatherSensorEntityDescription(
         key="snow24Hour",
-        name="Snow Fall - Last 24 hours",
-        icon="mdi:snowflake",
+        name="Snowfall - Last 24 hours",
+        icon=ICON_SNOWFLAKE,
         state_class=SensorStateClass.MEASUREMENT,
         device_class=SensorDeviceClass.PRECIPITATION,
         unit_fn=lambda metric: UnitOfLength.MILLIMETERS if metric else UnitOfLength.INCHES,
