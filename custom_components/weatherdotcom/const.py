@@ -99,10 +99,10 @@ FIELD_WINDDIR = 'windDirection'
 FIELD_WINDGUST = 'windGust'
 FIELD_WINDSPEED = 'windSpeed'
 
+ICON_SNOWFLAKE = 'mdi:snowflake'
 ICON_THERMOMETER = 'mdi:thermometer'
 ICON_UMBRELLA = 'mdi:umbrella'
 ICON_WIND = 'mdi:weather-windy'
-ICON_SNOWFLAKE = 'mdi:snowflake'
 
 HIGH_TEMP_TODAY_STORAGE = 'high_temp_today'
 HIGH_TEMP_TODAY_TIMESTAMP_STORAGE = 'high_temp_today_timestamp'

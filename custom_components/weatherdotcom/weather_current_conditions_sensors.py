@@ -133,7 +133,7 @@ current_condition_sensor_descriptions = [
     ),
     WeatherSensorEntityDescription(
         key="precip1Hour",
-        name="Precipitation - Last 1 hour",
+        name="Precipitation - Last hour",
         icon=ICON_UMBRELLA,
         state_class=SensorStateClass.MEASUREMENT,
         device_class=SensorDeviceClass.PRECIPITATION,
@@ -228,7 +228,7 @@ current_condition_sensor_descriptions = [
     ),
     WeatherSensorEntityDescription(
         key="snow1Hour",
-        name="Snowfall - Last 1 hour",
+        name="Snowfall - Last hour",
         icon=ICON_SNOWFLAKE,
         state_class=SensorStateClass.MEASUREMENT,
         device_class=SensorDeviceClass.PRECIPITATION,
