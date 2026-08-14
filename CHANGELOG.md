@@ -1,3 +1,7 @@
+v1.3.3
+* Add snowfall and icon code sensors. The icon code sensor is disabled by default - see [this comment](https://github.com/jaydeethree/Home-Assistant-weatherdotcom/pull/67#issuecomment-5275499651) for details on how to use it. Thank you @francis110!
+* Change wind direction for hourly and daily forecasts to use degrees instead of cardinal direction. Once again, thank you @francis110!
+
 v1.3.2
 * Add Greek translation. Thank you @Thunderstrike116!
 * Adjust error logging - retriable errors will now be logged as warnings, not errors
