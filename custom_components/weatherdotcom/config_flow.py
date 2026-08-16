@@ -140,7 +140,9 @@ class WeatherFlowHandler(config_entries.ConfigFlow, domain=DOMAIN):
                     vol.Required(CONF_API_KEY): str,
                     vol.Required(CONF_NAME, default=conf_entry.title): str,
                     vol.Required("entity_id", default=conf_entry.data.get("entity_id")): selector.EntitySelector(
-                        selector.EntitySelectorConfig(domain="zone")
+                        selector.EntitySelectorConfig(domain="zone"),
+                        selector.EntityFilterConfig(domain="device_tracker"),
+                        selector.EntityFilterConfig(domain="person"),
                     ),
                     vol.Required("obfuscation", default=conf_entry.data.get("obfuscation", "1000m")): selector.SelectSelector(
                         selector.SelectSelectorConfig(
