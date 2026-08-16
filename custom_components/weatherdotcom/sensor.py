@@ -74,9 +74,9 @@ class WeatherSensor(CoordinatorEntity, SensorEntity):
         self._unit_system = coordinator.unit_system
         self._attr_device_info = coordinator.device_info
         if description.key == 'latitude':
-            self._sensor_data = coordinator._latitude
+            self._sensor_data = coordinator._get_coordinates()[0]
         elif description.key == 'longitude':
-            self._sensor_data = coordinator._longitude
+            self._sensor_data = coordinator._get_coordinates()[1]
         else:
             self._sensor_data = _get_sensor_data(
                 coordinator.data, description.key, self._unit_system)
@@ -111,9 +111,9 @@ class WeatherSensor(CoordinatorEntity, SensorEntity):
     def _handle_coordinator_update(self) -> None:
         """Handle data update."""
         if self.entity_description.key == 'latitude':
-            self._sensor_data = self.coordinator._latitude
+            self._sensor_data = getattr(self.coordinator, "latitude", getattr(self.coordinator, "_latitude", None))
         elif self.entity_description.key == 'longitude':
-            self._sensor_data = self.coordinator._longitude
+            self._sensor_data = getattr(self.coordinator, "longitude", getattr(self.coordinator, "_longitude", None))
         else:
             self._sensor_data = _get_sensor_data(
                 self.coordinator.data, self.entity_description.key, self._unit_system

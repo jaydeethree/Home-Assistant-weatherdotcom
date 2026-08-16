@@ -6,14 +6,13 @@ import async_timeout
 import voluptuous as vol
 from homeassistant import config_entries
 import homeassistant.helpers.config_validation as cv
-from homeassistant.const import CONF_API_KEY, CONF_LATITUDE, CONF_LONGITUDE, CONF_NAME
+from homeassistant.const import CONF_API_KEY, CONF_NAME
 from homeassistant.core import callback
 from homeassistant.helpers.aiohttp_client import async_create_clientsession
 from .coordinator import InvalidApiKey
 
 from .const import (
     DOMAIN,
-
     CONF_LANG,
     DEFAULT_LANG,
     LANG_CODES
@@ -21,6 +20,12 @@ from .const import (
 
 _LOGGER = logging.getLogger(__name__)
 
+OBFUSCATION_OPTIONS = [
+    selector.SelectOptionDict(value="exact", label="Exact location"),
+    selector.SelectOptionDict(value="100m", label="Obfuscate 100m (330 ft)"),
+    selector.SelectOptionDict(value="500m", label="Obfuscate 500m (0.31 mi)"),
+    selector.SelectOptionDict(value="1000m", label="Obfuscate 1000m (0.62 mi)"),
+]
 
 class WeatherFlowHandler(config_entries.ConfigFlow, domain=DOMAIN):
     """Handle a Weather.com config flow."""
@@ -36,9 +41,18 @@ class WeatherFlowHandler(config_entries.ConfigFlow, domain=DOMAIN):
         session = async_create_clientsession(self.hass)
 
         api_key = user_input[CONF_API_KEY]
-        latitude = user_input[CONF_LATITUDE]
-        longitude = user_input[CONF_LONGITUDE]
         location_name = user_input[CONF_NAME]
+        entity_id = user_input["entity_id"]
+        
+        # Fetch the zone state to get initial coordinates to validate the API key
+        state = self.hass.states.get(entity_id)
+        if state is None or "latitude" not in state.attributes or "longitude" not in state.attributes:
+            errors["base"] = "invalid_zone"
+            return await self._show_setup_form(errors=errors)
+
+        latitude = state.attributes["latitude"]
+        longitude = state.attributes["longitude"]
+
         headers = {
             'Accept-Encoding': 'gzip',
             "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/111.0.0.0 Safari/537.36"
@@ -91,10 +105,29 @@ class WeatherFlowHandler(config_entries.ConfigFlow, domain=DOMAIN):
                 title=location_name,
                 data={
                     CONF_API_KEY: user_input[CONF_API_KEY],
-                    CONF_LATITUDE: latitude,
-                    CONF_LONGITUDE: longitude,
+                    "entity_id": user_input["entity_id"],
+                    "obfuscation": user_input["obfuscation"],
                     CONF_NAME: location_name,
                     CONF_LANG: user_input[CONF_LANG]
+                },
+            )
+
+    async def async_step_reconfigure(self, user_input=None):
+        """Handle a reconfiguration flow initialized by the user."""
+        errors = {}
+        conf_entry = self._get_reconfigure_entry()
+
+        if user_input is not None:
+            return self.async_update_reload_and_abort(
+                conf_entry,
+                title=user_input.get(CONF_NAME, conf_entry.title),
+                data={
+                    **conf_entry.data,
+                    CONF_API_KEY: user_input[CONF_API_KEY],
+                    CONF_NAME: user_input[CONF_NAME],
+                    "entity_id": user_input["entity_id"],
+                    "obfuscation": user_input["obfuscation"],
+                    CONF_LANG: user_input[CONF_LANG],
                 },
             )
 
@@ -105,18 +138,17 @@ class WeatherFlowHandler(config_entries.ConfigFlow, domain=DOMAIN):
             data_schema=vol.Schema(
                 {
                     vol.Required(CONF_API_KEY): str,
-                    vol.Required(
-                        CONF_LATITUDE, default=self.hass.config.latitude
-                    ): cv.latitude,
-                    vol.Required(
-                        CONF_LONGITUDE, default=self.hass.config.longitude
-                    ): cv.longitude,
-                    vol.Required(
-                        CONF_NAME, default=self.hass.config.location_name
-                    ): str,
-                    vol.Required(
-                        CONF_LANG, default=DEFAULT_LANG
-                    ): vol.All(vol.In(LANG_CODES)),
+                    vol.Required(CONF_NAME, default=conf_entry.title): str,
+                    vol.Required("entity_id", default=conf_entry.data.get("entity_id")): selector.EntitySelector(
+                        selector.EntitySelectorConfig(domain="zone")
+                    ),
+                    vol.Required("obfuscation", default=conf_entry.data.get("obfuscation", "1000m")): selector.SelectSelector(
+                        selector.SelectSelectorConfig(
+                            options=OBFUSCATION_OPTIONS,
+                            mode=selector.SelectSelectorMode.DROPDOWN,
+                        )
+                    ),
+                    vol.Required(CONF_LANG, default=conf_entry.data.get(CONF_LANG, DEFAULT_LANG)): vol.All(vol.In(LANG_CODES)),
                 }
             ),
             errors=errors or {},

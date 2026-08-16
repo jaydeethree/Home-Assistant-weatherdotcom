@@ -11,6 +11,8 @@ from typing import Any
 
 import aiohttp
 import async_timeout
+import math
+import random
 
 from homeassistant.core import HomeAssistant
 from homeassistant.exceptions import HomeAssistantError
@@ -59,8 +61,11 @@ class WeatherUpdateCoordinatorConfig:
     unit_system_api: str
     unit_system: str
     lang: str
-    latitude: str
-    longitude: str
+    # Make old and new fields optional
+    location_entity_id: str | None = None
+    obfuscation: str | None = None
+    latitude: str | None = None
+    longitude: str | None = None
     update_interval = MIN_TIME_BETWEEN_UPDATES
     tranfile: str
 
@@ -80,12 +85,15 @@ class WeatherUpdateCoordinator(DataUpdateCoordinator):
         self._unit_system_api = config.unit_system_api
         self.unit_system = config.unit_system
         self._lang = config.lang
-        self._latitude = config.latitude
-        self._longitude = config.longitude
         self.data = None
         self._session = async_get_clientsession(self._hass)
         self._tranfile = config.tranfile
         self._store = WeatherDotComStorage(self._hass, self._location_name)
+
+        self._location_entity_id = config.location_entity_id
+        self._obfuscation = config.obfuscation
+        self._latitude = config.latitude
+        self._longitude = config.longitude
 
         self.device_info = _get_device_info(self._location_name)
 
@@ -116,6 +124,72 @@ class WeatherUpdateCoordinator(DataUpdateCoordinator):
     def location_name(self):
         """Return the location used for data."""
         return self._location_name
+        
+    def _get_coordinates(self) -> tuple[float | None, float | None]:
+        """Fetch and obfuscate current latitude and longitude from the entity's state attributes."""
+        
+        # LEGACY MODE: If no zone entity was configured, use the static latitude/longitude
+        if not self._location_entity_id:
+            if self._latitude is not None and self._longitude is not None:
+                return float(self._latitude), float(self._longitude)
+            return None, None
+
+        # NEW MODE: Fetch from the configured zone entity
+        state = self._hass.states.get(self._location_entity_id)
+        if state is None:
+            _LOGGER.error("Location entity '%s' not found", self._location_entity_id)
+            return None, None
+
+        lat_raw = state.attributes.get("latitude")
+        lon_raw = state.attributes.get("longitude")
+
+        if lat_raw is None or lon_raw is None:
+            _LOGGER.error(
+                "Location entity '%s' does not have valid latitude/longitude attributes",
+                self._location_entity_id
+            )
+            return None, None
+
+        lat = float(lat_raw)
+        lon = float(lon_raw)
+
+        # Apply the randomized offset based on the selected privacy level
+        if self._obfuscation == "1000m":
+            lat, lon = self._apply_random_offset(lat, lon, 1000)
+        elif self._obfuscation == "500m":
+            lat, lon = self._apply_random_offset(lat, lon, 500)
+        elif self._obfuscation == "100m":
+            lat, lon = self._apply_random_offset(lat, lon, 100)
+        # If "exact", it skips the offset and uses the raw coordinates
+
+        return lat, lon
+
+    def _apply_random_offset(self, lat: float, lon: float, max_radius_m: int) -> tuple[float, float]:
+        """
+        Shifts coordinates by a random direction and distance within an annulus
+        where the maximum distance is selected and minimum distance is 50% of the max, 
+        securely pinned to the specific location.
+        """
+        # Create a unique and permanent seed for the integration (multiple services will use same seed)
+        seed_string = f"{lat}_{lon}_{max_radius_m}_weather_secret"
+        rng = random.Random(seed_string)
+
+        # Calculate distance
+        min_radius_m = max_radius_m * 0.5
+        distance = rng.uniform(min_radius_m, max_radius_m)
+
+        # Calculate direction
+        angle = rng.uniform(0, 2 * math.pi)
+
+        # Calculate X and Y offsets
+        dx = distance * math.cos(angle)
+        dy = distance * math.sin(angle)
+
+        # Convert to decimal degrees
+        delta_lat = dy / 111111.0
+        delta_lon = dx / (111111.0 * math.cos(math.radians(lat)))
+
+        return round(lat + delta_lat, 6), round(lon + delta_lon, 6)
 
     async def _async_update_data(self) -> dict[str, Any]:
         return await self.get_weather()
@@ -203,15 +277,15 @@ class WeatherUpdateCoordinator(DataUpdateCoordinator):
             self.data = result
             return result
 
-    def _build_url(self, baseurl):
+    def _build_url(self, baseurl: str, latitude: float, longitude: float) -> str:
         baseurl += '&language={language}'
         baseurl += _RESOURCESHARED
 
         return baseurl.format(
             apiKey=self._api_key,
             language=self._lang,
-            latitude=self._latitude,
-            longitude=self._longitude,
+            latitude=latitude,
+            longitude=longitude,
             units=self._unit_system_api
         )
 
