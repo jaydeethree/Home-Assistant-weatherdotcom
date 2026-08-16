@@ -47,7 +47,7 @@ class WeatherFlowHandler(config_entries.ConfigFlow, domain=DOMAIN):
         # Fetch the zone state to get initial coordinates to validate the API key
         state = self.hass.states.get(entity_id)
         if state is None or "latitude" not in state.attributes or "longitude" not in state.attributes:
-            errors["base"] = "invalid_zone"
+            errors["base"] = "invalid_location_entity"
             return await self._show_setup_form(errors=errors)
 
         latitude = state.attributes["latitude"]
