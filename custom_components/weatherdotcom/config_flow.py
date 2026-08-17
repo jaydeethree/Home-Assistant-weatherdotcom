@@ -6,7 +6,12 @@ import async_timeout
 import voluptuous as vol
 from homeassistant import config_entries
 import homeassistant.helpers.config_validation as cv
-from homeassistant.const import CONF_API_KEY, CONF_NAME
+from homeassistant.const import (
+    CONF_API_KEY,
+    CONF_NAME,
+    CONF_LATITUDE,
+    CONF_LONGITUDE
+)
 from homeassistant.core import callback
 from homeassistant.helpers.aiohttp_client import async_create_clientsession
 from .coordinator import InvalidApiKey
@@ -128,6 +133,9 @@ class WeatherFlowHandler(config_entries.ConfigFlow, domain=DOMAIN):
                     "entity_id": user_input["entity_id"],
                     "obfuscation": user_input["obfuscation"],
                     CONF_LANG: user_input[CONF_LANG],
+                    # Explicitly clear out legacy latitude and longitude to prevent reverting on API calls
+                    CONF_LATITUDE: None,
+                    CONF_LONGITUDE: None,
                 },
             )
 
