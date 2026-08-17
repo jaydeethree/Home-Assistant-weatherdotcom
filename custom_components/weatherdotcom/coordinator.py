@@ -196,6 +196,13 @@ class WeatherUpdateCoordinator(DataUpdateCoordinator):
 
     async def get_weather(self):
         """Get weather data."""
+        latitude, longitude = self._get_coordinates()
+        if latitude is None or longitude is None:
+            raise UpdateFailed(f"Could not retrieve coordinates from entity {self._location_entity_id}")
+
+        self.current_latitude = latitude
+        self.current_longitude = longitude
+
         headers = {
             'Accept-Encoding': 'gzip',
             "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36"
