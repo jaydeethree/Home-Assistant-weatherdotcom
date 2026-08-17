@@ -139,6 +139,27 @@ class WeatherFlowHandler(config_entries.ConfigFlow, domain=DOMAIN):
                 },
             )
 
+        return self.async_show_form(
+            step_id="reconfigure",
+            data_schema=vol.Schema(
+                {
+                    vol.Required(CONF_API_KEY, default=conf_entry.data.get(CONF_API_KEY, "")): str,
+                    vol.Required(CONF_NAME, default=conf_entry.title): str,
+                    vol.Required("entity_id", default=conf_entry.data.get("entity_id")): selector.EntitySelector(
+                        selector.EntitySelectorConfig(domain="zone")
+                    ),
+                    vol.Required("obfuscation", default=conf_entry.data.get("obfuscation", "1000m")): selector.SelectSelector(
+                        selector.SelectSelectorConfig(
+                            options=OBFUSCATION_OPTIONS,
+                            mode=selector.SelectSelectorMode.DROPDOWN,
+                        )
+                    ),
+                    vol.Required(CONF_LANG, default=conf_entry.data.get(CONF_LANG, DEFAULT_LANG)): vol.All(vol.In(LANG_CODES)),
+                }
+            ),
+            errors=errors,
+        )
+
     async def _show_setup_form(self, errors=None):
         """Show the setup form to the user."""
         return self.async_show_form(
