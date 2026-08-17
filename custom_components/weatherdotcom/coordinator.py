@@ -61,13 +61,13 @@ class WeatherUpdateCoordinatorConfig:
     unit_system_api: str
     unit_system: str
     lang: str
+    tranfile: str
     # Make old and new fields optional
     location_entity_id: str | None = None
     obfuscation: str | None = None
     latitude: str | None = None
     longitude: str | None = None
     update_interval = MIN_TIME_BETWEEN_UPDATES
-    tranfile: str
 
 
 class WeatherUpdateCoordinator(DataUpdateCoordinator):
@@ -134,7 +134,7 @@ class WeatherUpdateCoordinator(DataUpdateCoordinator):
                 return float(self._latitude), float(self._longitude)
             return None, None
 
-        # NEW MODE: Fetch from the configured zone entity
+        # NEW MODE: Fetch from the configured location entity
         state = self._hass.states.get(self._location_entity_id)
         if state is None:
             _LOGGER.error("Location entity '%s' not found", self._location_entity_id)

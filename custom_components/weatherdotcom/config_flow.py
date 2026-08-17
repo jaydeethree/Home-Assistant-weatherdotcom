@@ -6,6 +6,7 @@ import async_timeout
 import voluptuous as vol
 from homeassistant import config_entries
 import homeassistant.helpers.config_validation as cv
+from homeassistant.helpers import selector
 from homeassistant.const import (
     CONF_API_KEY,
     CONF_NAME,
@@ -167,7 +168,9 @@ class WeatherFlowHandler(config_entries.ConfigFlow, domain=DOMAIN):
             data_schema=vol.Schema(
                 {
                     vol.Required(CONF_API_KEY): str,
-                    vol.Required(CONF_NAME, default=conf_entry.title): str,
+                    vol.Required(
+                        CONF_NAME, default=self.hass.config.location_name
+                    ): str,
                     vol.Required("entity_id", default=conf_entry.data.get("entity_id")): selector.EntitySelector(
                         selector.EntitySelectorConfig(domain="zone"),
                         selector.EntityFilterConfig(domain="device_tracker"),

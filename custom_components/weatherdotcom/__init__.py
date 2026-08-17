@@ -7,7 +7,8 @@ from homeassistant.const import (
     CONF_API_KEY,
     CONF_LATITUDE, 
     CONF_LONGITUDE, 
-    CONF_NAME, Platform
+    CONF_NAME, 
+    Platform
 )
 from homeassistant.core import HomeAssistant
 from homeassistant.util.unit_system import METRIC_SYSTEM
