@@ -217,7 +217,7 @@ class WeatherUpdateCoordinator(DataUpdateCoordinator):
         for attempt in range(2):
             try:
                 async with async_timeout.timeout(10):
-                    url = self._build_url(_RESOURCECURRENT)
+                    url = self._build_url(_RESOURCECURRENT, latitude, longitude)
                     response = await self._session.get(url, headers=headers)
                     result_current = await response.json(content_type=None)
                     if result_current is None:
@@ -235,7 +235,7 @@ class WeatherUpdateCoordinator(DataUpdateCoordinator):
         for attempt in range(2):
             try:
                 async with async_timeout.timeout(10):
-                    url = self._build_url(_RESOURCEFORECASTDAILY)
+                    url = self._build_url(_RESOURCEFORECASTDAILY, latitude, longitude)
                     response = await self._session.get(url, headers=headers)
                     result_forecast_daily = await response.json(content_type=None)
                     if result_forecast_daily is None:
@@ -258,7 +258,7 @@ class WeatherUpdateCoordinator(DataUpdateCoordinator):
         for attempt in range(2):
             try:
                 async with async_timeout.timeout(10):
-                    url = self._build_url(_RESOURCEFORECASTHOURLY)
+                    url = self._build_url(_RESOURCEFORECASTHOURLY, latitude, longitude)
                     response = await self._session.get(url, headers=headers)
                     result_forecast_hourly = await response.json(content_type=None)
                     if result_forecast_hourly is None:
