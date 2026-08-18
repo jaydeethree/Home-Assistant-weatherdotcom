@@ -2,20 +2,20 @@
   "config": {
     "step": {
       "user": {
+        "description": "Set up Weather.com integration. Follow the instructions in the GitHub README to get an API key.",
         "data": {
           "api_key": "[%key:common::config_flow::data::api_key%]",
           "name": "Name of the integration",
           "lang": "Language",
           "entity_id": "Location",
           "obfuscation": "Location Obfuscation Level"
-        },
-        "description": "Set up Weather.com integration. Follow the instructions in the GitHub README to get an API key."
+        }
       }
     },
     "error": {
       "invalid_api_key": "[%key:common::config_flow::error::invalid_api_key%]",
-      "invalid_location_entity": "The selected entity does not have valid latitude and longitude attributes.",
-      "unknown_error": "Unknown Error"
+      "invalid_location_entity": "The selected location does not have valid latitude and longitude attributes.",
+      "unknown_error": "[%key:common::config_flow::error::unknown%]"
     }
   }
 }

@@ -128,7 +128,7 @@ class WeatherUpdateCoordinator(DataUpdateCoordinator):
     def _get_coordinates(self) -> tuple[float | None, float | None]:
         """Fetch and obfuscate current latitude and longitude from the entity's state attributes."""
         
-        # LEGACY MODE: If no zone entity was configured, use the static latitude/longitude
+        # LEGACY MODE: If no location entity was configured, use the static latitude/longitude
         if not self._location_entity_id:
             if self._latitude is not None and self._longitude is not None:
                 return float(self._latitude), float(self._longitude)

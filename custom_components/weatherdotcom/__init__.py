@@ -5,9 +5,9 @@ from typing import Final
 from homeassistant.config_entries import ConfigEntry
 from homeassistant.const import (
     CONF_API_KEY,
-    CONF_LATITUDE, 
-    CONF_LONGITUDE, 
-    CONF_NAME, 
+    CONF_NAME,
+    CONF_LATITUDE,
+    CONF_LONGITUDE,
     Platform
 )
 from homeassistant.core import HomeAssistant
@@ -39,16 +39,18 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry):
         unit_system_api = API_URL_IMPERIAL
         unit_system = API_IMPERIAL
 
+# Initialize legacy and new setups
     config = WeatherUpdateCoordinatorConfig(
         api_key=entry.data[CONF_API_KEY],
         location_name=entry.data[CONF_NAME],
         unit_system_api=unit_system_api,
         unit_system=unit_system,
         lang=entry.data[CONF_LANG],
+        # Use .get() so missing keys return None instead of crashing
         location_entity_id=entry.data.get("entity_id"),
         obfuscation=entry.data.get("obfuscation"),
-        latitude=entry.data[CONF_LATITUDE],
-        longitude=entry.data[CONF_LONGITUDE],
+        latitude=entry.data.get(CONF_LATITUDE),
+        longitude=entry.data.get(CONF_LONGITUDE),
         tranfile='',
     )
 

@@ -9,9 +9,9 @@
         "data": {
           "api_key": "API Key",
           "name": "Name",
-          "lang": "Language",
-          "latitude": "Latitude",
-          "longitude": "Longitude"
+          "entity_id": "Location",
+          "obfuscation": "Location Obfuscation Level",
+          "lang": "Language"
         },
         "description": "Set up Weather.com integration. Follow the instructions in the GitHub README to get an API key."
       }

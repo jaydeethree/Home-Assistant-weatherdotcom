@@ -41,7 +41,7 @@ class WeatherFlowHandler(config_entries.ConfigFlow, domain=DOMAIN):
     async def async_step_user(self, user_input=None):
         """Handle a flow initiated by the user."""
         if user_input is None:
-            return await self._show_setup_form(user_input)
+            return self._show_setup_form()
 
         errors = {}
         session = async_create_clientsession(self.hass)
@@ -49,34 +49,48 @@ class WeatherFlowHandler(config_entries.ConfigFlow, domain=DOMAIN):
         api_key = user_input[CONF_API_KEY]
         location_name = user_input[CONF_NAME]
         entity_id = user_input["entity_id"]
-        
-        # Fetch the zone state to get initial coordinates to validate the API key
+
+        # Fetch the entity state to get initial coordinates
         state = self.hass.states.get(entity_id)
-        if state is None or "latitude" not in state.attributes or "longitude" not in state.attributes:
+
+        if (
+            state is None
+            or "latitude" not in state.attributes
+            or "longitude" not in state.attributes
+        ):
             errors["base"] = "invalid_location_entity"
-            return await self._show_setup_form(errors=errors)
+            return self._show_setup_form(errors)
 
         latitude = state.attributes["latitude"]
         longitude = state.attributes["longitude"]
 
         headers = {
-            'Accept-Encoding': 'gzip',
-            "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/111.0.0.0 Safari/537.36"
+            "Accept-Encoding": "gzip",
+            "user-agent": (
+                "Mozilla/5.0 (Windows NT 10.0; Win64; x64) "
+                "AppleWebKit/537.36 (KHTML, like Gecko) "
+                "Chrome/111.0.0.0 Safari/537.36"
+            ),
         }
+
         try:
-            if user_input[CONF_API_KEY] is None or user_input[CONF_API_KEY] == "":
+            if not api_key:
                 errors["base"] = "invalid_api_key"
                 raise InvalidApiKey
 
             async with async_timeout.timeout(10):
-                # Use English and US units for the initial test API call. User-supplied units and language will be used for
-                # the created entities.
-                url = f'https://api.weather.com/v3/wx/observations/current?geocode={latitude},{longitude}&format=json&units=e' \
-                      f'&apiKey={api_key}&language=en-US'
+                url = (
+                    "https://api.weather.com/v3/wx/observations/current"
+                    f"?geocode={latitude},{longitude}"
+                    "&format=json"
+                    "&units=e"
+                    f"&apiKey={api_key}"
+                    "&language=en-US"
+                )
+
                 response = await session.get(url, headers=headers)
-            # _LOGGER.debug(response.status)
+
             if response.status != HTTPStatus.OK:
-                # 401 status is most likely bad api_key or api usage limit exceeded
                 if response.status == HTTPStatus.UNAUTHORIZED:
                     _LOGGER.error(
                         "Weather.com config responded with HTTP error %s: %s",
@@ -84,39 +98,39 @@ class WeatherFlowHandler(config_entries.ConfigFlow, domain=DOMAIN):
                         response.reason,
                     )
                     raise InvalidApiKey
-                else:
-                    _LOGGER.error(
-                        "Weather.com config responded with HTTP error %s: %s",
-                        response.status,
-                        response.reason,
-                    )
-                    raise Exception
+
+                _LOGGER.error(
+                    "Weather.com config responded with HTTP error %s: %s",
+                    response.status,
+                    response.reason,
+                )
+                raise Exception
 
         except InvalidApiKey:
             errors["base"] = "invalid_api_key"
-            return await self._show_setup_form(errors=errors)
-        except Exception:  # pylint: disable=broad-except
+            return self._show_setup_form(errors)
+
+        except Exception:
             _LOGGER.exception("Unexpected exception")
             errors["base"] = "unknown_error"
-            return await self._show_setup_form(errors=errors)
+            return self._show_setup_form(errors)
 
-        if not errors:
-            result_current = await response.json(content_type=None)
+        result_current = await response.json(content_type=None)
 
-            unique_id = str(f"{DOMAIN}-{location_name}")
-            await self.async_set_unique_id(unique_id)
-            self._abort_if_unique_id_configured()
+        unique_id = f"{DOMAIN}-{location_name}"
+        await self.async_set_unique_id(unique_id)
+        self._abort_if_unique_id_configured()
 
-            return self.async_create_entry(
-                title=location_name,
-                data={
-                    CONF_API_KEY: user_input[CONF_API_KEY],
-                    "entity_id": user_input["entity_id"],
-                    "obfuscation": user_input["obfuscation"],
-                    CONF_NAME: location_name,
-                    CONF_LANG: user_input[CONF_LANG]
-                },
-            )
+        return self.async_create_entry(
+            title=location_name,
+            data={
+                CONF_API_KEY: api_key,
+                "entity_id": entity_id,
+                "obfuscation": user_input["obfuscation"],
+                CONF_NAME: location_name,
+                CONF_LANG: user_input[CONF_LANG],
+            },
+        )
 
     async def async_step_reconfigure(self, user_input=None):
         """Handle a reconfiguration flow initialized by the user."""
@@ -134,7 +148,6 @@ class WeatherFlowHandler(config_entries.ConfigFlow, domain=DOMAIN):
                     "entity_id": user_input["entity_id"],
                     "obfuscation": user_input["obfuscation"],
                     CONF_LANG: user_input[CONF_LANG],
-                    # Explicitly clear out legacy latitude and longitude to prevent reverting on API calls
                     CONF_LATITUDE: None,
                     CONF_LONGITUDE: None,
                 },
@@ -144,47 +157,86 @@ class WeatherFlowHandler(config_entries.ConfigFlow, domain=DOMAIN):
             step_id="reconfigure",
             data_schema=vol.Schema(
                 {
-                    vol.Required(CONF_API_KEY, default=conf_entry.data.get(CONF_API_KEY, "")): str,
-                    vol.Required(CONF_NAME, default=conf_entry.title): str,
-                    vol.Required("entity_id", default=conf_entry.data.get("entity_id")): selector.EntitySelector(
-                        selector.EntitySelectorConfig(domain="zone"),
-                        selector.EntityFilterConfig(domain="device_tracker"),
-                        selector.EntityFilterConfig(domain="person"),
+                    vol.Required(
+                        CONF_API_KEY,
+                        default=conf_entry.data.get(CONF_API_KEY, ""),
+                    ): str,
+
+                    vol.Required(
+                        CONF_NAME,
+                        default=conf_entry.title,
+                    ): str,
+
+                    vol.Required(
+                        "entity_id",
+                        default=conf_entry.data.get(
+                            "entity_id",
+                            vol.UNDEFINED,
+                        ),
+                    ): selector.EntitySelector(
+                        selector.EntitySelectorConfig(
+                            domain=["zone", "device_tracker", "person"]
+                        )
                     ),
-                    vol.Required("obfuscation", default=conf_entry.data.get("obfuscation", "1000m")): selector.SelectSelector(
+
+                    vol.Required(
+                        "obfuscation",
+                        default=conf_entry.data.get(
+                            "obfuscation",
+                            "1000m",
+                        ),
+                    ): selector.SelectSelector(
                         selector.SelectSelectorConfig(
                             options=OBFUSCATION_OPTIONS,
                             mode=selector.SelectSelectorMode.DROPDOWN,
                         )
                     ),
-                    vol.Required(CONF_LANG, default=conf_entry.data.get(CONF_LANG, DEFAULT_LANG)): vol.All(vol.In(LANG_CODES)),
+
+                    vol.Required(
+                        CONF_LANG,
+                        default=conf_entry.data.get(
+                            CONF_LANG,
+                            DEFAULT_LANG,
+                        ),
+                    ): vol.All(vol.In(LANG_CODES)),
                 }
             ),
             errors=errors,
         )
 
-    async def _show_setup_form(self, errors=None):
-        """Show the setup form to the user."""
+    def _show_setup_form(self, errors=None):
+        """Show the initial setup form."""
         return self.async_show_form(
             step_id="user",
             data_schema=vol.Schema(
                 {
                     vol.Required(CONF_API_KEY): str,
+
                     vol.Required(
-                        CONF_NAME, default=self.hass.config.location_name
+                        CONF_NAME,
+                        default=self.hass.config.location_name,
                     ): str,
-                    vol.Required("entity_id", default=conf_entry.data.get("entity_id")): selector.EntitySelector(
-                        selector.EntitySelectorConfig(domain="zone"),
-                        selector.EntityFilterConfig(domain="device_tracker"),
-                        selector.EntityFilterConfig(domain="person"),
+
+                    vol.Required("entity_id"): selector.EntitySelector(
+                        selector.EntitySelectorConfig(
+                            domain=["zone", "device_tracker", "person"]
+                        )
                     ),
-                    vol.Required("obfuscation", default=conf_entry.data.get("obfuscation", "1000m")): selector.SelectSelector(
+
+                    vol.Required(
+                        "obfuscation",
+                        default="1000m",
+                    ): selector.SelectSelector(
                         selector.SelectSelectorConfig(
                             options=OBFUSCATION_OPTIONS,
                             mode=selector.SelectSelectorMode.DROPDOWN,
                         )
                     ),
-                    vol.Required(CONF_LANG, default=conf_entry.data.get(CONF_LANG, DEFAULT_LANG)): vol.All(vol.In(LANG_CODES)),
+
+                    vol.Required(
+                        CONF_LANG,
+                        default=DEFAULT_LANG,
+                    ): vol.All(vol.In(LANG_CODES)),
                 }
             ),
             errors=errors or {},
