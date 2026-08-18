@@ -62,7 +62,7 @@ class WeatherUpdateCoordinatorConfig:
     unit_system: str
     lang: str
     tranfile: str
-    # Make old and new fields optional
+    # Make legacy and new fields optional
     location_entity_id: str | None = None
     obfuscation: str | None = None
     latitude: str | None = None
