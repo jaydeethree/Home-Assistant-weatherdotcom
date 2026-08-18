@@ -39,14 +39,13 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry):
         unit_system_api = API_URL_IMPERIAL
         unit_system = API_IMPERIAL
 
-# Initialize legacy and new setups
+# Initialize legacy and new instances
     config = WeatherUpdateCoordinatorConfig(
         api_key=entry.data[CONF_API_KEY],
         location_name=entry.data[CONF_NAME],
         unit_system_api=unit_system_api,
         unit_system=unit_system,
         lang=entry.data[CONF_LANG],
-        # Use .get() so missing keys return None instead of crashing
         location_entity_id=entry.data.get("entity_id"),
         obfuscation=entry.data.get("obfuscation"),
         latitude=entry.data.get(CONF_LATITUDE),
