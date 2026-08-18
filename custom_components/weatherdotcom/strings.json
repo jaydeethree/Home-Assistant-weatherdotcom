@@ -10,6 +10,16 @@
           "entity_id": "Location",
           "obfuscation": "Location Obfuscation Level"
         }
+      },
+      "reconfigure": {
+        "description": "Reconfigure Weather.com integration. Follow the instructions in the GitHub README.",
+        "data": {
+          "api_key": "[%key:common::config_flow::data::api_key%]",
+          "name": "Name of the integration",
+          "lang": "Language",
+          "entity_id": "Location",
+          "obfuscation": "Location Obfuscation Level"
+        }
       }
     },
     "error": {
