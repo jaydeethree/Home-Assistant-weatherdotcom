@@ -4,9 +4,12 @@ import logging
 from http import HTTPStatus
 import async_timeout
 import voluptuous as vol
+import math
+import random
 from homeassistant import config_entries
 import homeassistant.helpers.config_validation as cv
 from homeassistant.helpers import selector
+from homeassistant.exceptions import HomeAssistantError
 from homeassistant.const import (
     CONF_API_KEY,
     CONF_NAME,
@@ -16,7 +19,6 @@ from homeassistant.const import (
 )
 from homeassistant.core import callback
 from homeassistant.helpers.aiohttp_client import async_create_clientsession
-from .coordinator import InvalidApiKey
 
 from .const import (
     DOMAIN,
@@ -27,6 +29,23 @@ from .const import (
 
 _LOGGER = logging.getLogger(__name__)
 
+class InvalidApiKey(HomeAssistantError):
+    """Error to indicate there is an invalid api key."""
+
+# Added to obfuscate initial API call, tried to import, HA becoming more strict about imports
+def _apply_random_offset(lat: float, lon: float) -> tuple[float, float]:
+    """Apply a random offset between a maximum and minimum radius."""
+    max_radius_m = 1000
+    min_radius_m = 600
+    seed_string = f"{lat}_{lon}_{max_radius_m}_weather_secret"
+    rng = random.Random(seed_string)
+    distance = rng.uniform(min_radius_m, max_radius_m)
+    angle = rng.uniform(0, 2 * math.pi)
+    dx = distance * math.cos(angle)
+    dy = distance * math.sin(angle)
+    delta_lat = dy / 111111.0
+    delta_lon = dx / (111111.0 * math.cos(math.radians(lat)))
+    return round(lat + delta_lat, 6), round(lon + delta_lon, 6)
 
 class WeatherFlowHandler(config_entries.ConfigFlow, domain=DOMAIN):
     """Handle a Weather.com config flow."""
@@ -56,8 +75,12 @@ class WeatherFlowHandler(config_entries.ConfigFlow, domain=DOMAIN):
             errors["base"] = "invalid_location_entity"
             return self._show_setup_form(errors)
 
-        latitude = state.attributes["latitude"]
-        longitude = state.attributes["longitude"]
+        raw_lat = state.attributes["latitude"]
+        raw_lon = state.attributes["longitude"]
+
+        latitude, longitude = _apply_random_offset(
+            float(raw_lat), float(raw_lon)
+        )
 
         headers = {
             'Accept-Encoding': 'gzip',

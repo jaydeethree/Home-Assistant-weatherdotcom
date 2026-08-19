@@ -124,50 +124,38 @@ class WeatherUpdateCoordinator(DataUpdateCoordinator):
     def location_name(self):
         """Return the location used for data."""
         return self._location_name
-        
+
     def _get_coordinates(self) -> tuple[float | None, float | None]:
-        """Fetch and obfuscate current latitude and longitude from the entity's state attributes."""
-        
-        # LEGACY MODE: If no location entity was configured, use the static latitude/longitude
-        if not self._location_entity_id:
+        """Fetch current latitude and longitude and apply hardcoded obfuscation."""
+        lat, lon = None, None
+
+        # New configuration attempt
+        if self._location_entity_id and (state := self._hass.states.get(self._location_entity_id)):
+            raw_lat = state.attributes.get("latitude")
+            raw_lon = state.attributes.get("longitude")
+            if raw_lat is not None and raw_lon is not None:
+                lat, lon = float(raw_lat), float(raw_lon)
+
+        # Fallback to legacy config if entity is missing
+        if lat is None or lon is None:
             if self._latitude is not None and self._longitude is not None:
-                return float(self._latitude), float(self._longitude)
-            return None, None
+                lat, lon = float(self._latitude), float(self._longitude)
+            else:
+                _LOGGER.error("Could not determine latitude/longitude from entity or prior config")
+                return None, None
 
-        # NEW MODE: Fetch from the configured location entity
-        state = self._hass.states.get(self._location_entity_id)
-        if state is None:
-            _LOGGER.error("Location entity '%s' not found", self._location_entity_id)
-            return None, None
-
-        lat_raw = state.attributes.get("latitude")
-        lon_raw = state.attributes.get("longitude")
-
-        if lat_raw is None or lon_raw is None:
-            _LOGGER.error(
-                "Location entity '%s' does not have valid latitude/longitude attributes",
-                self._location_entity_id
-            )
-            return None, None
-
-        lat = float(lat_raw)
-        lon = float(lon_raw)
-
-        # APPLY OBFUSCATION HERE
-        obfuscated_lat, obfuscated_lon = self._apply_random_offset(lat, lon)
-
+        # Universally apply offset
+        obf_lat, obf_lon = self._apply_random_offset(lat, lon)
+        
         _LOGGER.debug(
             "Location entity '%s': original=(%s, %s), obfuscated=(%s, %s)",
-            self._location_entity_id,
-            lat,
-            lon,
-            obfuscated_lat,
-            obfuscated_lon,
+            self._location_entity_id, lat, lon, obf_lat, obf_lon
         )
+        
+        return obf_lat, obf_lon
 
-        return obfuscated_lat, obfuscated_lon
-
-    def _apply_random_offset(self, lat: float, lon: float) -> tuple[float, float]:
+    @staticmethod
+    def _apply_random_offset(lat: float, lon: float) -> tuple[float, float]:
         """Apply a random offset between a maxium and minimum radius"""
         max_radius_m = 1000
         min_radius_m = 600
@@ -203,7 +191,7 @@ class WeatherUpdateCoordinator(DataUpdateCoordinator):
         self.current_latitude = latitude
         self.current_longitude = longitude
 
-        # LOG THE FINAL COORDINATES SENT TO THE API
+        # Debug log
         _LOGGER.debug(
             "Weather.com API coordinates: latitude=%s, longitude=%s",
             latitude,
@@ -251,7 +239,7 @@ class WeatherUpdateCoordinator(DataUpdateCoordinator):
                     # If the result includes max temperature data for today,
                     # update that data in storage.
                     temperature_max = result_forecast_daily[FIELD_TEMPERATUREMAX][0]
-                    if temperature_max != None:
+                    if temperature_max is not None:
                         await self._store.async_save(temperature_max, round(time.time()))
                     break
             except (ValueError, asyncio.TimeoutError, aiohttp.ClientError) as err:
@@ -317,7 +305,7 @@ class WeatherUpdateCoordinator(DataUpdateCoordinator):
             )
 
     def get_current(self, field):
-        if self.data[RESULTS_CURRENT] == None:
+        if self.data[RESULTS_CURRENT] is None:
             return None
         return self.data[RESULTS_CURRENT][field]
 
@@ -331,13 +319,13 @@ class WeatherUpdateCoordinator(DataUpdateCoordinator):
                 # Those fields exist per-day, rather than per dayPart, so the period is halved
                 return self.data[RESULTS_FORECAST_DAILY][field][int(period / 2)]
             return self.data[RESULTS_FORECAST_DAILY][FIELD_DAYPART][0][field][period]
-        except IndexError:
+        except (IndexError, TypeError):
             return None
 
     def get_forecast_hourly(self, field, hour):
         try:
             return self.data[RESULTS_FORECAST_HOURLY][field][hour]
-        except IndexError:
+        except (IndexError, TypeError):
             return None
 
     @classmethod
@@ -345,7 +333,7 @@ class WeatherUpdateCoordinator(DataUpdateCoordinator):
         for condition, iconcodes in cls.icon_condition_map.items():
             if icon_code in iconcodes:
                 return condition
-        if icon_code != None:
+        if icon_code is not None:
             _LOGGER.warning(f'Unmapped icon code from Weather.com API: {icon_code}')
         return None
 
