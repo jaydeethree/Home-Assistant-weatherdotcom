@@ -6,6 +6,7 @@ from homeassistant.config_entries import ConfigEntry
 from homeassistant.const import (
     CONF_API_KEY,
     CONF_NAME,
+    CONF_ENTITY_ID,
     CONF_LATITUDE,
     CONF_LONGITUDE,
     Platform
@@ -46,8 +47,7 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry):
         unit_system_api=unit_system_api,
         unit_system=unit_system,
         lang=entry.data[CONF_LANG],
-        location_entity_id=entry.data.get("entity_id"),
-        obfuscation=entry.data.get("obfuscation"),
+        location_entity_id=entry.data.get(CONF_ENTITY_ID),
         latitude=entry.data.get(CONF_LATITUDE),
         longitude=entry.data.get(CONF_LONGITUDE),
         tranfile='',

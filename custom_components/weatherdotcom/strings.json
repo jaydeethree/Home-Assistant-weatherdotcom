@@ -7,8 +7,7 @@
           "api_key": "[%key:common::config_flow::data::api_key%]",
           "name": "Name of the integration",
           "lang": "Language",
-          "entity_id": "Location",
-          "obfuscation": "Location Obfuscation Level"
+          "entity_id": "Location"
         }
       },
       "reconfigure": {
@@ -17,8 +16,7 @@
           "api_key": "[%key:common::config_flow::data::api_key%]",
           "name": "Name of the integration",
           "lang": "Language",
-          "entity_id": "Location",
-          "obfuscation": "Location Obfuscation Level"
+          "entity_id": "Location"
         }
       }
     },

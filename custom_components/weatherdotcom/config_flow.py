@@ -10,6 +10,7 @@ from homeassistant.helpers import selector
 from homeassistant.const import (
     CONF_API_KEY,
     CONF_NAME,
+    CONF_ENTITY_ID,
     CONF_LATITUDE,
     CONF_LONGITUDE
 )
@@ -26,12 +27,6 @@ from .const import (
 
 _LOGGER = logging.getLogger(__name__)
 
-OBFUSCATION_OPTIONS = [
-    selector.SelectOptionDict(value="exact", label="Exact location"),
-    selector.SelectOptionDict(value="100m", label="Obfuscate 100m (330 ft)"),
-    selector.SelectOptionDict(value="500m", label="Obfuscate 500m (0.31 mi)"),
-    selector.SelectOptionDict(value="1000m", label="Obfuscate 1000m (0.62 mi)"),
-]
 
 class WeatherFlowHandler(config_entries.ConfigFlow, domain=DOMAIN):
     """Handle a Weather.com config flow."""
@@ -48,7 +43,7 @@ class WeatherFlowHandler(config_entries.ConfigFlow, domain=DOMAIN):
 
         api_key = user_input[CONF_API_KEY]
         location_name = user_input[CONF_NAME]
-        entity_id = user_input["entity_id"]
+        entity_id = user_input[CONF_ENTITY_ID]
 
         # Fetch the entity state to get initial coordinates
         state = self.hass.states.get(entity_id)
@@ -65,12 +60,8 @@ class WeatherFlowHandler(config_entries.ConfigFlow, domain=DOMAIN):
         longitude = state.attributes["longitude"]
 
         headers = {
-            "Accept-Encoding": "gzip",
-            "user-agent": (
-                "Mozilla/5.0 (Windows NT 10.0; Win64; x64) "
-                "AppleWebKit/537.36 (KHTML, like Gecko) "
-                "Chrome/111.0.0.0 Safari/537.36"
-            ),
+            'Accept-Encoding': 'gzip',
+            "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/111.0.0.0 Safari/537.36"
         }
 
         try:
@@ -79,14 +70,10 @@ class WeatherFlowHandler(config_entries.ConfigFlow, domain=DOMAIN):
                 raise InvalidApiKey
 
             async with async_timeout.timeout(10):
-                url = (
-                    "https://api.weather.com/v3/wx/observations/current"
-                    f"?geocode={latitude},{longitude}"
-                    "&format=json"
-                    "&units=e"
-                    f"&apiKey={api_key}"
-                    "&language=en-US"
-                )
+                # Use English and US units for the initial test API call. User-supplied units and language will be used for
+                # the created entities.
+                url = f'https://api.weather.com/v3/wx/observations/current?geocode={latitude},{longitude}&format=json&units=e' \
+                      f'&apiKey={api_key}&language=en-US'
 
                 response = await session.get(url, headers=headers)
 
@@ -125,8 +112,7 @@ class WeatherFlowHandler(config_entries.ConfigFlow, domain=DOMAIN):
             title=location_name,
             data={
                 CONF_API_KEY: api_key,
-                "entity_id": entity_id,
-                "obfuscation": user_input["obfuscation"],
+                CONF_ENTITY_ID: entity_id,
                 CONF_NAME: location_name,
                 CONF_LANG: user_input[CONF_LANG],
             },
@@ -145,8 +131,7 @@ class WeatherFlowHandler(config_entries.ConfigFlow, domain=DOMAIN):
                     **conf_entry.data,
                     CONF_API_KEY: user_input[CONF_API_KEY],
                     CONF_NAME: user_input[CONF_NAME],
-                    "entity_id": user_input["entity_id"],
-                    "obfuscation": user_input["obfuscation"],
+                    CONF_ENTITY_ID: user_input[CONF_ENTITY_ID],
                     CONF_LANG: user_input[CONF_LANG],
                     CONF_LATITUDE: None,
                     CONF_LONGITUDE: None,
@@ -168,27 +153,14 @@ class WeatherFlowHandler(config_entries.ConfigFlow, domain=DOMAIN):
                     ): str,
 
                     vol.Required(
-                        "entity_id",
+                        CONF_ENTITY_ID,
                         default=conf_entry.data.get(
-                            "entity_id",
+                            CONF_ENTITY_ID,
                             vol.UNDEFINED,
                         ),
                     ): selector.EntitySelector(
                         selector.EntitySelectorConfig(
                             domain=["zone", "device_tracker", "person"]
-                        )
-                    ),
-
-                    vol.Required(
-                        "obfuscation",
-                        default=conf_entry.data.get(
-                            "obfuscation",
-                            "1000m",
-                        ),
-                    ): selector.SelectSelector(
-                        selector.SelectSelectorConfig(
-                            options=OBFUSCATION_OPTIONS,
-                            mode=selector.SelectSelectorMode.DROPDOWN,
                         )
                     ),
 
@@ -217,19 +189,9 @@ class WeatherFlowHandler(config_entries.ConfigFlow, domain=DOMAIN):
                         default=self.hass.config.location_name,
                     ): str,
 
-                    vol.Required("entity_id"): selector.EntitySelector(
+                    vol.Required(CONF_ENTITY_ID): selector.EntitySelector(
                         selector.EntitySelectorConfig(
                             domain=["zone", "device_tracker", "person"]
-                        )
-                    ),
-
-                    vol.Required(
-                        "obfuscation",
-                        default="1000m",
-                    ): selector.SelectSelector(
-                        selector.SelectSelectorConfig(
-                            options=OBFUSCATION_OPTIONS,
-                            mode=selector.SelectSelectorMode.DROPDOWN,
                         )
                     ),
 

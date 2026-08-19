@@ -62,11 +62,11 @@ class WeatherUpdateCoordinatorConfig:
     unit_system: str
     lang: str
     tranfile: str
-    # Make legacy and new fields optional
     location_entity_id: str | None = None
-    obfuscation: str | None = None
+    # For legacy services that have not migrated
     latitude: str | None = None
     longitude: str | None = None
+
     update_interval = MIN_TIME_BETWEEN_UPDATES
 
 
@@ -91,7 +91,7 @@ class WeatherUpdateCoordinator(DataUpdateCoordinator):
         self._store = WeatherDotComStorage(self._hass, self._location_name)
 
         self._location_entity_id = config.location_entity_id
-        self._obfuscation = config.obfuscation
+        # For legacy services that have not migrated
         self._latitude = config.latitude
         self._longitude = config.longitude
 
@@ -153,29 +153,29 @@ class WeatherUpdateCoordinator(DataUpdateCoordinator):
         lat = float(lat_raw)
         lon = float(lon_raw)
 
-        # Apply the randomized offset based on the selected privacy level
-        if self._obfuscation == "1000m":
-            lat, lon = self._apply_random_offset(lat, lon, 1000)
-        elif self._obfuscation == "500m":
-            lat, lon = self._apply_random_offset(lat, lon, 500)
-        elif self._obfuscation == "100m":
-            lat, lon = self._apply_random_offset(lat, lon, 100)
-        # If "exact", it skips the offset and uses the raw coordinates
+        # APPLY OBFUSCATION HERE
+        obfuscated_lat, obfuscated_lon = self._apply_random_offset(lat, lon)
 
-        return lat, lon
+        _LOGGER.debug(
+            "Location entity '%s': original=(%s, %s), obfuscated=(%s, %s)",
+            self._location_entity_id,
+            lat,
+            lon,
+            obfuscated_lat,
+            obfuscated_lon,
+        )
 
-    def _apply_random_offset(self, lat: float, lon: float, max_radius_m: int) -> tuple[float, float]:
-        """
-        Shifts coordinates by a random direction and distance within an annulus
-        where the maximum distance is selected and minimum distance is 50% of the max, 
-        securely pinned to the specific location.
-        """
+        return obfuscated_lat, obfuscated_lon
+
+    def _apply_random_offset(self, lat: float, lon: float) -> tuple[float, float]:
+        """Apply a random offset between a maxium and minimum radius"""
+        max_radius_m = 1000
+        min_radius_m = 600
         # Create a unique and permanent seed for the integration (multiple services will use same seed)
         seed_string = f"{lat}_{lon}_{max_radius_m}_weather_secret"
         rng = random.Random(seed_string)
 
         # Calculate distance
-        min_radius_m = max_radius_m * 0.5
         distance = rng.uniform(min_radius_m, max_radius_m)
 
         # Calculate direction
@@ -198,10 +198,17 @@ class WeatherUpdateCoordinator(DataUpdateCoordinator):
         """Get weather data."""
         latitude, longitude = self._get_coordinates()
         if latitude is None or longitude is None:
-            raise UpdateFailed(f"Could not retrieve coordinates from entity {self._location_entity_id}")
+            raise UpdateFailed(f"Could not retrieve location coordinates {self._location_entity_id}")
 
         self.current_latitude = latitude
         self.current_longitude = longitude
+
+        # LOG THE FINAL COORDINATES SENT TO THE API
+        _LOGGER.debug(
+            "Weather.com API coordinates: latitude=%s, longitude=%s",
+            latitude,
+            longitude,
+        )
 
         headers = {
             'Accept-Encoding': 'gzip',

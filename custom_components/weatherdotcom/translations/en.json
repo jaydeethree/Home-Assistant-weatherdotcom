@@ -10,7 +10,6 @@
           "api_key": "API Key",
           "name": "Name",
           "entity_id": "Location",
-          "obfuscation": "Location Obfuscation Level",
           "lang": "Language"
         },
         "description": "Set up Weather.com integration. Follow the instructions in the GitHub README to get an API key."
@@ -20,7 +19,6 @@
           "api_key": "API Key",
           "name": "Name",
           "entity_id": "Location",
-          "obfuscation": "Location Obfuscation Level",
           "lang": "Language"
         },
         "description": "Reconfigure Weather.com integration. Follow the instructions in the GitHub README."
