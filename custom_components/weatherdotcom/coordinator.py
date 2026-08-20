@@ -61,13 +61,13 @@ class WeatherUpdateCoordinatorConfig:
     unit_system_api: str
     unit_system: str
     lang: str
-    tranfile: str
     location_entity_id: str | None = None
     # For legacy services that have not migrated
     latitude: str | None = None
     longitude: str | None = None
 
     update_interval = MIN_TIME_BETWEEN_UPDATES
+    tranfile: str
 
 
 class WeatherUpdateCoordinator(DataUpdateCoordinator):
@@ -239,7 +239,7 @@ class WeatherUpdateCoordinator(DataUpdateCoordinator):
                     # If the result includes max temperature data for today,
                     # update that data in storage.
                     temperature_max = result_forecast_daily[FIELD_TEMPERATUREMAX][0]
-                    if temperature_max is not None:
+                    if temperature_max != None:
                         await self._store.async_save(temperature_max, round(time.time()))
                     break
             except (ValueError, asyncio.TimeoutError, aiohttp.ClientError) as err:
@@ -305,7 +305,7 @@ class WeatherUpdateCoordinator(DataUpdateCoordinator):
             )
 
     def get_current(self, field):
-        if self.data[RESULTS_CURRENT] is None:
+        if self.data[RESULTS_CURRENT] == None:
             return None
         return self.data[RESULTS_CURRENT][field]
 
@@ -333,7 +333,7 @@ class WeatherUpdateCoordinator(DataUpdateCoordinator):
         for condition, iconcodes in cls.icon_condition_map.items():
             if icon_code in iconcodes:
                 return condition
-        if icon_code is not None:
+        if icon_code != None:
             _LOGGER.warning(f'Unmapped icon code from Weather.com API: {icon_code}')
         return None
 

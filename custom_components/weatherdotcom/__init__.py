@@ -5,11 +5,8 @@ from typing import Final
 from homeassistant.config_entries import ConfigEntry
 from homeassistant.const import (
     CONF_API_KEY,
-    CONF_NAME,
     CONF_ENTITY_ID,
-    CONF_LATITUDE,
-    CONF_LONGITUDE,
-    Platform
+    CONF_LATITUDE, CONF_LONGITUDE, CONF_NAME, Platform
 )
 from homeassistant.core import HomeAssistant
 from homeassistant.util.unit_system import METRIC_SYSTEM
@@ -18,6 +15,7 @@ from .coordinator import WeatherUpdateCoordinator, WeatherUpdateCoordinatorConfi
 from .const import (
     CONF_LANG,
     DOMAIN,
+    
     API_METRIC,
     API_IMPERIAL,
     API_URL_METRIC,

@@ -2,13 +2,13 @@
   "config": {
     "step": {
       "user": {
-        "description": "Set up Weather.com integration. Follow the instructions in the GitHub README to get an API key.",
         "data": {
           "api_key": "[%key:common::config_flow::data::api_key%]",
           "name": "Name of the integration",
           "lang": "Language",
           "entity_id": "Location"
-        }
+        },
+        "description": "Set up Weather.com integration. Follow the instructions in the GitHub README to get an API key."
       },
       "reconfigure": {
         "description": "Reconfigure Weather.com integration. Follow the instructions in the GitHub README.",
