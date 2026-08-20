@@ -10,7 +10,7 @@ from homeassistant import config_entries
 import homeassistant.helpers.config_validation as cv
 from homeassistant.helpers import selector
 from homeassistant.exceptions import HomeAssistantError
-from homeassistant.const import CONF_API_KEY, CONF_LATITUDE, CONF_LONGITUDE, CONF_NAME, CONF_ENTITY_ID,
+from homeassistant.const import CONF_API_KEY, CONF_LATITUDE, CONF_LONGITUDE, CONF_NAME, CONF_ENTITY_ID
 from homeassistant.core import callback
 from homeassistant.helpers.aiohttp_client import async_create_clientsession
 from .coordinator import InvalidApiKey
