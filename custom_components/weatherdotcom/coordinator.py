@@ -11,6 +11,8 @@ from typing import Any
 
 import aiohttp
 import async_timeout
+import math
+import random
 
 from homeassistant.core import HomeAssistant
 from homeassistant.exceptions import HomeAssistantError
@@ -59,8 +61,11 @@ class WeatherUpdateCoordinatorConfig:
     unit_system_api: str
     unit_system: str
     lang: str
-    latitude: str
-    longitude: str
+    location_entity_id: str | None = None
+    # For legacy services that have not migrated
+    latitude: str | None = None
+    longitude: str | None = None
+
     update_interval = MIN_TIME_BETWEEN_UPDATES
     tranfile: str
 
@@ -80,12 +85,15 @@ class WeatherUpdateCoordinator(DataUpdateCoordinator):
         self._unit_system_api = config.unit_system_api
         self.unit_system = config.unit_system
         self._lang = config.lang
-        self._latitude = config.latitude
-        self._longitude = config.longitude
         self.data = None
         self._session = async_get_clientsession(self._hass)
         self._tranfile = config.tranfile
         self._store = WeatherDotComStorage(self._hass, self._location_name)
+
+        self._location_entity_id = config.location_entity_id
+        # For legacy services that have not migrated
+        self._latitude = config.latitude
+        self._longitude = config.longitude
 
         self.device_info = _get_device_info(self._location_name)
 
@@ -117,11 +125,79 @@ class WeatherUpdateCoordinator(DataUpdateCoordinator):
         """Return the location used for data."""
         return self._location_name
 
+    def _get_coordinates(self) -> tuple[float | None, float | None]:
+        """Fetch current latitude and longitude and apply hardcoded obfuscation."""
+        lat, lon = None, None
+
+        # New configuration attempt
+        if self._location_entity_id and (state := self._hass.states.get(self._location_entity_id)):
+            raw_lat = state.attributes.get("latitude")
+            raw_lon = state.attributes.get("longitude")
+            if raw_lat is not None and raw_lon is not None:
+                lat, lon = float(raw_lat), float(raw_lon)
+
+        # Fallback to legacy config if entity is missing
+        if lat is None or lon is None:
+            if self._latitude is not None and self._longitude is not None:
+                lat, lon = float(self._latitude), float(self._longitude)
+            else:
+                _LOGGER.error("Could not determine latitude/longitude from entity or prior config")
+                return None, None
+
+        # Universally apply offset
+        obf_lat, obf_lon = self._apply_random_offset(lat, lon)
+        
+        _LOGGER.debug(
+            "Location entity '%s': original=(%s, %s), obfuscated=(%s, %s)",
+            self._location_entity_id, lat, lon, obf_lat, obf_lon
+        )
+        
+        return obf_lat, obf_lon
+
+    @staticmethod
+    def _apply_random_offset(lat: float, lon: float) -> tuple[float, float]:
+        """Apply a random offset between a maxium and minimum radius"""
+        max_radius_m = 1000
+        min_radius_m = 600
+        # Create a unique and permanent seed for the integration (multiple services will use same seed)
+        seed_string = f"{lat}_{lon}_{max_radius_m}_weather_secret"
+        rng = random.Random(seed_string)
+
+        # Calculate distance
+        distance = rng.uniform(min_radius_m, max_radius_m)
+
+        # Calculate direction
+        angle = rng.uniform(0, 2 * math.pi)
+
+        # Calculate X and Y offsets
+        dx = distance * math.cos(angle)
+        dy = distance * math.sin(angle)
+
+        # Convert to decimal degrees
+        delta_lat = dy / 111111.0
+        delta_lon = dx / (111111.0 * math.cos(math.radians(lat)))
+
+        return round(lat + delta_lat, 6), round(lon + delta_lon, 6)
+
     async def _async_update_data(self) -> dict[str, Any]:
         return await self.get_weather()
 
     async def get_weather(self):
         """Get weather data."""
+        latitude, longitude = self._get_coordinates()
+        if latitude is None or longitude is None:
+            raise UpdateFailed(f"Could not retrieve location coordinates {self._location_entity_id}")
+
+        self.current_latitude = latitude
+        self.current_longitude = longitude
+
+        # Debug log
+        _LOGGER.debug(
+            "Weather.com API coordinates: latitude=%s, longitude=%s",
+            latitude,
+            longitude,
+        )
+
         headers = {
             'Accept-Encoding': 'gzip',
             "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36"
@@ -136,7 +212,7 @@ class WeatherUpdateCoordinator(DataUpdateCoordinator):
         for attempt in range(2):
             try:
                 async with async_timeout.timeout(10):
-                    url = self._build_url(_RESOURCECURRENT)
+                    url = self._build_url(_RESOURCECURRENT, latitude, longitude)
                     response = await self._session.get(url, headers=headers)
                     result_current = await response.json(content_type=None)
                     if result_current is None:
@@ -154,7 +230,7 @@ class WeatherUpdateCoordinator(DataUpdateCoordinator):
         for attempt in range(2):
             try:
                 async with async_timeout.timeout(10):
-                    url = self._build_url(_RESOURCEFORECASTDAILY)
+                    url = self._build_url(_RESOURCEFORECASTDAILY, latitude, longitude)
                     response = await self._session.get(url, headers=headers)
                     result_forecast_daily = await response.json(content_type=None)
                     if result_forecast_daily is None:
@@ -177,7 +253,7 @@ class WeatherUpdateCoordinator(DataUpdateCoordinator):
         for attempt in range(2):
             try:
                 async with async_timeout.timeout(10):
-                    url = self._build_url(_RESOURCEFORECASTHOURLY)
+                    url = self._build_url(_RESOURCEFORECASTHOURLY, latitude, longitude)
                     response = await self._session.get(url, headers=headers)
                     result_forecast_hourly = await response.json(content_type=None)
                     if result_forecast_hourly is None:
@@ -203,15 +279,15 @@ class WeatherUpdateCoordinator(DataUpdateCoordinator):
             self.data = result
             return result
 
-    def _build_url(self, baseurl):
+    def _build_url(self, baseurl: str, latitude: float, longitude: float) -> str:
         baseurl += '&language={language}'
         baseurl += _RESOURCESHARED
 
         return baseurl.format(
             apiKey=self._api_key,
             language=self._lang,
-            latitude=self._latitude,
-            longitude=self._longitude,
+            latitude=latitude,
+            longitude=longitude,
             units=self._unit_system_api
         )
 
@@ -243,13 +319,13 @@ class WeatherUpdateCoordinator(DataUpdateCoordinator):
                 # Those fields exist per-day, rather than per dayPart, so the period is halved
                 return self.data[RESULTS_FORECAST_DAILY][field][int(period / 2)]
             return self.data[RESULTS_FORECAST_DAILY][FIELD_DAYPART][0][field][period]
-        except IndexError:
+        except (IndexError, TypeError):
             return None
 
     def get_forecast_hourly(self, field, hour):
         try:
             return self.data[RESULTS_FORECAST_HOURLY][field][hour]
-        except IndexError:
+        except (IndexError, TypeError):
             return None
 
     @classmethod
