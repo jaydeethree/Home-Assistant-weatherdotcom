@@ -1,8 +1,9 @@
 {
   "config": {
     "error": {
-      "invalid_api_key": "Invalid API key",
-      "unknown_error": "Unknown Error"
+      "invalid_api_key": "Invalid API key. Please check your credentials.",
+      "invalid_location_entity": "The selected entity does not have valid latitude and longitude attributes.",
+      "unknown_error": "An unexpected error occurred. Check the logs for details."
     },
     "step": {
       "user": {
