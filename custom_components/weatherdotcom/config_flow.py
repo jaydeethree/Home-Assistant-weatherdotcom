@@ -10,14 +10,18 @@ from homeassistant import config_entries
 import homeassistant.helpers.config_validation as cv
 from homeassistant.helpers import selector
 from homeassistant.exceptions import HomeAssistantError
-from homeassistant.const import CONF_API_KEY, CONF_LATITUDE, CONF_LONGITUDE, CONF_NAME, CONF_ENTITY_ID
+from homeassistant.const import (
+    CONF_API_KEY,
+    CONF_NAME,
+    CONF_ENTITY_ID,
+    CONF_LATITUDE,
+    CONF_LONGITUDE
+)
 from homeassistant.core import callback
 from homeassistant.helpers.aiohttp_client import async_create_clientsession
-from .coordinator import InvalidApiKey
 
 from .const import (
     DOMAIN,
-
     CONF_LANG,
     DEFAULT_LANG,
     LANG_CODES
@@ -25,7 +29,9 @@ from .const import (
 
 _LOGGER = logging.getLogger(__name__)
 
-# Added to obfuscate initial API call, tried to import, HA becoming more strict about imports
+class InvalidApiKey(HomeAssistantError):
+    """Error to indicate there is an invalid api key."""
+
 def _apply_random_offset(lat: float, lon: float) -> tuple[float, float]:
     """Apply a random offset between a maximum and minimum radius."""
     max_radius_m = 1000
@@ -48,7 +54,7 @@ class WeatherFlowHandler(config_entries.ConfigFlow, domain=DOMAIN):
     async def async_step_user(self, user_input=None):
         """Handle a flow initiated by the user."""
         if user_input is None:
-            return self._show_setup_form()
+            return await self._show_setup_form()
 
         errors = {}
         session = async_create_clientsession(self.hass)
@@ -66,7 +72,7 @@ class WeatherFlowHandler(config_entries.ConfigFlow, domain=DOMAIN):
             or "longitude" not in state.attributes
         ):
             errors["base"] = "invalid_location_entity"
-            return self._show_setup_form(errors)
+            return await self._show_setup_form(errors)
 
         raw_lat = state.attributes["latitude"]
         raw_lon = state.attributes["longitude"]
@@ -79,8 +85,9 @@ class WeatherFlowHandler(config_entries.ConfigFlow, domain=DOMAIN):
             'Accept-Encoding': 'gzip',
             "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/111.0.0.0 Safari/537.36"
         }
+
         try:
-            if user_input[CONF_API_KEY] is None or user_input[CONF_API_KEY] == "":
+            if not api_key:
                 errors["base"] = "invalid_api_key"
                 raise InvalidApiKey
 
@@ -89,10 +96,10 @@ class WeatherFlowHandler(config_entries.ConfigFlow, domain=DOMAIN):
                 # the created entities.
                 url = f'https://api.weather.com/v3/wx/observations/current?geocode={latitude},{longitude}&format=json&units=e' \
                       f'&apiKey={api_key}&language=en-US'
+
                 response = await session.get(url, headers=headers)
-            # _LOGGER.debug(response.status)
+
             if response.status != HTTPStatus.OK:
-                # 401 status is most likely bad api_key or api usage limit exceeded
                 if response.status == HTTPStatus.UNAUTHORIZED:
                     _LOGGER.error(
                         "Weather.com config responded with HTTP error %s: %s",
@@ -100,21 +107,22 @@ class WeatherFlowHandler(config_entries.ConfigFlow, domain=DOMAIN):
                         response.reason,
                     )
                     raise InvalidApiKey
-                else:
-                    _LOGGER.error(
-                        "Weather.com config responded with HTTP error %s: %s",
-                        response.status,
-                        response.reason,
-                    )
-                    raise Exception
+
+                _LOGGER.error(
+                    "Weather.com config responded with HTTP error %s: %s",
+                    response.status,
+                    response.reason,
+                )
+                raise Exception
 
         except InvalidApiKey:
             errors["base"] = "invalid_api_key"
-            return self._show_setup_form(errors)
-        except Exception:  # pylint: disable=broad-except
+            return await self._show_setup_form(errors)
+
+        except Exception:
             _LOGGER.exception("Unexpected exception")
             errors["base"] = "unknown_error"
-            return self._show_setup_form(errors)
+            return await self._show_setup_form(errors)
 
         result_current = await response.json(content_type=None)
 
@@ -190,15 +198,17 @@ class WeatherFlowHandler(config_entries.ConfigFlow, domain=DOMAIN):
             errors=errors,
         )
 
-    def _show_setup_form(self, errors=None):
+    async def _show_setup_form(self, errors=None):
         """Show the initial setup form."""
         return self.async_show_form(
             step_id="user",
             data_schema=vol.Schema(
                 {
                     vol.Required(CONF_API_KEY): str,
+
                     vol.Required(
-                        CONF_NAME, default=self.hass.config.location_name,
+                        CONF_NAME,
+                        default=self.hass.config.location_name,
                     ): str,
 
                     vol.Required(CONF_ENTITY_ID): selector.EntitySelector(
@@ -208,7 +218,8 @@ class WeatherFlowHandler(config_entries.ConfigFlow, domain=DOMAIN):
                     ),
 
                     vol.Required(
-                        CONF_LANG, default=DEFAULT_LANG
+                        CONF_LANG,
+                        default=DEFAULT_LANG,
                     ): vol.All(vol.In(LANG_CODES)),
                 }
             ),
