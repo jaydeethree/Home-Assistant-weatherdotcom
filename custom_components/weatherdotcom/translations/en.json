@@ -1,28 +1,53 @@
 {
   "config": {
-    "error": {
-      "invalid_api_key": "Invalid API key. Please check your credentials.",
-      "invalid_location_entity": "The selected entity does not have valid latitude and longitude attributes.",
-      "unknown_error": "An unexpected error occurred. Check the logs for details."
-    },
     "step": {
       "user": {
+        "description": "Set up Weather.com integration. Follow the instructions in the GitHub README to get an API key.",
         "data": {
           "api_key": "API Key",
-          "name": "Name",
-          "entity_id": "Location",
-          "lang": "Language"
-        },
-        "description": "Set up Weather.com integration. Follow the instructions in the GitHub README to get an API key."
+          "name": "Name of the integration",
+          "lang": "Language",
+          "location_source": "Location Source"
+        }
+      },
+      "coordinates": {
+        "description": "Enter the geographical coordinates to use for the weather forecast.",
+        "data": {
+          "latitude": "Latitude",
+          "longitude": "Longitude"
+        }
+      },
+      "entity": {
+        "description": "Select a Home Assistant tracking entity or zone to pull coordinates from.",
+        "data": {
+          "entity_id": "Location Entity"
+        }
       },
       "reconfigure": {
+        "description": "Reconfigure the Weather.com integration. You can change the API key, name, language, or location source.",
         "data": {
           "api_key": "API Key",
-          "name": "Name",
-          "entity_id": "Location",
-          "lang": "Language"
-        },
-        "description": "Reconfigure Weather.com integration. Follow the instructions in the GitHub README."
+          "name": "Name of the integration",
+          "lang": "Language",
+          "location_source": "Location Source"
+        }
+      }
+    },
+    "error": {
+      "invalid_api_key": "The API key is invalid. Please check your credentials.",
+      "invalid_location_entity": "The selected location does not have valid latitude and longitude attributes.",
+      "unknown_error": "An unexpected error occurred while connecting to Weather.com. Check the Home Assistant logs for more details."
+    },
+    "abort": {
+      "already_configured": "A Weather.com integration with this name already exists. Please choose a different name.",
+      "reconfigure_successful": "The Weather.com integration was reconfigured successfully."
+    }
+  },
+  "selector": {
+    "location_source_options": {
+      "options": {
+        "coordinates": "Geographical Coordinates",
+        "entity": "Entity (Zone, device_tracker, or person)"
       }
     }
   }
