@@ -24,10 +24,9 @@
         }
       },
       "reconfigure": {
-        "description": "Reconfigure the Weather.com integration. You can change the API key, name, language, or location source.",
+        "description": "Reconfigure the Weather.com integration. You can change the API key, language, or location source.",
         "data": {
           "api_key": "API Key",
-          "name": "Name of the integration",
           "lang": "Language",
           "location_source": "Location Source"
         }
