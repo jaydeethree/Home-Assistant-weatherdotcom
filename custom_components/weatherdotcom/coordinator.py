@@ -61,14 +61,14 @@ class WeatherUpdateCoordinatorConfig:
     unit_system_api: str
     unit_system: str
     lang: str
-    location_entity_id: str | None = None
-    # For legacy services that have not migrated
-    latitude: str | None = None
-    longitude: str | None = None
 
     update_interval = MIN_TIME_BETWEEN_UPDATES
     tranfile: str
 
+    location_entity_id: str | None = None
+    # For legacy services that have not migrated
+    latitude: str | None = None
+    longitude: str | None = None
 
 class WeatherUpdateCoordinator(DataUpdateCoordinator):
     """The Weather.com update coordinator."""
