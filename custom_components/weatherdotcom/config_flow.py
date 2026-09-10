@@ -228,14 +228,10 @@ class WeatherFlowHandler(config_entries.ConfigFlow, domain=DOMAIN):
         if location_source == LOCATION_TYPE_LATLONG:
             entry_data[CONF_LATITUDE] = self._data[CONF_LATITUDE]
             entry_data[CONF_LONGITUDE] = self._data[CONF_LONGITUDE]
-
-            unique_id = str(f"{DOMAIN}-{location_name}")
         else:
             entry_data[CONF_ENTITY_ID] = self._data[CONF_ENTITY_ID]
 
-            unique_id = (
-                f"{DOMAIN}-entity-{self._data[CONF_ENTITY_ID]}"
-            )
+        unique_id = str(f"{DOMAIN}-{location_name}")
 
         if self.source == config_entries.SOURCE_RECONFIGURE:
             return self.async_update_reload_and_abort(
