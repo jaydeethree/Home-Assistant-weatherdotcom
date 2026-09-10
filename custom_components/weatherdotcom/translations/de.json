@@ -1,19 +1,52 @@
 {
   "config": {
-    "error": {
-      "invalid_api_key": "Ungültiger API-Schlüssel",
-      "unknown_error": "Unbekannter Fehler"
-    },
     "step": {
       "user": {
+        "description": "Richten Sie die Weather.com-Integration ein. ",
         "data": {
           "api_key": "API-Schlüssel",
-          "name": "Name",
+          "name": "Standortname",
           "lang": "Sprache",
+          "location_source": "Standortquelle"
+        }
+      },
+      "latlong": {
+        "description": "Geben Sie die geografischen Koordinaten ein, die für die Wettervorhersage verwendet werden sollen.",
+        "data": {
           "latitude": "Breite",
-          "longitude": "Längengrad"
-        },
-        "description": "Richten Sie die Weather.com-Integration ein. "
+          "longitude": "Länge"
+        }
+      },
+      "entity": {
+        "description": "Wählen Sie eine Home Assistant-Tracking-Entität oder -Zone aus, aus der Sie Koordinaten abrufen möchten.",
+        "data": {
+          "entity_id": "Standortentität"
+        }
+      },
+      "reconfigure": {
+        "description": "Konfigurieren Sie die Weather.com-Integration neu. ",
+        "data": {
+          "api_key": "API-Schlüssel",
+          "lang": "Sprache",
+          "location_source": "Standortquelle"
+        }
+      }
+    },
+    "error": {
+      "invalid_api_key": "Der API-Schlüssel ist ungültig.",
+      "invalid_location_entity": "Die ausgewählte Entität verfügt nicht über gültige Breiten- und Längengradattribute.",
+      "unknown_error": "Es ist ein unerwarteter Fehler aufgetreten. "
+    },
+    "abort": {
+      "already_configured": "Eine Weather.com-Integration mit diesem Namen existiert bereits. ",
+      "reconfigure_successful": "Die Weather.com-Integration wurde erfolgreich neu konfiguriert."
+    }
+  },
+  "selector": {
+    "location_source_options": {
+      "options": {
+        "latlong": "Breitengrad/Längengrad",
+        "entity": "Entität (Zone, Device_Tracker oder Person)"
       }
     }
   }

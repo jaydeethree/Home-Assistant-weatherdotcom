@@ -1,19 +1,52 @@
 {
   "config": {
-    "error": {
-      "invalid_api_key": "مفتاح API غير صالح",
-      "unknown_error": "خطأ غير معروف"
-    },
     "step": {
       "user": {
+        "description": "قم بإعداد تكامل Weather.com. ",
         "data": {
-          "api_key": "مفتاح API",
-          "name": "اسم",
+          "api_key": "مفتاح واجهة برمجة التطبيقات",
+          "name": "اسم الموقع",
           "lang": "لغة",
+          "location_source": "مصدر الموقع"
+        }
+      },
+      "latlong": {
+        "description": "أدخل الإحداثيات الجغرافية المراد استخدامها لتوقعات الطقس.",
+        "data": {
           "latitude": "خط العرض",
           "longitude": "خط الطول"
-        },
-        "description": "قم بإعداد تكامل Weather.com. "
+        }
+      },
+      "entity": {
+        "description": "حدد كيان أو منطقة تتبع Home Assistant لسحب الإحداثيات منها.",
+        "data": {
+          "entity_id": "كيان الموقع"
+        }
+      },
+      "reconfigure": {
+        "description": "أعد تكوين تكامل Weather.com. ",
+        "data": {
+          "api_key": "مفتاح واجهة برمجة التطبيقات",
+          "lang": "لغة",
+          "location_source": "مصدر الموقع"
+        }
+      }
+    },
+    "error": {
+      "invalid_api_key": "مفتاح API غير صالح.",
+      "invalid_location_entity": "لا يحتوي الكيان المحدد على سمات خط الطول وخط العرض الصالحة.",
+      "unknown_error": "حدث خطأ غير متوقع. "
+    },
+    "abort": {
+      "already_configured": "يوجد بالفعل تكامل Weather.com بهذا الاسم. ",
+      "reconfigure_successful": "تمت إعادة تكوين تكامل Weather.com بنجاح."
+    }
+  },
+  "selector": {
+    "location_source_options": {
+      "options": {
+        "latlong": "خط العرض/خط الطول",
+        "entity": "الكيان (المنطقة أو جهاز تعقب الجهاز أو الشخص)"
       }
     }
   }

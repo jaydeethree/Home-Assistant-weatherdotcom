@@ -1,19 +1,52 @@
 {
   "config": {
-    "error": {
-      "invalid_api_key": "无效的 API 密钥",
-      "unknown_error": "未知错误"
-    },
     "step": {
       "user": {
+        "description": "设置 Weather.com 集成。",
         "data": {
           "api_key": "API密钥",
-          "name": "姓名",
+          "name": "地点名称",
           "lang": "语言",
+          "location_source": "位置来源"
+        }
+      },
+      "latlong": {
+        "description": "输入用于天气预报的地理坐标。",
+        "data": {
           "latitude": "纬度",
           "longitude": "经度"
-        },
-        "description": "设置 Weather.com 集成。"
+        }
+      },
+      "entity": {
+        "description": "选择要从中提取坐标的 Home Assistant 跟踪实体或区域。",
+        "data": {
+          "entity_id": "位置实体"
+        }
+      },
+      "reconfigure": {
+        "description": "重新配置 Weather.com 集成。",
+        "data": {
+          "api_key": "API密钥",
+          "lang": "语言",
+          "location_source": "位置来源"
+        }
+      }
+    },
+    "error": {
+      "invalid_api_key": "API 密钥无效。",
+      "invalid_location_entity": "所选实体没有有效的纬度和经度属性。",
+      "unknown_error": "发生意外错误。"
+    },
+    "abort": {
+      "already_configured": "已存在使用此名称的 Weather.com 集成。",
+      "reconfigure_successful": "Weather.com 集成已成功重新配置。"
+    }
+  },
+  "selector": {
+    "location_source_options": {
+      "options": {
+        "latlong": "纬度/经度",
+        "entity": "实体（区域、device_tracker 或人员）"
       }
     }
   }

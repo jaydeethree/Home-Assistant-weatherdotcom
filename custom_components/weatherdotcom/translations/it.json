@@ -1,19 +1,52 @@
 {
   "config": {
-    "error": {
-      "invalid_api_key": "Chiave API non valida",
-      "unknown_error": "Errore sconosciuto"
-    },
     "step": {
       "user": {
+        "description": "Configura l'integrazione di Weather.com. ",
         "data": {
-          "api_key": "Chiave dell'API",
-          "name": "Nome",
+          "api_key": "Chiave API",
+          "name": "Nome della posizione",
           "lang": "Lingua",
+          "location_source": "Origine della posizione"
+        }
+      },
+      "latlong": {
+        "description": "Inserisci le coordinate geografiche da utilizzare per le previsioni meteo.",
+        "data": {
           "latitude": "Latitudine",
           "longitude": "Longitudine"
-        },
-        "description": "Configura l'integrazione Weather.com. "
+        }
+      },
+      "entity": {
+        "description": "Seleziona un'entità o una zona di monitoraggio dell'assistente domestico da cui estrarre le coordinate.",
+        "data": {
+          "entity_id": "Entità di posizione"
+        }
+      },
+      "reconfigure": {
+        "description": "Riconfigurare l'integrazione di Weather.com. ",
+        "data": {
+          "api_key": "Chiave API",
+          "lang": "Lingua",
+          "location_source": "Origine della posizione"
+        }
+      }
+    },
+    "error": {
+      "invalid_api_key": "La chiave API non è valida.",
+      "invalid_location_entity": "L'entità selezionata non ha attributi di latitudine e longitudine validi.",
+      "unknown_error": "Si è verificato un errore imprevisto. "
+    },
+    "abort": {
+      "already_configured": "Esiste già un'integrazione Weather.com con questo nome. ",
+      "reconfigure_successful": "L'integrazione di Weather.com è stata riconfigurata con successo."
+    }
+  },
+  "selector": {
+    "location_source_options": {
+      "options": {
+        "latlong": "Latitudine/Longitudine",
+        "entity": "Entità (zona, dispositivo_tracker o persona)"
       }
     }
   }

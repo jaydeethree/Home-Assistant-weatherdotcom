@@ -1,19 +1,52 @@
 {
   "config": {
-    "error": {
-      "invalid_api_key": "Clé API invalide",
-      "unknown_error": "Erreur inconnue"
-    },
     "step": {
       "user": {
+        "description": "Configurez l’intégration Weather.com. ",
         "data": {
-          "api_key": "clé API",
-          "name": "Nom",
+          "api_key": "Clé API",
+          "name": "Nom du lieu",
           "lang": "Langue",
+          "location_source": "Source de localisation"
+        }
+      },
+      "latlong": {
+        "description": "Saisissez les coordonnées géographiques à utiliser pour les prévisions météo.",
+        "data": {
           "latitude": "Latitude",
           "longitude": "Longitude"
-        },
-        "description": "Configurez l'intégration de Weather.com. "
+        }
+      },
+      "entity": {
+        "description": "Sélectionnez une entité ou une zone de suivi de Home Assistant à partir de laquelle extraire les coordonnées.",
+        "data": {
+          "entity_id": "Entité de localisation"
+        }
+      },
+      "reconfigure": {
+        "description": "Reconfigurez l’intégration Weather.com. ",
+        "data": {
+          "api_key": "Clé API",
+          "lang": "Langue",
+          "location_source": "Source de localisation"
+        }
+      }
+    },
+    "error": {
+      "invalid_api_key": "La clé API n'est pas valide.",
+      "invalid_location_entity": "L'entité sélectionnée ne possède pas d'attributs de latitude et de longitude valides.",
+      "unknown_error": "Une erreur inattendue s'est produite. "
+    },
+    "abort": {
+      "already_configured": "Une intégration Weather.com portant ce nom existe déjà. ",
+      "reconfigure_successful": "L'intégration de Weather.com a été reconfigurée avec succès."
+    }
+  },
+  "selector": {
+    "location_source_options": {
+      "options": {
+        "latlong": "Latitude/Longitude",
+        "entity": "Entité (zone, device_tracker ou personne)"
       }
     }
   }

@@ -1,19 +1,52 @@
 {
   "config": {
-    "error": {
-      "invalid_api_key": "Недействительный ключ API",
-      "unknown_error": "Неизвестная ошибка"
-    },
     "step": {
       "user": {
+        "description": "Настройте интеграцию с Weather.com. ",
         "data": {
           "api_key": "API-ключ",
-          "name": "Имя",
+          "name": "Название местоположения",
           "lang": "Язык",
+          "location_source": "Источник местоположения"
+        }
+      },
+      "latlong": {
+        "description": "Введите географические координаты, которые будут использоваться для прогноза погоды.",
+        "data": {
           "latitude": "Широта",
           "longitude": "Долгота"
-        },
-        "description": "Настройте интеграцию с Weather.com. "
+        }
+      },
+      "entity": {
+        "description": "Выберите объект или зону отслеживания Home Assistant, из которой нужно получить координаты.",
+        "data": {
+          "entity_id": "Объект местоположения"
+        }
+      },
+      "reconfigure": {
+        "description": "Перенастройте интеграцию Weather.com. ",
+        "data": {
+          "api_key": "API-ключ",
+          "lang": "Язык",
+          "location_source": "Источник местоположения"
+        }
+      }
+    },
+    "error": {
+      "invalid_api_key": "Ключ API недействителен.",
+      "invalid_location_entity": "Выбранный объект не имеет допустимых атрибутов широты и долготы.",
+      "unknown_error": "Произошла непредвиденная ошибка. "
+    },
+    "abort": {
+      "already_configured": "Интеграция Weather.com с таким названием уже существует. ",
+      "reconfigure_successful": "Интеграция Weather.com была успешно перенастроена."
+    }
+  },
+  "selector": {
+    "location_source_options": {
+      "options": {
+        "latlong": "Широта/долгота",
+        "entity": "Объект (зона, устройство_трекер или человек)"
       }
     }
   }

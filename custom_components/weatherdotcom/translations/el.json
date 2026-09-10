@@ -1,19 +1,52 @@
 {
   "config": {
-    "error": {
-      "invalid_api_key": "Μη έγκυρο κλειδί API",
-      "unknown_error": "Αγνωστο σφάλμα"
-    },
     "step": {
       "user": {
+        "description": "Ρυθμίστε την ενοποίηση του Weather.com. ",
         "data": {
           "api_key": "Κλειδί API",
-          "name": "Ονομα",
+          "name": "Όνομα τοποθεσίας",
           "lang": "Γλώσσα",
+          "location_source": "Πηγή τοποθεσίας"
+        }
+      },
+      "latlong": {
+        "description": "Εισαγάγετε τις γεωγραφικές συντεταγμένες που θα χρησιμοποιηθούν για την πρόγνωση του καιρού.",
+        "data": {
           "latitude": "Γεωγραφικό πλάτος",
           "longitude": "Γεωγραφικό μήκος"
-        },
-        "description": "Ρυθμίστε την ενσωμάτωση του Weather.com. Ακολουθήστε τις οδηγίες στο GitHub README για να λάβετε ένα κλειδί API."
+        }
+      },
+      "entity": {
+        "description": "Επιλέξτε μια οντότητα ή ζώνη παρακολούθησης του Home Assistant για να τραβήξετε συντεταγμένες.",
+        "data": {
+          "entity_id": "Οντότητα τοποθεσίας"
+        }
+      },
+      "reconfigure": {
+        "description": "Ρυθμίστε ξανά την ενσωμάτωση του Weather.com. ",
+        "data": {
+          "api_key": "Κλειδί API",
+          "lang": "Γλώσσα",
+          "location_source": "Πηγή τοποθεσίας"
+        }
+      }
+    },
+    "error": {
+      "invalid_api_key": "Το κλειδί API δεν είναι έγκυρο.",
+      "invalid_location_entity": "Η επιλεγμένη οντότητα δεν έχει έγκυρα χαρακτηριστικά γεωγραφικού πλάτους και μήκους.",
+      "unknown_error": "Παρουσιάστηκε απροσδόκητο σφάλμα. "
+    },
+    "abort": {
+      "already_configured": "Υπάρχει ήδη μια ενοποίηση του Weather.com με αυτό το όνομα. ",
+      "reconfigure_successful": "Η ενσωμάτωση του Weather.com διαμορφώθηκε ξανά με επιτυχία."
+    }
+  },
+  "selector": {
+    "location_source_options": {
+      "options": {
+        "latlong": "Γεωγραφικό πλάτος/μήκος",
+        "entity": "Οντότητα (ζώνη, συσκευή_tracker ή άτομο)"
       }
     }
   }

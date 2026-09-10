@@ -1,19 +1,52 @@
 {
   "config": {
-    "error": {
-      "invalid_api_key": "無効な API キー",
-      "unknown_error": "不明なエラー"
-    },
     "step": {
       "user": {
+        "description": "Weather.com 統合をセットアップします。 ",
         "data": {
           "api_key": "APIキー",
-          "name": "名前",
+          "name": "地名",
           "lang": "言語",
+          "location_source": "位置情報源"
+        }
+      },
+      "latlong": {
+        "description": "天気予報に使用する地理座標を入力します。",
+        "data": {
           "latitude": "緯度",
           "longitude": "経度"
-        },
-        "description": "Weather.com 統合をセットアップします。 "
+        }
+      },
+      "entity": {
+        "description": "座標を取得するホーム アシスタントの追跡エンティティまたはゾーンを選択します。",
+        "data": {
+          "entity_id": "位置エンティティ"
+        }
+      },
+      "reconfigure": {
+        "description": "Weather.com 統合を再構成します。 ",
+        "data": {
+          "api_key": "APIキー",
+          "lang": "言語",
+          "location_source": "位置情報源"
+        }
+      }
+    },
+    "error": {
+      "invalid_api_key": "APIキーが無効です。",
+      "invalid_location_entity": "選択したエンティティには有効な緯度と経度の属性がありません。",
+      "unknown_error": "予期しないエラーが発生しました。"
+    },
+    "abort": {
+      "already_configured": "この名前の Weather.com 統合はすでに存在します。",
+      "reconfigure_successful": "Weather.com 統合は正常に再構成されました。"
+    }
+  },
+  "selector": {
+    "location_source_options": {
+      "options": {
+        "latlong": "緯度・経度",
+        "entity": "エンティティ (ゾーン、device_tracker、または人物)"
       }
     }
   }
