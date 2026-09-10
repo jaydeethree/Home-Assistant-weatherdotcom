@@ -11,8 +11,6 @@ from typing import Any
 
 import aiohttp
 import async_timeout
-import math
-import random
 
 from homeassistant.core import HomeAssistant
 from homeassistant.exceptions import HomeAssistantError
@@ -134,50 +132,15 @@ class WeatherUpdateCoordinator(DataUpdateCoordinator):
             raw_lat = state.attributes.get("latitude")
             raw_lon = state.attributes.get("longitude")
             if raw_lat is not None and raw_lon is not None:
-                lat, lon = float(raw_lat), float(raw_lon)
+                return round(float(raw_lat), 2), round(float(raw_lon), 2)
 
         # Fallback to legacy config if entity is missing
         if lat is None or lon is None:
             if self._latitude is not None and self._longitude is not None:
-                lat, lon = float(self._latitude), float(self._longitude)
+                return float(self._latitude), float(self._longitude)
             else:
                 _LOGGER.error("Could not determine latitude/longitude from entity or prior config")
                 return None, None
-
-        # Universally apply offset
-        obf_lat, obf_lon = self._apply_random_offset(lat, lon)
-        
-        _LOGGER.debug(
-            "Location entity '%s': original=(%s, %s), obfuscated=(%s, %s)",
-            self._location_entity_id, lat, lon, obf_lat, obf_lon
-        )
-        
-        return obf_lat, obf_lon
-
-    @staticmethod
-    def _apply_random_offset(lat: float, lon: float) -> tuple[float, float]:
-        """Apply a random offset between a maxium and minimum radius"""
-        max_radius_m = 1000
-        min_radius_m = 600
-        # Create a unique and permanent seed for the integration (multiple services will use same seed)
-        seed_string = f"{lat}_{lon}_{max_radius_m}_weather_secret"
-        rng = random.Random(seed_string)
-
-        # Calculate distance
-        distance = rng.uniform(min_radius_m, max_radius_m)
-
-        # Calculate direction
-        angle = rng.uniform(0, 2 * math.pi)
-
-        # Calculate X and Y offsets
-        dx = distance * math.cos(angle)
-        dy = distance * math.sin(angle)
-
-        # Convert to decimal degrees
-        delta_lat = dy / 111111.0
-        delta_lon = dx / (111111.0 * math.cos(math.radians(lat)))
-
-        return round(lat + delta_lat, 6), round(lon + delta_lon, 6)
 
     async def _async_update_data(self) -> dict[str, Any]:
         return await self.get_weather()
@@ -190,13 +153,6 @@ class WeatherUpdateCoordinator(DataUpdateCoordinator):
 
         self.current_latitude = latitude
         self.current_longitude = longitude
-
-        # Debug log
-        _LOGGER.debug(
-            "Weather.com API coordinates: latitude=%s, longitude=%s",
-            latitude,
-            longitude,
-        )
 
         headers = {
             'Accept-Encoding': 'gzip',

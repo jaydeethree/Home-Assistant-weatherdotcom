@@ -4,18 +4,16 @@ import logging
 from http import HTTPStatus
 import async_timeout
 import voluptuous as vol
-import math
-import random
 from homeassistant import config_entries
 import homeassistant.helpers.config_validation as cv
 from homeassistant.helpers import selector
 from homeassistant.exceptions import HomeAssistantError
 from homeassistant.const import (
     CONF_API_KEY,
-    CONF_NAME,
     CONF_ENTITY_ID,
     CONF_LATITUDE,
-    CONF_LONGITUDE
+    CONF_LONGITUDE,
+    CONF_NAME
 )
 from homeassistant.core import callback
 from homeassistant.helpers.aiohttp_client import async_create_clientsession
@@ -23,8 +21,11 @@ from homeassistant.helpers.aiohttp_client import async_create_clientsession
 from .const import (
     DOMAIN,
     CONF_LANG,
+    CONF_LOCATION_SOURCE,
     DEFAULT_LANG,
-    LANG_CODES
+    LANG_CODES,
+    LOCATION_TYPE_ENTITY,
+    LOCATION_TYPE_LATLONG
 )
 
 _LOGGER = logging.getLogger(__name__)
@@ -32,21 +33,6 @@ _LOGGER = logging.getLogger(__name__)
 
 class InvalidApiKey(HomeAssistantError):
     """Error to indicate there is an invalid api key."""
-
-
-def _apply_random_offset(lat: float, lon: float) -> tuple[float, float]:
-    """Apply a random offset between a maximum and minimum radius."""
-    max_radius_m = 1000
-    min_radius_m = 600
-    seed_string = f"{lat}_{lon}_{max_radius_m}_weather_secret"
-    rng = random.Random(seed_string)
-    distance = rng.uniform(min_radius_m, max_radius_m)
-    angle = rng.uniform(0, 2 * math.pi)
-    dx = distance * math.cos(angle)
-    dy = distance * math.sin(angle)
-    delta_lat = dy / 111111.0
-    delta_lon = dx / (111111.0 * math.cos(math.radians(lat)))
-    return round(lat + delta_lat, 6), round(lon + delta_lon, 6)
 
 
 class WeatherFlowHandler(config_entries.ConfigFlow, domain=DOMAIN):
@@ -63,7 +49,7 @@ class WeatherFlowHandler(config_entries.ConfigFlow, domain=DOMAIN):
         errors = {}
         if user_input is not None:
             self._data = user_input
-            if user_input.get("location_source") == "coordinates":
+            if user_input.get(CONF_LOCATION_SOURCE) == LOCATION_TYPE_LATLONG:
                 return await self.async_step_coordinates()
             return await self.async_step_entity()
 
@@ -80,11 +66,11 @@ class WeatherFlowHandler(config_entries.ConfigFlow, domain=DOMAIN):
                         CONF_LANG,
                         default=DEFAULT_LANG,
                     ): vol.All(vol.In(LANG_CODES)),
-                    vol.Required("location_source", default="entity"): selector.SelectSelector(
+                    vol.Required(CONF_LOCATION_SOURCE, default=LOCATION_TYPE_LATLONG): selector.SelectSelector(
                         selector.SelectSelectorConfig(
                             options=[
-                                {"value": "entity", "label": "Entity (zone, device_tracker, or person)"},
-                                {"value": "coordinates", "label": "Geographical coordinates"},
+                                {"value": LOCATION_TYPE_ENTITY, "label": "Entity (zone, device_tracker, or person)"},
+                                {"value": LOCATION_TYPE_LATLONG, "label": "Latitude/longitude"},
                             ],
                             mode=selector.SelectSelectorMode.LIST,
                         )
@@ -179,7 +165,7 @@ class WeatherFlowHandler(config_entries.ConfigFlow, domain=DOMAIN):
 
         api_key = self._data[CONF_API_KEY]
         location_name = self._data[CONF_NAME]
-        location_source = self._data.get("location_source")
+        location_source = self._data.get(CONF_LOCATION_SOURCE)
 
         # Prevent multiple config entries from using the same location name.
         for entry in self.hass.config_entries.async_entries(DOMAIN):
@@ -192,18 +178,19 @@ class WeatherFlowHandler(config_entries.ConfigFlow, domain=DOMAIN):
             ):
                 return self.async_abort(reason="already_configured")
 
-        if location_source == "coordinates":
-            raw_lat = self._data[CONF_LATITUDE]
-            raw_lon = self._data[CONF_LONGITUDE]
+        if location_source == LOCATION_TYPE_LATLONG:
+            latitude = self._data[CONF_LATITUDE]
+            longitude = self._data[CONF_LONGITUDE]
         else:
             entity_id = self._data[CONF_ENTITY_ID]
             state = self.hass.states.get(entity_id)
             raw_lat = state.attributes["latitude"]
             raw_lon = state.attributes["longitude"]
-
-        latitude, longitude = _apply_random_offset(
-            float(raw_lat), float(raw_lon)
-        )
+            # Obfuscate location by up to 0.01 degrees (1.1km)
+            latitude, longitude = (
+                round(float(raw_lat), 2),
+                round(float(raw_lon), 2)
+            )
 
         headers = {
             'Accept-Encoding': 'gzip',
@@ -241,18 +228,14 @@ class WeatherFlowHandler(config_entries.ConfigFlow, domain=DOMAIN):
             CONF_API_KEY: api_key,
             CONF_NAME: location_name,
             CONF_LANG: self._data[CONF_LANG],
-            "location_source": location_source,
+            CONF_LOCATION_SOURCE: location_source,
         }
 
-        if location_source == "coordinates":
+        if location_source == LOCATION_TYPE_LATLONG:
             entry_data[CONF_LATITUDE] = self._data[CONF_LATITUDE]
             entry_data[CONF_LONGITUDE] = self._data[CONF_LONGITUDE]
 
-            unique_id = (
-                f"{DOMAIN}-coordinates-"
-                f"{float(self._data[CONF_LATITUDE]):.6f}-"
-                f"{float(self._data[CONF_LONGITUDE]):.6f}"
-            )
+            unique_id = str(f"{DOMAIN}-{location_name}")
         else:
             entry_data[CONF_ENTITY_ID] = self._data[CONF_ENTITY_ID]
 
@@ -277,7 +260,7 @@ class WeatherFlowHandler(config_entries.ConfigFlow, domain=DOMAIN):
 
     async def _show_appropriate_form(self, errors):
         """Return the correct second step form based on user selection when errors occur."""
-        if self._data.get("location_source") == "coordinates":
+        if self._data.get(CONF_LOCATION_SOURCE) == LOCATION_TYPE_LATLONG:
             return await self.async_step_coordinates()
         return await self.async_step_entity()
 
@@ -292,20 +275,20 @@ class WeatherFlowHandler(config_entries.ConfigFlow, domain=DOMAIN):
             self._data[CONF_NAME] = conf_entry.title
 
             # Branch based on the selected location source.
-            if user_input.get("location_source") == "coordinates":
+            if user_input.get(CONF_LOCATION_SOURCE) == LOCATION_TYPE_LATLONG:
                 return await self.async_step_coordinates()
 
             return await self.async_step_entity()
 
         # Determine default location source from existing config, falling back to entity.
-        default_source = conf_entry.data.get("location_source", "entity")
+        default_source = conf_entry.data.get(CONF_LOCATION_SOURCE, LOCATION_TYPE_LATLONG)
 
         if (
             CONF_LATITUDE in conf_entry.data
             and CONF_LONGITUDE in conf_entry.data
             and CONF_ENTITY_ID not in conf_entry.data
         ):
-            default_source = "coordinates"
+            default_source = LOCATION_TYPE_LATLONG
 
         return self.async_show_form(
             step_id="reconfigure",
@@ -323,11 +306,11 @@ class WeatherFlowHandler(config_entries.ConfigFlow, domain=DOMAIN):
                         ),
                     ): vol.All(vol.In(LANG_CODES)),
                     vol.Required(
-                        "location_source",
+                        CONF_LOCATION_SOURCE,
                         default=default_source,
                     ): selector.SelectSelector(
                         selector.SelectSelectorConfig(
-                            options=["entity", "coordinates"],
+                            options=[LOCATION_TYPE_LATLONG, LOCATION_TYPE_ENTITY],
                             mode=selector.SelectSelectorMode.LIST,
                             translation_key="location_source_options"
                         )

@@ -6,7 +6,10 @@ from homeassistant.config_entries import ConfigEntry
 from homeassistant.const import (
     CONF_API_KEY,
     CONF_ENTITY_ID,
-    CONF_LATITUDE, CONF_LONGITUDE, CONF_NAME, Platform
+    CONF_LATITUDE,
+    CONF_LONGITUDE,
+    CONF_NAME,
+    Platform
 )
 from homeassistant.core import HomeAssistant
 from homeassistant.util.unit_system import METRIC_SYSTEM
