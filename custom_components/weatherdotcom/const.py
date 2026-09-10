@@ -28,6 +28,10 @@ DOMAIN = 'weatherdotcom'
 # NAME = 'WeatherUnderground'
 CONF_ATTRIBUTION = 'Data provided by the Weather.com weather service'
 CONF_LANG = 'lang'
+CONF_LOCATION_SOURCE = 'location_source'
+
+LOCATION_TYPE_ENTITY = 'entity'
+LOCATION_TYPE_LATLONG = 'latlong'
 
 ENTRY_WEATHER_COORDINATOR = 'weather_coordinator'
 
