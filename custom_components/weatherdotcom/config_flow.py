@@ -127,8 +127,8 @@ class WeatherFlowHandler(config_entries.ConfigFlow, domain=DOMAIN):
             state = self.hass.states.get(user_input[CONF_ENTITY_ID])
             if (
                 state is None
-                or "latitude" not in state.attributes
-                or "longitude" not in state.attributes
+                or CONF_LATITUDE not in state.attributes
+                or CONF_LONGITUDE not in state.attributes
             ):
                 errors["base"] = "invalid_location_entity"
             else:
