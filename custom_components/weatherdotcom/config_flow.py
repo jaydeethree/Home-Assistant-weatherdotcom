@@ -189,9 +189,9 @@ class WeatherFlowHandler(config_entries.ConfigFlow, domain=DOMAIN):
         """Check if the provided lat/long is valid."""
         if entity:
             state = self.hass.states.get(entity)
-            raw_lat = state.attributes[CONF_LATITUDE]
-            raw_lon = state.attributes[CONF_LONGITUDE]
-            if -90 <= raw_lat <= 90 and -180 <= raw_lon <= 180:
+            entity_lat = state.attributes[CONF_LATITUDE]
+            entity_long = state.attributes[CONF_LONGITUDE]
+            if -90 <= entity_lat <= 90 and -180 <= entity_long <= 180:
                 return True
         elif lat and long:
             if -90 <= lat <= 90 and -180 <= long <= 180:
@@ -211,11 +211,11 @@ class WeatherFlowHandler(config_entries.ConfigFlow, domain=DOMAIN):
             entity_id = self._data[CONF_ENTITY_ID]
             state = self.hass.states.get(entity_id)
             raw_lat = state.attributes[CONF_LATITUDE]
-            raw_lon = state.attributes[CONF_LONGITUDE]
+            raw_long = state.attributes[CONF_LONGITUDE]
             # Obfuscate location by up to 0.01 degrees (1.1km)
             latitude, longitude = (
                 round(float(raw_lat), 2),
-                round(float(raw_lon), 2)
+                round(float(raw_long), 2)
             )
 
         entry_data = {

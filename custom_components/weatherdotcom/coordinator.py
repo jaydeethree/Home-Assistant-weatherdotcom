@@ -132,17 +132,17 @@ class WeatherUpdateCoordinator(DataUpdateCoordinator):
 
     def _get_coordinates(self) -> tuple[float | None, float | None]:
         """Fetch current latitude and longitude and obfuscate if needed."""
-        lat, lon = None, None
+        lat, long = None, None
 
         # New configuration attempt
         if self._location_entity_id and (state := self._hass.states.get(self._location_entity_id)):
             raw_lat = state.attributes.get(CONF_LATITUDE)
-            raw_lon = state.attributes.get(CONF_LONGITUDE)
-            if raw_lat is not None and raw_lon is not None:
-                return round(float(raw_lat), 2), round(float(raw_lon), 2)
+            raw_long = state.attributes.get(CONF_LONGITUDE)
+            if raw_lat is not None and raw_long is not None:
+                return round(float(raw_lat), 2), round(float(raw_long), 2)
 
         # Fallback to legacy config if entity is missing
-        if lat is None or lon is None:
+        if lat is None or long is None:
             if self._latitude is not None and self._longitude is not None:
                 return float(self._latitude), float(self._longitude)
             else:
