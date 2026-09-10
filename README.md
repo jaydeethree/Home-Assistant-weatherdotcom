@@ -14,8 +14,6 @@ install and use the software.
 - This integration requires Home Assistant Version 2023.9 or greater
 - A Weather.com API Key is required (see below for how to get this)
 
-[Back to top](#top) 
-
 # Weather.com API Key
 1) Open https://www.wunderground.com (Wunderground is owned by Weather.com and uses some of the Weather.com APIs)
 2) View the page source in your browser.
@@ -27,8 +25,6 @@ Important notes:
 * Wunderground PWS (Personal Weather Station) API Keys will not work for this integration, as they do not have access to the Weather.com APIs that this integration uses.
 * While there have been no reports of API keys being blocked or changing over time, it's always possible that Weather.com will eventually block them. If that happens you will need to find an API key from another source.
 
-[Back to top](#top)
-
 # Installation
 
 [![Open your Home Assistant instance and open a repository inside the Home Assistant Community Store.](https://my.home-assistant.io/badges/hacs_repository.svg)](https://my.home-assistant.io/redirect/hacs_repository/?owner=jaydeethree&repository=Home-Assistant-weatherdotcom)
@@ -39,7 +35,7 @@ This integration is available in HACS, so just install it from there and then:
 2. Select the "Weather.com" integration.  
 3. Enter your Weather.com API key and submit.  
 
-[Back to top](#top)
+When choosing your location you have the option to use either a fixed latitude/longitude or to follow the location of a device, person, or zone.
 
 # Sensors Created By This Integration
 The following Weather.com data is available in the `weather.<LOCATION_NAME>` entity:
@@ -97,8 +93,6 @@ Additional details about the APIs used by this integration are available through
 * [Forecast (Daily)](https://developer.weather.com/docs/openapi/daily-forecast-3-0-0/get-wx-forecast-daily-duration-by-geocode)
 * [Forecast (Hourly)](https://developer.weather.com/docs/openapi/hourly-forecast-3-0/get-v3-wx-forecast-hourly-duration-by-geocode)
 
-[Back to top](#top)
-
 # Localization
 
 Sensor "friendly names" are set via translation files.  
@@ -119,5 +113,3 @@ Available lang: options are:
 'tk-TM', 'tl-PH', 'tr-TR', 'uk-UA', 'ur-PK', 'uz-UZ', 'vi-VN', 'zh-CN', 'zh-HK', 'zh-TW'
 ```
 Weather Entity translations are handled by Home Assistant and configured under the User -> Language setting.
-
-[Back to top](#top)

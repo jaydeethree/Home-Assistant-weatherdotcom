@@ -1,3 +1,10 @@
+v1.4.0
+* First off, a huge thanks to @francis110 for being the primary contributor to this major release!
+* Added the option to track weather for a device, person, or zone instead of only supporting a fixed latitude/longitude
+  * IMPORTANT: The location from a device, person, or zone will be rounded to the nearest 0.01 degrees (1.1km) for privacy
+* Added reconfiguration flow - you can now change options without having to delete/recreate your weather entries
+* Lots of code clean-up
+
 v1.3.3
 * Add snowfall and icon code sensors. The icon code sensor is disabled by default - see [this comment](https://github.com/jaydeethree/Home-Assistant-weatherdotcom/pull/67#issuecomment-5275499651) for details on how to use it. Thank you @francis110!
 * Change wind direction for hourly and daily forecasts to use degrees instead of cardinal direction. Once again, thank you @francis110!
