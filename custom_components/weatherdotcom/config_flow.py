@@ -103,7 +103,7 @@ class WeatherFlowHandler(config_entries.ConfigFlow, domain=DOMAIN):
 
         if user_input is not None:
             self._data.update(user_input)
-            if self._async_validate_latlong(lat=user_input.get(CONF_LATITUDE), long=user_input.get(CONF_LONGITUDE)):
+            if await self._async_validate_latlong(lat=user_input.get(CONF_LATITUDE), long=user_input.get(CONF_LONGITUDE)):
                 return await self._async_validate_and_create()
             else:
                 errors["base"] = "unknown_error"
@@ -155,7 +155,7 @@ class WeatherFlowHandler(config_entries.ConfigFlow, domain=DOMAIN):
                 errors["base"] = "invalid_location_entity"
             else:
                 self._data.update(user_input)
-                if self._async_validate_latlong(entity=state):
+                if await self._async_validate_latlong(entity=state):
                     return await self._async_validate_and_create()
                 else:
                     errors["base"] = "unknown_error"
@@ -188,12 +188,9 @@ class WeatherFlowHandler(config_entries.ConfigFlow, domain=DOMAIN):
     async def _async_validate_latlong(self, lat=None, long=None, entity=None):
         """Check if the provided lat/long is valid."""
         if entity:
-            state = self.hass.states.get(entity)
-            entity_lat = state.attributes[CONF_LATITUDE]
-            entity_long = state.attributes[CONF_LONGITUDE]
-            if -90 <= entity_lat <= 90 and -180 <= entity_long <= 180:
-                return True
-        elif lat and long:
+            lat = entity.attributes[CONF_LATITUDE]
+            long = entity.attributes[CONF_LONGITUDE]
+        if lat and long:
             if -90 <= lat <= 90 and -180 <= long <= 180:
                 return True
         return False
