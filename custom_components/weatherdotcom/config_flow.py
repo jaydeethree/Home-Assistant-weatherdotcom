@@ -273,10 +273,9 @@ class WeatherFlowHandler(config_entries.ConfigFlow, domain=DOMAIN):
             # Branch based on the selected location source.
             if user_input.get(CONF_LOCATION_SOURCE) == LOCATION_TYPE_LATLONG:
                 return await self.async_step_latlong()
-
             return await self.async_step_entity()
 
-        # Determine default location source from existing config, falling back to entity.
+        # Determine default location source from existing config, falling back to lat/long.
         default_source = conf_entry.data.get(CONF_LOCATION_SOURCE, LOCATION_TYPE_LATLONG)
 
         if (

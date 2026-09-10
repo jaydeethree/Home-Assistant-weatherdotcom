@@ -19,7 +19,15 @@ from homeassistant.helpers.device_registry import DeviceEntryType, DeviceInfo
 from homeassistant.helpers.update_coordinator import DataUpdateCoordinator, UpdateFailed
 from homeassistant.util.unit_system import METRIC_SYSTEM
 from homeassistant.const import (
-    PERCENTAGE, UnitOfPressure, UnitOfTemperature, UnitOfLength, UnitOfSpeed, UnitOfVolumetricFlux)
+    CONF_LATITUDE,
+    CONF_LONGITUDE,
+    PERCENTAGE,
+    UnitOfPressure,
+    UnitOfTemperature,
+    UnitOfLength,
+    UnitOfSpeed,
+    UnitOfVolumetricFlux
+)
 from .const import (
     DOMAIN,
     ICON_CONDITION_MAP,
@@ -89,7 +97,6 @@ class WeatherUpdateCoordinator(DataUpdateCoordinator):
         self._store = WeatherDotComStorage(self._hass, self._location_name)
 
         self._location_entity_id = config.location_entity_id
-        # For legacy services that have not migrated
         self._latitude = config.latitude
         self._longitude = config.longitude
 
@@ -124,13 +131,13 @@ class WeatherUpdateCoordinator(DataUpdateCoordinator):
         return self._location_name
 
     def _get_coordinates(self) -> tuple[float | None, float | None]:
-        """Fetch current latitude and longitude and apply hardcoded obfuscation."""
+        """Fetch current latitude and longitude and obfuscate if needed."""
         lat, lon = None, None
 
         # New configuration attempt
         if self._location_entity_id and (state := self._hass.states.get(self._location_entity_id)):
-            raw_lat = state.attributes.get("latitude")
-            raw_lon = state.attributes.get("longitude")
+            raw_lat = state.attributes.get(CONF_LATITUDE)
+            raw_lon = state.attributes.get(CONF_LONGITUDE)
             if raw_lat is not None and raw_lon is not None:
                 return round(float(raw_lat), 2), round(float(raw_lon), 2)
 
