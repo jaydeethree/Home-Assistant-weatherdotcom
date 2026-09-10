@@ -167,17 +167,6 @@ class WeatherFlowHandler(config_entries.ConfigFlow, domain=DOMAIN):
         location_name = self._data[CONF_NAME]
         location_source = self._data.get(CONF_LOCATION_SOURCE)
 
-        # Prevent multiple config entries from using the same location name.
-        for entry in self.hass.config_entries.async_entries(DOMAIN):
-            if (
-                entry.title.lower().strip() == location_name.lower().strip()
-                and (
-                    self.source != config_entries.SOURCE_RECONFIGURE
-                    or entry.entry_id != self._get_reconfigure_entry().entry_id
-                )
-            ):
-                return self.async_abort(reason="already_configured")
-
         if location_source == LOCATION_TYPE_LATLONG:
             latitude = self._data[CONF_LATITUDE]
             longitude = self._data[CONF_LONGITUDE]
