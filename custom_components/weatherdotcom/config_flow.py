@@ -49,9 +49,26 @@ class WeatherFlowHandler(config_entries.ConfigFlow, domain=DOMAIN):
         errors = {}
         if user_input is not None:
             self._data = user_input
-            if user_input.get(CONF_LOCATION_SOURCE) == LOCATION_TYPE_LATLONG:
-                return await self.async_step_latlong()
-            return await self.async_step_entity()
+            headers = {
+                'Accept-Encoding': 'gzip',
+                "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/111.0.0.0 Safari/537.36"
+            }
+            session = async_create_clientsession(self.hass)
+            async with async_timeout.timeout(10):
+                # Use hardcoded values for the initial test API call. User-supplied values will be used for the created entities.
+                url = 'https://api.weather.com/v3/wx/observations/current?geocode=37.3355,-121.8930&format=json&units=e&apiKey=%s&language=en-US' % user_input.get(CONF_API_KEY)
+                response = await session.get(url, headers=headers)
+            if response.status != HTTPStatus.OK:
+                _LOGGER.error("Weather.com config responded with HTTP error %s: %s",
+                              response.status, response.reason,)
+                if response.status == HTTPStatus.UNAUTHORIZED:
+                    errors["base"] = "invalid_api_key"
+                else:
+                    errors["base"] = "unknown_error"
+            else:
+                if user_input.get(CONF_LOCATION_SOURCE) == LOCATION_TYPE_LATLONG:
+                    return await self.async_step_latlong()
+                return await self.async_step_entity()
 
         return self.async_show_form(
             step_id="user",
@@ -161,7 +178,6 @@ class WeatherFlowHandler(config_entries.ConfigFlow, domain=DOMAIN):
     async def _async_validate_and_create(self):
         """Validate API key and lat/long, then create the config entry."""
         errors = {}
-        session = async_create_clientsession(self.hass)
 
         api_key = self._data[CONF_API_KEY]
         location_name = self._data[CONF_NAME]
@@ -180,43 +196,6 @@ class WeatherFlowHandler(config_entries.ConfigFlow, domain=DOMAIN):
                 round(float(raw_lat), 2),
                 round(float(raw_lon), 2)
             )
-
-        headers = {
-            'Accept-Encoding': 'gzip',
-            "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/111.0.0.0 Safari/537.36"
-        }
-
-        try:
-            if not api_key:
-                errors["base"] = "invalid_api_key"
-                raise InvalidApiKey
-
-            async with async_timeout.timeout(10):
-                # Use English and US units for the initial test API call. User-supplied units and language will be used for
-                # the created entities.
-                url = f'https://api.weather.com/v3/wx/observations/current?geocode={latitude},{longitude}&format=json&units=e' \
-                      f'&apiKey={api_key}&language=en-US'
-
-                response = await session.get(url, headers=headers)
-
-            if response.status != HTTPStatus.OK:
-                _LOGGER.error(
-                    "Weather.com config responded with HTTP error %s: %s",
-                    response.status,
-                    response.reason,
-                )
-                if response.status == HTTPStatus.UNAUTHORIZED:
-                    raise InvalidApiKey
-                raise Exception
-
-        except InvalidApiKey:
-            errors["base"] = "invalid_api_key"
-            return await self._show_appropriate_form(errors)
-
-        except Exception:
-            _LOGGER.exception("Unexpected exception")
-            errors["base"] = "unknown_error"
-            return await self._show_appropriate_form(errors)
 
         entry_data = {
             CONF_API_KEY: api_key,
@@ -254,8 +233,6 @@ class WeatherFlowHandler(config_entries.ConfigFlow, domain=DOMAIN):
 
     async def _show_appropriate_form(self, errors):
         """Return the correct form based on user selection when errors occur."""
-        if 'base' in errors and 'invalid_api_key' in errors['base']:
-            return await self.async_step_user()
         if self._data.get(CONF_LOCATION_SOURCE) == LOCATION_TYPE_LATLONG:
             return await self.async_step_latlong()
         return await self.async_step_entity()
