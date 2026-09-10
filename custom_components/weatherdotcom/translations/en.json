@@ -5,12 +5,12 @@
         "description": "Set up Weather.com integration. Follow the instructions in the GitHub README to get an API key.",
         "data": {
           "api_key": "API Key",
-          "name": "Name of the integration",
+          "name": "Location Name",
           "lang": "Language",
           "location_source": "Location Source"
         }
       },
-      "coordinates": {
+      "latlong": {
         "description": "Enter the geographical coordinates to use for the weather forecast.",
         "data": {
           "latitude": "Latitude",
@@ -33,9 +33,9 @@
       }
     },
     "error": {
-      "invalid_api_key": "The API key is invalid. Please check your credentials.",
-      "invalid_location_entity": "The selected location does not have valid latitude and longitude attributes.",
-      "unknown_error": "An unexpected error occurred while connecting to Weather.com. Check the Home Assistant logs for more details."
+      "invalid_api_key": "The API key is invalid.",
+      "invalid_location_entity": "The selected entity does not have valid latitude and longitude attributes.",
+      "unknown_error": "An unexpected error occurred. Check the Home Assistant logs for more details."
     },
     "abort": {
       "already_configured": "A Weather.com integration with this name already exists. Please choose a different name.",
@@ -45,8 +45,8 @@
   "selector": {
     "location_source_options": {
       "options": {
-        "coordinates": "Geographical Coordinates",
-        "entity": "Entity (Zone, device_tracker, or person)"
+        "latlong": "Latitude/Longitude",
+        "entity": "Entity (zone, device_tracker, or person)"
       }
     }
   }
