@@ -173,8 +173,8 @@ class WeatherFlowHandler(config_entries.ConfigFlow, domain=DOMAIN):
         else:
             entity_id = self._data[CONF_ENTITY_ID]
             state = self.hass.states.get(entity_id)
-            raw_lat = state.attributes["latitude"]
-            raw_lon = state.attributes["longitude"]
+            raw_lat = state.attributes[CONF_LATITUDE]
+            raw_lon = state.attributes[CONF_LONGITUDE]
             # Obfuscate location by up to 0.01 degrees (1.1km)
             latitude, longitude = (
                 round(float(raw_lat), 2),
@@ -200,6 +200,11 @@ class WeatherFlowHandler(config_entries.ConfigFlow, domain=DOMAIN):
                 response = await session.get(url, headers=headers)
 
             if response.status != HTTPStatus.OK:
+                _LOGGER.error(
+                    "Weather.com config responded with HTTP error %s: %s",
+                    response.status,
+                    response.reason,
+                )
                 if response.status == HTTPStatus.UNAUTHORIZED:
                     raise InvalidApiKey
                 raise Exception
@@ -248,7 +253,9 @@ class WeatherFlowHandler(config_entries.ConfigFlow, domain=DOMAIN):
         )
 
     async def _show_appropriate_form(self, errors):
-        """Return the correct second step form based on user selection when errors occur."""
+        """Return the correct form based on user selection when errors occur."""
+        if 'base' in errors and 'invalid_api_key' in errors["base"]:
+            return await self.async_step_user()
         if self._data.get(CONF_LOCATION_SOURCE) == LOCATION_TYPE_LATLONG:
             return await self.async_step_latlong()
         return await self.async_step_entity()
