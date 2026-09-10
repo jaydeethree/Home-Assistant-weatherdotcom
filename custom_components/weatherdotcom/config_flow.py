@@ -254,7 +254,7 @@ class WeatherFlowHandler(config_entries.ConfigFlow, domain=DOMAIN):
 
     async def _show_appropriate_form(self, errors):
         """Return the correct form based on user selection when errors occur."""
-        if 'base' in errors and 'invalid_api_key' in errors["base"]:
+        if 'base' in errors and 'invalid_api_key' in errors['base']:
             return await self.async_step_user()
         if self._data.get(CONF_LOCATION_SOURCE) == LOCATION_TYPE_LATLONG:
             return await self.async_step_latlong()
