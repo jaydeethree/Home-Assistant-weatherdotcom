@@ -50,7 +50,7 @@ class WeatherFlowHandler(config_entries.ConfigFlow, domain=DOMAIN):
         if user_input is not None:
             self._data = user_input
             if user_input.get(CONF_LOCATION_SOURCE) == LOCATION_TYPE_LATLONG:
-                return await self.async_step_coordinates()
+                return await self.async_step_latlong()
             return await self.async_step_entity()
 
         return self.async_show_form(
@@ -80,8 +80,8 @@ class WeatherFlowHandler(config_entries.ConfigFlow, domain=DOMAIN):
             errors=errors,
         )
 
-    async def async_step_coordinates(self, user_input=None):
-        """Handle the second step for geographical coordinates."""
+    async def async_step_latlong(self, user_input=None):
+        """Handle the second step for latitude/longitude."""
         errors = {}
 
         if user_input is not None:
@@ -103,7 +103,7 @@ class WeatherFlowHandler(config_entries.ConfigFlow, domain=DOMAIN):
             )
 
         return self.async_show_form(
-            step_id="coordinates",
+            step_id=LOCATION_TYPE_LATLONG,
             data_schema=vol.Schema(
                 {
                     vol.Required(
@@ -142,7 +142,7 @@ class WeatherFlowHandler(config_entries.ConfigFlow, domain=DOMAIN):
             default_entity = conf_entry.data.get(CONF_ENTITY_ID)
 
         return self.async_show_form(
-            step_id="entity",
+            step_id=LOCATION_TYPE_ENTITY,
             data_schema=vol.Schema(
                 {
                     vol.Required(
@@ -159,7 +159,7 @@ class WeatherFlowHandler(config_entries.ConfigFlow, domain=DOMAIN):
         )
 
     async def _async_validate_and_create(self):
-        """Validate API key and coordinates, then create the config entry."""
+        """Validate API key and lat/long, then create the config entry."""
         errors = {}
         session = async_create_clientsession(self.hass)
 
@@ -261,7 +261,7 @@ class WeatherFlowHandler(config_entries.ConfigFlow, domain=DOMAIN):
     async def _show_appropriate_form(self, errors):
         """Return the correct second step form based on user selection when errors occur."""
         if self._data.get(CONF_LOCATION_SOURCE) == LOCATION_TYPE_LATLONG:
-            return await self.async_step_coordinates()
+            return await self.async_step_latlong()
         return await self.async_step_entity()
 
 
@@ -276,7 +276,7 @@ class WeatherFlowHandler(config_entries.ConfigFlow, domain=DOMAIN):
 
             # Branch based on the selected location source.
             if user_input.get(CONF_LOCATION_SOURCE) == LOCATION_TYPE_LATLONG:
-                return await self.async_step_coordinates()
+                return await self.async_step_latlong()
 
             return await self.async_step_entity()
 
