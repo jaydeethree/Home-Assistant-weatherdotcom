@@ -19,6 +19,7 @@ from .coordinator import WeatherUpdateCoordinator
 
 from .const import (
     CONF_ATTRIBUTION,
+    CONF_EXTRA_ATTRIBUTES,
     DOMAIN,
     FIELD_DAYPART,
     FIELD_WINDGUST,
@@ -43,7 +44,11 @@ async def async_setup_entry(
     """Add Weather.com entities from a config_entry."""
     coordinator: WeatherUpdateCoordinator = hass.data[DOMAIN][entry.entry_id]
     sensors = [
-        WeatherSensor(coordinator, description) for description in SENSOR_DESCRIPTIONS
+        WeatherSensor(
+            coordinator, 
+            description, 
+            entry.options.get(CONF_EXTRA_ATTRIBUTES),
+            ) for description in SENSOR_DESCRIPTIONS
     ]
 
     async_add_entities(sensors)
@@ -59,9 +64,11 @@ class WeatherSensor(CoordinatorEntity, SensorEntity):
             self,
             coordinator: WeatherUpdateCoordinator,
             description: WeatherSensorEntityDescription,
+            extra_attributes: list[str] | None = None,
     ):
         super().__init__(coordinator)
         self.entity_description = description
+        self._extra_attributes = extra_attributes
 
         # This will cause problems if we ever add another type of entity, but
         # for now all entities are of type 'sensor' so this is okay.
@@ -105,7 +112,10 @@ class WeatherSensor(CoordinatorEntity, SensorEntity):
     @property
     def extra_state_attributes(self) -> dict[str, Any]:
         """Return the state attributes."""
-        return self.entity_description.attr_fn(self.coordinator.data)
+        return self.entity_description.attr_fn(
+            self.coordinator.data,
+            self._extra_attributes,
+            )
 
     @callback
     def _handle_coordinator_update(self) -> None:
