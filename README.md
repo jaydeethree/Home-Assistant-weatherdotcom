@@ -113,3 +113,55 @@ Available lang: options are:
 'tk-TM', 'tl-PH', 'tr-TR', 'uk-UA', 'ur-PK', 'uz-UZ', 'vi-VN', 'zh-CN', 'zh-HK', 'zh-TW'
 ```
 Weather Entity translations are handled by Home Assistant and configured under the User -> Language setting.
+
+# Advanced Configuration
+
+The integration exposes all daily and daypart forecast data as attributes of a disabled-by-default sensor, "Forecast Details". The benefits of this are:
+
+1. Gives access to non-conforming data available from the weather.com API, but not available in the `<weather.get_forecasts>` method
+2. Limits the need to manually configure sensors/attributes to gain access to data
+
+> [!TIP]
+> Home Assistant’s guidance recommends limiting attribute data in frequently updated entities. It is advised to configure entity exclusion in your recorder configuration to limit database writes.
+>
+> ```yaml
+> recorder:
+>   exclude:
+>     entities:
+>       - sensor.[name]_forecast_details
+> ```
+
+## Attribute Options
+
+<details>
+
+<summary><b>Daily forecast options</b></summary>
+
+<br>
+
+Daily options are native API forecast values that return a 15 item array:
+`day`, `daily_temp_max`, `daily_temp_min`, `daily_precip_qpf`, `daily_rain_qpf`, `daily_snow_qpf`, `daily_ice_qpf`, `daily_narrative` `sunrise`, `sunset`, `moon_phase`, `moon_phase_code`, `moon_phase_day`, `moonrise`, `moonset`.
+
+</details>
+
+<details>
+
+<summary><b>Day forecast options</b></summary>
+
+<br>
+
+Day options are synthetic API forecast values that return a 15 item array. Data is derived from the day values in daypart array, when there is no value for the current day the night value is returned:
+`day_icon_code`, `day_cloud_cover`, `day_relative_humidity`.
+
+</details>
+
+<details>
+
+<summary><b>Daypart forecast options</b></summary>
+
+<br>
+
+Daypart options are native API forecast values that return a 30 item array; 1 item for day, 1 item for night:
+`daypart_cloud_cover`, `daypart_name`, `daypart_icon_code`, `daypart_precip_chance`, `daypart_precip_type`, `daypart_total_qpf` `daypart_rain_qpf`, `daypart_snow_qpf`, `daypart_ice_qpf`, `daypart_snow_range`, `daypart_relative_humidity`, `daypart_heat_index`, `daypart_wind_chill`, `daypart_thunder_category`, `daypart_thunder_index`, `daypart_uv_description`, `daypart_uv_index`, `daypart_wind_dir`, `daypart_wind_dir_cardinal`, `daypart_wind_speed`, `daypart_wind_phrase`, `daypart_wx_phrase_long`, `daypart_wx_phrase_short`, `daypart_qualifier_phrase`, `daypart_narrative`.
+
+</details>
