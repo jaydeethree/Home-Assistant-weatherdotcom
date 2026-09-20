@@ -54,7 +54,7 @@
     "step": {
       "extra_attributes": {
         "title": "Extra Weather Attributes",
-        "description": "Select attributes to add to the Forecast Details sensor. See README for more information.",
+        "description": "Select attributes to add to the Forecast Details sensor. See **Advanced Configuration** in the GitHub README via **Help** (?) above.",
         "data": {
           "extra_attributes": "Extra Attributes Selection"
         }
