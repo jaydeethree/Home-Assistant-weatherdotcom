@@ -116,19 +116,19 @@ Weather Entity translations are handled by Home Assistant and configured under t
 
 # Advanced Configuration
 
-The integration exposes all daily and daypart forecast data as attributes of a disabled-by-default sensor, "Forecast Details". The benefits of this are:
+The integration exposes daily and daypart forecast data as attributes of a disabled-by-default sensor, `Forecast Details`. The benefits of this are:
 
-1. Gives access to non-conforming data available from the weather.com API, but not available in the `<weather.get_forecasts>` method
-2. Limits the need to manually configure sensors/attributes to gain access to data
+1. Provides access to non-conforming data available from the weather.com API that is not available through the `<weather.get_forecasts>` method.
+2. Reduces the need to manually configure sensors or template sensors to access this data.
 
 > [!TIP]
-> Home Assistant’s guidance recommends limiting attribute data in frequently updated entities. It is advised to configure entity exclusion in your recorder configuration to limit database writes.
+> Home Assistant’s guidance recommends limiting attribute data in frequently updated entities. It is recommended to configure entity exclusion in your Recorder configuration to limit database writes.
 >
 > ```yaml
 > recorder:
 >   exclude:
 >     entities:
->       - sensor.[name]_forecast_details
+>       - sensor.<LOCATION_NAME>_forecast_details
 > ```
 
 ## Attribute Options
@@ -139,8 +139,9 @@ The integration exposes all daily and daypart forecast data as attributes of a d
 
 <br>
 
-Daily options are native API forecast values that return a 15 item array:
-`day`, `daily_temp_max`, `daily_temp_min`, `daily_precip_qpf`, `daily_rain_qpf`, `daily_snow_qpf`, `daily_ice_qpf`, `daily_narrative` `sunrise`, `sunset`, `moon_phase`, `moon_phase_code`, `moon_phase_day`, `moonrise`, `moonset`.
+Daily options are native API forecast values that return a 15-item array:
+
+`day`, `temp_max`, `temp_min`, `daily_precip_qpf`, `daily_rain_qpf`, `daily_snow_qpf`, `daily_ice_qpf`, `daily_narrative`, `sunrise`, `sunset`, `moon_phase`, `moon_phase_code`, `moon_phase_day`, `moonrise`, `moonset`.
 
 </details>
 
@@ -150,7 +151,8 @@ Daily options are native API forecast values that return a 15 item array:
 
 <br>
 
-Day options are synthetic API forecast values that return a 15 item array. Data is derived from the day values in daypart array, when there is no value for the current day the night value is returned:
+Day options are synthetic forecast values that return a 15-item array. Data is derived from the corresponding day values in the daypart array. When the current day's daytime value is unavailable, the nighttime value is used:
+
 `day_icon_code`, `day_cloud_cover`, `day_relative_humidity`.
 
 </details>
@@ -161,7 +163,48 @@ Day options are synthetic API forecast values that return a 15 item array. Data 
 
 <br>
 
-Daypart options are native API forecast values that return a 30 item array; 1 item for day, 1 item for night:
-`daypart_cloud_cover`, `daypart_name`, `daypart_icon_code`, `daypart_precip_chance`, `daypart_precip_type`, `daypart_total_qpf` `daypart_rain_qpf`, `daypart_snow_qpf`, `daypart_ice_qpf`, `daypart_snow_range`, `daypart_relative_humidity`, `daypart_heat_index`, `daypart_wind_chill`, `daypart_thunder_category`, `daypart_thunder_index`, `daypart_uv_description`, `daypart_uv_index`, `daypart_wind_dir`, `daypart_wind_dir_cardinal`, `daypart_wind_speed`, `daypart_wind_phrase`, `daypart_wx_phrase_long`, `daypart_wx_phrase_short`, `daypart_qualifier_phrase`, `daypart_narrative`.
+Daypart options are native API forecast values that return a 30-item array, with two items per day: one daytime value and one nighttime value:
+
+`daypart_cloud_cover`, `daypart_name`, `daypart_icon_code`, `daypart_precip_chance`, `daypart_precip_type`, `daypart_total_qpf`, `daypart_rain_qpf`, `daypart_snow_qpf`, `daypart_ice_qpf`, `daypart_snow_range`, `daypart_relative_humidity`, `daypart_heat_index`, `daypart_wind_chill`, `daypart_thunder_category`, `daypart_thunder_index`, `daypart_uv_description`, `daypart_uv_index`, `daypart_wind_dir`, `daypart_wind_dir_cardinal`, `daypart_wind_speed`, `daypart_wind_phrase`, `daypart_wx_phrase_long`, `daypart_wx_phrase_short`, `daypart_qualifier_phrase`, `daypart_narrative`.
+
+</details>
+
+## Usage
+
+To use the forecast data, first enable `sensor.<LOCATION_NAME>_forecast_details`, which is located under **Disabled Entities** on the Devices page for the integration entry.
+
+Once enabled, navigate to the Weather.com integration page and select the gear icon (**Configure**) for the integration entry. Select the desired forecast attributes and click **Submit**. The selected attributes will automatically be added to `sensor.<LOCATION_NAME>_forecast_details`.
+
+### Accessing Forecast Attributes
+
+The forecast attributes can be accessed by Home Assistant templates and by dashboard cards that support Jinja or JavaScript templates.
+
+Common uses include:
+
+- **Template sensors** — expose a specific forecast value as a separate sensor.
+- **Automations and scripts** — use forecast values as conditions or actions.
+- **Markdown Card** — display forecast information directly on a dashboard.
+- **Button Card** — dynamically display selected forecast values using JavaScript.
+- **Other custom cards** — any card that can access entity attributes can use the forecast data.
+
+The array index corresponds to the forecast period. For daily attributes, `[0]` is the current day. For daypart attributes, `[0]` is the first daytime period and `[1]` is the first nighttime period.
+
+<details>
+
+<summary><b>JavaScript example for first value</b></summary>
+
+<br>
+
+`states['sensor.<LOCATION_NAME>_forecast_details'].attributes.<YOUR_ATTRIBUTE>[0]`
+
+</details>
+
+<details>
+
+<summary><b>Jinja example for first value</b></summary>
+
+<br>
+
+`{{ state_attr('sensor.<LOCATION_NAME>_forecast_details', '<YOUR_ATTRIBUTE>')[0] }}`
 
 </details>
