@@ -30,13 +30,6 @@
           "lang": "Language",
           "location_source": "Location Source"
         }
-      },
-      "extra_attributes": {
-        "title": "Extra Weather Attributes",
-        "description": "Select attributes to add to sensor.[name]_icon_code. See README for more information.",
-        "data": {
-          "extra_attributes": "Extra Attributes Selection"
-        }
       }
     },
     "error": {
@@ -54,6 +47,17 @@
       "options": {
         "latlong": "Latitude/Longitude",
         "entity": "Entity (zone, device_tracker, or person)"
+      }
+    }
+  },
+  "options": {
+    "step": {
+      "extra_attributes": {
+        "title": "Extra Weather Attributes",
+        "description": "Select attributes to add to the Forecast Details sensor. See README for more information.",
+        "data": {
+          "extra_attributes": "Extra Attributes Selection"
+        }
       }
     }
   }
