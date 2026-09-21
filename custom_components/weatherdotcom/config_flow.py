@@ -25,7 +25,9 @@ from .const import (
     DEFAULT_LANG,
     LANG_CODES,
     LOCATION_TYPE_ENTITY,
-    LOCATION_TYPE_LATLONG
+    LOCATION_TYPE_LATLONG,
+    EXTRA_ATTRIBUTE_KEYS,
+    CONF_EXTRA_ATTRIBUTES
 )
 
 _LOGGER = logging.getLogger(__name__)
@@ -43,6 +45,14 @@ class WeatherFlowHandler(config_entries.ConfigFlow, domain=DOMAIN):
     def __init__(self) -> None:
         """Initialize the config flow."""
         self._data: dict = {}
+
+    @staticmethod
+    @callback
+    def async_get_options_flow(
+        config_entry: config_entries.ConfigEntry,
+    ) -> config_entries.OptionsFlow:
+        """Create the options flow."""
+        return WeatherDotComOptionsFlow()
 
     async def async_step_user(self, user_input=None):
         """Handle the first step initiated by the user."""
@@ -306,3 +316,43 @@ class WeatherFlowHandler(config_entries.ConfigFlow, domain=DOMAIN):
             errors=errors,
         )
 
+class WeatherDotComOptionsFlow(config_entries.OptionsFlowWithReload):
+    """Handle Weather.com options for sensor.forecast_details attribute."""
+
+    async def async_step_init(self, user_input=None):
+        """Handle the options flow."""
+        return await self.async_step_extra_attributes(user_input)
+
+    async def async_step_extra_attributes(self, user_input=None):
+        """Handle the extra weather attributes options."""
+        if user_input is not None:
+            return self.async_create_entry(
+                data=user_input,
+            )
+
+        default_attributes = [
+            attribute
+            for attribute in self.config_entry.options.get(
+                CONF_EXTRA_ATTRIBUTES,
+                [],
+            )
+            if attribute in EXTRA_ATTRIBUTE_KEYS
+        ]
+
+        return self.async_show_form(
+            step_id=CONF_EXTRA_ATTRIBUTES,
+            data_schema=vol.Schema(
+                {
+                    vol.Required(
+                        CONF_EXTRA_ATTRIBUTES,
+                        default=default_attributes,
+                    ): selector.SelectSelector(
+                        selector.SelectSelectorConfig(
+                            options=EXTRA_ATTRIBUTE_KEYS,
+                            multiple=True,
+                            mode=selector.SelectSelectorMode.LIST,
+                        )
+                    ),
+                }
+            ),
+        )
