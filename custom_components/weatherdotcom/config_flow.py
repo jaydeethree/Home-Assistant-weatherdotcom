@@ -26,7 +26,9 @@ from .const import (
     LANG_CODES,
     LOCATION_TYPE_ENTITY,
     LOCATION_TYPE_LATLONG,
-    EXTRA_ATTRIBUTE_KEYS,
+    EXTRA_ATTRIBUTE_KEYS_DAILY,
+    EXTRA_ATTRIBUTE_KEYS_DAY,
+    EXTRA_ATTRIBUTE_KEYS_DAYPART,
     CONF_EXTRA_ATTRIBUTES
 )
 
@@ -326,29 +328,65 @@ class WeatherDotComOptionsFlow(config_entries.OptionsFlowWithReload):
     async def async_step_extra_attributes(self, user_input=None):
         """Handle the extra weather attributes options."""
         if user_input is not None:
-            return self.async_create_entry(
-                data=user_input,
+            selected_attributes = (
+                user_input.get("daily_attributes", [])
+                + user_input.get("day_attributes", [])
+                + user_input.get("daypart_attributes", [])
             )
 
-        default_attributes = [
-            attribute
-            for attribute in self.config_entry.options.get(
-                CONF_EXTRA_ATTRIBUTES,
-                [],
+            return self.async_create_entry(
+                data={
+                    CONF_EXTRA_ATTRIBUTES: selected_attributes,
+                },
             )
-            if attribute in EXTRA_ATTRIBUTE_KEYS
-        ]
+
+        default_attributes = self.config_entry.options.get(
+            CONF_EXTRA_ATTRIBUTES,
+            [],
+        )
 
         return self.async_show_form(
             step_id=CONF_EXTRA_ATTRIBUTES,
             data_schema=vol.Schema(
                 {
-                    vol.Required(
-                        CONF_EXTRA_ATTRIBUTES,
-                        default=default_attributes,
+                    vol.Optional(
+                        "daily_attributes",
+                        default=[
+                            attribute
+                            for attribute in default_attributes
+                            if attribute in EXTRA_ATTRIBUTE_KEYS_DAILY
+                        ],
                     ): selector.SelectSelector(
                         selector.SelectSelectorConfig(
-                            options=EXTRA_ATTRIBUTE_KEYS,
+                            options=EXTRA_ATTRIBUTE_KEYS_DAILY,
+                            multiple=True,
+                            mode=selector.SelectSelectorMode.LIST,
+                        )
+                    ),
+                    vol.Optional(
+                        "day_attributes",
+                        default=[
+                            attribute
+                            for attribute in default_attributes
+                            if attribute in EXTRA_ATTRIBUTE_KEYS_DAY
+                        ],
+                    ): selector.SelectSelector(
+                        selector.SelectSelectorConfig(
+                            options=EXTRA_ATTRIBUTE_KEYS_DAY,
+                            multiple=True,
+                            mode=selector.SelectSelectorMode.LIST,
+                        )
+                    ),
+                    vol.Optional(
+                        "daypart_attributes",
+                        default=[
+                            attribute
+                            for attribute in default_attributes
+                            if attribute in EXTRA_ATTRIBUTE_KEYS_DAYPART
+                        ],
+                    ): selector.SelectSelector(
+                        selector.SelectSelectorConfig(
+                            options=EXTRA_ATTRIBUTE_KEYS_DAYPART,
                             multiple=True,
                             mode=selector.SelectSelectorMode.LIST,
                         )

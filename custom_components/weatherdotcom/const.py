@@ -112,7 +112,7 @@ HIGH_TEMP_TODAY_STORAGE = 'high_temp_today'
 HIGH_TEMP_TODAY_TIMESTAMP_STORAGE = 'high_temp_today_timestamp'
 
 CONF_EXTRA_ATTRIBUTES = "extra_attributes"
-EXTRA_ATTRIBUTE_KEYS = [
+EXTRA_ATTRIBUTE_KEYS_DAILY = [
     "day",
     "daily_temp_max",
     "daily_temp_min",
@@ -121,9 +121,20 @@ EXTRA_ATTRIBUTE_KEYS = [
     "daily_snow_qpf",
     "daily_ice_qpf",
     "daily_narrative",
+    "sunrise",
+    "sunset",
+    "moon_phase",
+    "moon_phase_code",
+    "moon_phase_day",
+    "moonrise",
+    "moonset",
+]
+EXTRA_ATTRIBUTE_KEYS_DAY = [
     "day_icon_code",
     "day_cloud_cover",
     "day_relative_humidity",
+]
+EXTRA_ATTRIBUTE_KEYS_DAYPART = [
     "daypart_cloud_cover",
     "daypart_name",
     "daypart_icon_code",
@@ -149,11 +160,9 @@ EXTRA_ATTRIBUTE_KEYS = [
     "daypart_wx_phrase_short",
     "daypart_qualifier_phrase",
     "daypart_narrative",
-    "sunrise",
-    "sunset",
-    "moon_phase",
-    "moon_phase_code",
-    "moon_phase_day",
-    "moonrise",
-    "moonset",
 ]
+EXTRA_ATTRIBUTE_KEYS = (
+    EXTRA_ATTRIBUTE_KEYS_DAILY
+    + EXTRA_ATTRIBUTE_KEYS_DAY
+    + EXTRA_ATTRIBUTE_KEYS_DAYPART
+)
