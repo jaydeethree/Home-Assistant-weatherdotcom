@@ -116,6 +116,8 @@ Weather Entity translations are handled by Home Assistant and configured under t
 
 # Advanced Configuration
 
+IMPORTANT: Everything described below has not been released yet. It will become available in the next release and this message will be removed at that time.
+
 The integration exposes daily and daypart forecast data as attributes of a disabled-by-default sensor, `Forecast Details`. The benefits of this are:
 
 1. Provides access to non-conforming data available from the weather.com API that is not available through the `<weather.get_forecasts>` method.
