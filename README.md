@@ -143,7 +143,7 @@ The integration exposes daily and daypart forecast data as attributes of a disab
 
 Daily options are native API forecast values that return a 15-item array:
 
-`day`, `temp_max`, `temp_min`, `daily_precip_qpf`, `daily_rain_qpf`, `daily_snow_qpf`, `daily_ice_qpf`, `daily_narrative`, `sunrise`, `sunset`, `moon_phase`, `moon_phase_code`, `moon_phase_day`, `moonrise`, `moonset`.
+`day`, `daily_temp_max`, `daily_temp_min`, `daily_precip_qpf`, `daily_rain_qpf`, `daily_snow_qpf`, `daily_ice_qpf`, `daily_narrative`, `sunrise`, `sunset`, `moon_phase`, `moon_phase_code`, `moon_phase_day`, `moonrise`, `moonset`.
 
 </details>
 
