@@ -46,35 +46,18 @@ def _get_extra_attributes(
     day_cloud_cover = []
     day_relative_humidity = []
 
-    if daypart_icon_code[0] is None:
-        # Nighttime pull: replace missing index 0 with index 1
-        # Weather.com API workaround
-        day_icon.append(daypart_icon_code[1])
+    # Adjust index if it's night time
+    first_index = 1 if daypart_icon_code[0] is None else 0
+    indices = [first_index, *range(2, 29, 2)]
+
+    for i in indices:
+        day_icon.append(daypart_icon_code[i])
         day_cloud_cover.append(
-            daypart_cloud_cover[1] if daypart_cloud_cover[1] is not None else 0
+            daypart_cloud_cover[i] if daypart_cloud_cover[i] is not None else 0
         )
         day_relative_humidity.append(
-            daypart_relative_humidity[1] if daypart_relative_humidity[1] is not None else 0
+            daypart_relative_humidity[i] if daypart_relative_humidity[i] is not None else 0
         )
-        # Then use even indices for the remaining 14 days
-        for i in range(2, 29, 2):
-            day_icon.append(daypart_icon_code[i])
-            day_cloud_cover.append(
-                daypart_cloud_cover[i] if daypart_cloud_cover[i] is not None else 0
-            )
-            day_relative_humidity.append(
-                daypart_relative_humidity[i] if daypart_relative_humidity[i] is not None else 0
-            )
-    else:
-        # Daytime pull: use even indices from 0 through 28
-        for i in range(0, 29, 2):
-            day_icon.append(daypart_icon_code[i])
-            day_cloud_cover.append(
-                daypart_cloud_cover[i] if daypart_cloud_cover[i] is not None else 0
-            )
-            day_relative_humidity.append(
-                daypart_relative_humidity[i] if daypart_relative_humidity[i] is not None else 0
-            )
 
     daily_attributes = {
         "day": daily_data.get("dayOfWeek", [0] * 15),
