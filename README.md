@@ -17,7 +17,7 @@ install and use the software.
 # Weather.com API Key
 1) Open Developer Tools in your browser (this is typically done by pressing F12) and open the "Network" tab.
 2) Open https://www.wunderground.com (Wunderground is owned by Weather.com and uses some of the Weather.com APIs)
-3) Enter "/v3" (without quotes) in the search bar:
+3) Enter `/v3` in the search bar:
 
 ![Developer Tools Screenshot](apikey1.png)
 
