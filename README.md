@@ -15,12 +15,18 @@ install and use the software.
 - A Weather.com API Key is required (see below for how to get this)
 
 # Weather.com API Key
-1) Open https://www.wunderground.com (Wunderground is owned by Weather.com and uses some of the Weather.com APIs)
-2) View the page source in your browser.
-3) In the source, search for "apiKey" and copy/paste that into the integration
+1) Open Developer Tools in your browser (this is typically done by pressing F12) and open the "Network" tab.
+2) Open https://www.wunderground.com (Wunderground is owned by Weather.com and uses some of the Weather.com APIs)
+3) Enter "/v3" (without quotes) in the search bar:
+
+![Developer Tools Screenshot](apikey1.png)
+
+4) Click on any entry in the list, go to the Headers tab, and get the API key from there:
+
+![Developer Tools Screenshot](apikey2.png)
 
 Important notes:
-* It seems like Wunderground may provide different API keys depending on which country you are located in, and that the API keys for some countries may not be compatible with this integration. This integration has only been tested with the US API key which ends in `96f525` - if your API key isn't working, you may need to connect to a US VPN to retrieve the US API key.
+* It seems like Wunderground may provide different API keys depending on which country you are located in, and that the API keys for some countries may not be compatible with this integration. This integration has only been tested with the US API keys ending in `96f525` and `f7eaa8` - if your API key isn't working, you may need to connect to a US VPN to retrieve the US API key.
 * It also seems like Weather.com blocks traffic from certain countries. If this integration does not work for you, make sure that you can access Weather.com in your browser.
 * Wunderground PWS (Personal Weather Station) API Keys will not work for this integration, as they do not have access to the Weather.com APIs that this integration uses.
 * While there have been no reports of API keys being blocked or changing over time, it's always possible that Weather.com will eventually block them. If that happens you will need to find an API key from another source.
