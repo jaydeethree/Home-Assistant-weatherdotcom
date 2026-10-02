@@ -2,6 +2,7 @@ from __future__ import annotations
 
 from dataclasses import dataclass
 from typing import Callable, Any, cast
+from datetime import UTC, datetime
 
 from .const import (
     FIELD_DESCRIPTION,
@@ -407,7 +408,7 @@ current_condition_sensor_descriptions = [
         entity_registry_enabled_default=False,
         device_class=SensorDeviceClass.TIMESTAMP,
         unit_fn=lambda _: None,
-        value_fn=lambda data, _: cast(str, data),
+        value_fn=lambda data, _: datetime.fromtimestamp(data, UTC),
         attr_fn=lambda coordinator_data, selected_attributes: (
             _get_extra_attributes(
                 coordinator_data,
