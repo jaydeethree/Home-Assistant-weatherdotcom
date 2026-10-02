@@ -56,9 +56,9 @@
         "title": "Extra Weather Attributes",
         "description": "Select attributes to add to the Forecast Details sensor. See **Advanced Configuration** in the GitHub README via **Help** (?) above.",
         "data": {
-            "daily_attributes": "DAILY ATTRIBUTES",
-            "day_attributes": "DAY ATTRIBUTES",
-            "daypart_attributes": "DAYPART ATTRIBUTES"
+            "daily_attributes": "Daily Attributes:",
+            "day_attributes": "Day Attributes:",
+            "daypart_attributes": "Daypart Attributes:"
         }
       }
     }
