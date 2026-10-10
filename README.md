@@ -5,8 +5,6 @@ Includes a native Home Assistant Weather Entity and a variety of weather sensors
 This is a fork of the excellent [wundergroundpws integration by @cytech](https://github.com/cytech/Home-Assistant-wundergroundpws) - if you
 find this software useful, feel free to make a donation to them.
 
--------------------
-
 # AI Disclosure
 
 Starting in October 2026 I will begin using AI to help me maintain my open-source projects. I know a lot of people have strong feelings about AI so I want to be open about this decision and why I made it.
@@ -18,8 +16,6 @@ I've been using AI in my job for awhile and have found that while human oversigh
 To be very clear: **any AI-generated code that gets committed to my open-source projects will be thoroughly reviewed by me, a human.** I'm not vibe-coding or letting AIs run wild in my repositories, I'm using AI as a tool to help me work more efficiently. If you disagree with this you are always welcome to fork my projects and build non-AI versions of them.
 
 Also for what it's worth: 100% of this disclosure was written by a human without any AI involvement :)
-
--------------------
 
 # Installation Prerequisites
 Please review the minimum requirements below to determine whether you will be able to
