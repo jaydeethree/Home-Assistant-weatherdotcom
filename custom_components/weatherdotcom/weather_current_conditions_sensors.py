@@ -183,8 +183,8 @@ class WeatherSensorEntityDescription(
 ):
     attr_fn: Callable[
         [dict[str, Any], list[str] | None],
-        dict[str, StateType],
-    ] = lambda _, __: {}
+        dict[str, Any] | None,
+    ] | None = None
     unit_fn: Callable[[bool], str | None] = lambda _: None
     """Describes Weather.com Sensor entity."""
 
