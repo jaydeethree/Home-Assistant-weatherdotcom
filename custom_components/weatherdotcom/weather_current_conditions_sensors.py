@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 from dataclasses import dataclass
-from typing import Callable, Any, cast
+from typing import Callable, Any, cast, Final
 from datetime import UTC, datetime
 
 from .const import (
@@ -27,148 +27,127 @@ from homeassistant.const import PERCENTAGE, UV_INDEX, DEGREE, UnitOfLength, Unit
 from homeassistant.helpers.typing import StateType
 
 
+# Mapping of daily sensor attributes to Weather.com API names
+DAILY_ATTRIBUTE_MAP: Final[dict[str, str]] = {
+    "day": "dayOfWeek",
+    "daily_temp_max": "calendarDayTemperatureMax",
+    "daily_temp_min": "calendarDayTemperatureMin",
+    "daily_precip_qpf": "qpf",
+    "daily_rain_qpf": "qpfRain",
+    "daily_snow_qpf": "qpfSnow",
+    "daily_ice_qpf": "qpfIce",
+    "sunrise": "sunriseTimeLocal",
+    "sunset": "sunsetTimeLocal",
+    "moon_phase": "moonPhase",
+    "moon_phase_code": "moonPhaseCode",
+    "moon_phase_day": "moonPhaseDay",
+    "moonrise": "moonriseTimeLocal",
+    "moonset": "moonsetTimeLocal",
+    "daily_narrative": "narrative",
+}
+
+# Mapping of daypart attributes to Weather.com API names
+DAYPART_ATTRIBUTE_MAP: Final[dict[str, str]] = {
+    "daypart_cloud_cover": "cloudCover",
+    "daypart_name": "daypartName",
+    "daypart_icon_code": "iconCode",
+    "daypart_precip_chance": "precipChance",
+    "daypart_precip_type": "precipType",
+    "daypart_total_qpf": "qpf",
+    "daypart_rain_qpf": "qpfRain",
+    "daypart_snow_qpf": "qpfSnow",
+    "daypart_ice_qpf": "qpfIce",
+    "daypart_snow_range": "snowRange",
+    "daypart_relative_humidity": "relativeHumidity",
+    "daypart_heat_index": "temperatureHeatIndex",
+    "daypart_wind_chill": "temperatureWindChill",
+    "daypart_thunder_category": "thunderCategory",
+    "daypart_thunder_index": "thunderIndex",
+    "daypart_uv_description": "uvDescription",
+    "daypart_uv_index": "uvIndex",
+    "daypart_wind_dir": "windDirection",
+    "daypart_wind_dir_cardinal": "windDirectionCardinal",
+    "daypart_wind_speed": "windSpeed",
+    "daypart_wind_phrase": "windPhrase",
+    "daypart_wx_phrase_long": "wxPhraseLong",
+    "daypart_wx_phrase_short": "wxPhraseShort",
+    "daypart_qualifier_phrase": "qualifierPhrase",
+    "daypart_narrative": "narrative",
+}
+
+DAY_KEYS: Final[set[str]] = {
+    "day_icon_code",
+    "day_cloud_cover",
+    "day_relative_humidity",
+}
+
+
 def _get_extra_attributes(
-    coordinator_data: dict[str, Any],
+    coordinator_data: dict[str, Any] | None,
     selected_attributes: list[str] | None = None,
-) -> dict[str, Any]:
+) -> dict[str, Any] | None:
     if not selected_attributes or not coordinator_data:
-        return {}
+        return None
 
-    daily_data = coordinator_data.get("daily", {})
+    daily_data = coordinator_data.get("daily")
+    # Everything relies on daily_data, so if it's empty then return early.
+    if not isinstance(daily_data, dict):
+        return None
 
-    dayparts = daily_data.get("daypart", [{}])
-    daypart_data = dayparts[0] if dayparts else {}
+    selected_attributes_set = set(selected_attributes)
+    result: dict[str, Any] = {}
 
-    # Define base daypart arrays
-    daypart_icon_code = daypart_data.get("iconCode", [0] * 30)
-    daypart_cloud_cover = daypart_data.get("cloudCover", [0] * 30)
-    daypart_relative_humidity = daypart_data.get("relativeHumidity", [0] * 30)
+    for attr_name, api_name in DAILY_ATTRIBUTE_MAP.items():
+        if attr_name in selected_attributes_set:
+            val = daily_data.get(api_name)
+            result[attr_name] = val if val is not None else [0] * 15
 
-    # Synthetic daily attributes lists to append into
-    day_icon = []
-    day_cloud_cover = []
-    day_relative_humidity = []
+    # Check whether any other attributes are needed
+    needed_daypart_attrs = selected_attributes_set.intersection(DAYPART_ATTRIBUTE_MAP)
+    needed_day_attrs = selected_attributes_set.intersection(DAY_KEYS)
+    if not needed_daypart_attrs and not needed_day_attrs:
+        return result or None
 
-    # Adjust index if it's night time
-    first_index = 1 if daypart_icon_code[0] is None else 0
-    indices = [first_index, *range(2, 29, 2)]
+    dayparts = daily_data.get("daypart")
+    daypart_data = (
+        dayparts[0]
+        if (isinstance(dayparts, list) and dayparts and isinstance(dayparts[0], dict))
+        else {}
+    )
+    for attr_name in needed_daypart_attrs:
+        api_name = DAYPART_ATTRIBUTE_MAP[attr_name]
+        val = daypart_data.get(api_name)
+        result[attr_key] = val if val is not None else [0] * 30
 
-    for i in indices:
-        day_icon.append(daypart_icon_code[i])
-        day_cloud_cover.append(
-            daypart_cloud_cover[i] if daypart_cloud_cover[i] is not None else 0
-        )
-        day_relative_humidity.append(
-            daypart_relative_humidity[i] if daypart_relative_humidity[i] is not None else 0
-        )
+    if needed_day_attrs:
+        daypart_icon_code = daypart_data.get("iconCode") or []
+        daypart_cloud_cover = daypart_data.get("cloudCover") or []
+        daypart_relative_humidity = daypart_data.get("relativeHumidity") or []
 
-    daily_attributes = {
-        "day": daily_data.get("dayOfWeek", [0] * 15),
-        "daily_temp_max": daily_data.get("calendarDayTemperatureMax", [0] * 15),
-        "daily_temp_min": daily_data.get("calendarDayTemperatureMin", [0] * 15),
-        "daily_precip_qpf": daily_data.get("qpf", [0] * 15),
-        "daily_rain_qpf": daily_data.get("qpfRain", [0] * 15),
-        "daily_snow_qpf": daily_data.get("qpfSnow", [0] * 15),
-        "daily_ice_qpf": daily_data.get("qpfIce", [0] * 15),
-        "sunrise": daily_data.get("sunriseTimeLocal", [0] * 15),
-        "sunset": daily_data.get("sunsetTimeLocal", [0] * 15),
-        "moon_phase": daily_data.get("moonPhase", [0] * 15),
-        "moon_phase_code": daily_data.get("moonPhaseCode", [0] * 15),
-        "moon_phase_day": daily_data.get("moonPhaseDay", [0] * 15),
-        "moonrise": daily_data.get("moonriseTimeLocal", [0] * 15),
-        "moonset": daily_data.get("moonsetTimeLocal", [0] * 15),
-        "daily_narrative": daily_data.get("narrative", [0] * 15),
-    }
+        # Weather.com sets index 0 to None after 15:00 local time
+        # When None, shift day 0 to index 1 (tonight's forecast)
+        first_index = 1 if daypart_icon_code[0] is None else 0
+        indices = [first_index, *range(2, 29, 2)]
 
-    day_attributes = {
-        "day_icon_code": day_icon,
-        "day_cloud_cover": day_cloud_cover,
-        "day_relative_humidity": day_relative_humidity,
-    }
+        def _safe_get(arr: list, idx: int, default: Any = None) -> Any:
+            return arr[idx] if idx < len(arr) else default
 
-    daypart_attributes = {
-        "daypart_cloud_cover": daypart_cloud_cover,
-        "daypart_name": daypart_data.get(
-            "daypartName", [0] * 30
-        ),
-        "daypart_icon_code": daypart_icon_code,
-        "daypart_precip_chance": daypart_data.get(
-            "precipChance", [0] * 30
-        ),
-        "daypart_precip_type": daypart_data.get(
-            "precipType", [0] * 30
-        ),
-        "daypart_total_qpf": daypart_data.get(
-            "qpf", [0] * 30
-        ),
-        "daypart_rain_qpf": daypart_data.get(
-            "qpfRain", [0] * 30
-        ),
-        "daypart_snow_qpf": daypart_data.get(
-            "qpfSnow", [0] * 30
-        ),
-        "daypart_ice_qpf": daypart_data.get(
-            "qpfIce", [0] * 30
-        ),
-        "daypart_snow_range": daypart_data.get(
-            "snowRange", [0] * 30
-        ),
-        "daypart_relative_humidity": daypart_relative_humidity,
-        "daypart_heat_index": daypart_data.get(
-            "temperatureHeatIndex", [0] * 30
-        ),
-        "daypart_wind_chill": daypart_data.get(
-            "temperatureWindChill", [0] * 30
-        ),
-        "daypart_thunder_category": daypart_data.get(
-            "thunderCategory", [0] * 30
-        ),
-        "daypart_thunder_index": daypart_data.get(
-            "thunderIndex", [0] * 30
-        ),
-        "daypart_uv_description": daypart_data.get(
-            "uvDescription", [0] * 30
-        ),
-        "daypart_uv_index": daypart_data.get(
-            "uvIndex", [0] * 30
-        ),
-        "daypart_wind_dir": daypart_data.get(
-            "windDirection", [0] * 30
-        ),
-        "daypart_wind_dir_cardinal": daypart_data.get(
-            "windDirectionCardinal", [0] * 30
-        ),
-        "daypart_wind_speed": daypart_data.get(
-            "windSpeed", [0] * 30
-        ),
-        "daypart_wind_phrase": daypart_data.get(
-            "windPhrase", [0] * 30
-        ),
-        "daypart_wx_phrase_long": daypart_data.get(
-            "wxPhraseLong", [0] * 30
-        ),
-        "daypart_wx_phrase_short": daypart_data.get(
-            "wxPhraseShort", [0] * 30
-        ),
-        "daypart_qualifier_phrase": daypart_data.get(
-            "qualifierPhrase", [0] * 30
-        ),
-        "daypart_narrative": daypart_data.get(
-            "narrative", [0] * 30
-        ),
-    }
+        if "day_icon_code" in needed_day_attrs:
+            result["day_icon_code"] = [
+                _safe_get(daypart_icon_code, i, 0) for i in indices
+            ]
 
-    attributes = {
-        **daily_attributes,
-        **day_attributes,
-        **daypart_attributes,
-    }
+        if "day_cloud_cover" in needed_day_attrs:
+            result["day_cloud_cover"] = [
+                _safe_get(daypart_cloud_cover, i, 0) or 0 for i in indices
+            ]
 
-    return {
-        key: attributes[key]
-        for key in selected_attributes
-        if key in attributes
-    }
+        if "day_relative_humidity" in needed_day_attrs:
+            result["day_relative_humidity"] = [
+                _safe_get(daypart_relative_humidity, i, 0) or 0 for i in indices
+            ]
+
+    return result or None
 
 
 @dataclass
@@ -408,7 +387,7 @@ current_condition_sensor_descriptions = [
         entity_registry_enabled_default=False,
         device_class=SensorDeviceClass.TIMESTAMP,
         unit_fn=lambda _: None,
-        value_fn=lambda data, _: datetime.fromtimestamp(data, UTC),
+        value_fn=lambda data, _: datetime.fromtimestamp(data, UTC) if isinstance(data, (int, float)) and data > 0 else None,
         attr_fn=lambda coordinator_data, selected_attributes: (
             _get_extra_attributes(
                 coordinator_data,
