@@ -31,7 +31,7 @@ def _get_extra_attributes(
     coordinator_data: dict[str, Any],
     selected_attributes: list[str] | None = None,
 ) -> dict[str, Any]:
-    if not selected_attributes:
+    if not selected_attributes or not coordinator_data:
         return {}
 
     daily_data = coordinator_data.get("daily", {})
