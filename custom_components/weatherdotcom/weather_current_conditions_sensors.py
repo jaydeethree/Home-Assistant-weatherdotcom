@@ -117,7 +117,7 @@ def _get_extra_attributes(
     for attr_name in needed_daypart_attrs:
         api_name = DAYPART_ATTRIBUTE_MAP[attr_name]
         val = daypart_data.get(api_name)
-        result[attr_key] = val if val is not None else [0] * 30
+        result[attr_name] = val if val is not None else [0] * 30
 
     if needed_day_attrs:
         daypart_icon_code = daypart_data.get("iconCode") or []
