@@ -91,6 +91,13 @@ class WeatherSensor(CoordinatorEntity, SensorEntity):
             self.coordinator.hass.config.units is METRIC_SYSTEM)
 
     @property
+    def entity_registry_enabled_default(self) -> bool:
+        """Return if the entity should be enabled when first added to the registry."""
+        if self.entity_description.key == "validTimeUtc":
+            return bool(self._extra_attributes)
+        return self.entity_description.entity_registry_enabled_default
+
+    @property
     def available(self) -> bool:
         """Return if weather data is available."""
         return self.coordinator.data is not None

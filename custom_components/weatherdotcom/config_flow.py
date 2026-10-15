@@ -6,6 +6,7 @@ import async_timeout
 import voluptuous as vol
 from homeassistant import config_entries
 import homeassistant.helpers.config_validation as cv
+from homeassistant.helpers import entity_registry as er
 from homeassistant.helpers import selector
 from homeassistant.exceptions import HomeAssistantError
 from homeassistant.const import (
@@ -334,8 +335,24 @@ class WeatherDotComOptionsFlow(config_entries.OptionsFlowWithReload):
                 + user_input.get("daypart_attributes", [])
             )
 
+            # Auto-enable / disable Forecast Details sensor based on whether attributes are selected
+            ent_reg = er.async_get(self.hass)
+            location_name = self.config_entry.data.get(CONF_NAME, "")
+            unique_id = f"{location_name},validtimeutc".lower()
+            if entity_id := ent_reg.async_get_entity_id("sensor", DOMAIN, unique_id):
+                entity_entry = ent_reg.async_get(entity_id)
+                if entity_entry:
+                    if selected_attributes and entity_entry.disabled:
+                        ent_reg.async_update_entity(entity_id, disabled_by=None)
+                    elif not selected_attributes and not entity_entry.disabled_by:
+                        ent_reg.async_update_entity(
+                            entity_id,
+                            disabled_by=er.RegistryEntryDisabler.INTEGRATION,
+                        )
             return self.async_create_entry(
+                title="",
                 data={
+                    **self.config_entry.options,
                     CONF_EXTRA_ATTRIBUTES: selected_attributes,
                 },
             )
