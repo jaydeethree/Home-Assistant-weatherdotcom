@@ -1,3 +1,7 @@
+v1.4.1
+* Once again, thank you to @francis110 for all the work you did on this release!
+* Added the option to make forecast details available through a special sensor - please see the README for details
+
 v1.4.0
 * First off, a huge thanks to @francis110 for being the primary contributor to this major release!
 * Added the option to track weather for a device, person, or zone instead of only supporting a fixed latitude/longitude
