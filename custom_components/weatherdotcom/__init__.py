@@ -54,10 +54,9 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry):
         tranfile='',
     )
 
-    tfiledir = f'{hass.config.config_dir}/custom_components/{DOMAIN}/weather_translations/'
-    tfilename = config.lang.split('-', 1)[0]
-
     def _load_translation_file() -> dict:
+        tfiledir = f'{hass.config.config_dir}/custom_components/{DOMAIN}/weather_translations/'
+        tfilename = config.lang.split('-', 1)[0]
         if os.path.isfile(f'{tfiledir}{tfilename}.json'):
             return json.load_json(f'{tfiledir}{tfilename}.json')
         _LOGGER.warning(
