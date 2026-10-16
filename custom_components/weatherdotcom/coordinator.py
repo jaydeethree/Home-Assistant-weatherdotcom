@@ -4,7 +4,7 @@ from __future__ import annotations
 
 import asyncio
 from dataclasses import dataclass
-from datetime import datetime, timedelta
+from datetime import UTC, datetime, timedelta
 import logging
 import time
 from typing import Any
@@ -302,7 +302,9 @@ class WeatherUpdateCoordinator(DataUpdateCoordinator):
 
     @classmethod
     def _format_timestamp(cls, timestamp_secs):
-        return datetime.utcfromtimestamp(timestamp_secs).isoformat('T') + 'Z'
+        if timestamp_secs is None:
+            return None
+        return datetime.fromtimestamp(timestamp_secs, tz=UTC).strftime('%Y-%m-%dT%H:%M:%SZ')
 
 
 class InvalidApiKey(HomeAssistantError):
