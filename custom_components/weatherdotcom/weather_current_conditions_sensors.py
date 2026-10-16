@@ -126,7 +126,7 @@ def _get_extra_attributes(
 
         # Weather.com sets index 0 to None after 15:00 local time
         # When None, shift day 0 to index 1 (tonight's forecast)
-        first_index = 1 if daypart_icon_code[0] is None else 0
+        first_index = 1 if (daypart_icon_code and daypart_icon_code[0] is None) else 0
         indices = [first_index, *range(2, 29, 2)]
 
         def _safe_get(arr: list, idx: int, default: Any = None) -> Any:
