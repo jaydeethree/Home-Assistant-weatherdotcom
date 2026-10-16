@@ -36,7 +36,9 @@ from .const import (
     FIELD_WINDSPEED,
 
     HIGH_TEMP_TODAY_STORAGE,
-    HIGH_TEMP_TODAY_TIMESTAMP_STORAGE
+    HIGH_TEMP_TODAY_TIMESTAMP_STORAGE,
+    RESULTS_FORECAST_DAILY,
+    RESULTS_FORECAST_HOURLY,
 )
 from .store import WeatherDotComStorage
 
@@ -202,6 +204,9 @@ class WeatherDotComForecast(WeatherDotCom):
     @property
     def forecast_daily(self) -> list[Forecast]:
         """Return the daily forecast in native units."""
+        if not self.coordinator.data or self.coordinator.data.get(RESULTS_FORECAST_DAILY) is None:
+            return []
+
         days = [0, 2, 4, 6, 8, 10, 12, 14, 16, 18, 20, 22, 24, 26, 28]
         if self.coordinator.get_forecast_daily('temperature', 0) is None:
             days[0] += 1
@@ -270,6 +275,8 @@ class WeatherDotComForecast(WeatherDotCom):
     @property
     def forecast_hourly(self) -> list[Forecast]:
         """Return the hourly forecast in native units."""
+        if not self.coordinator.data or self.coordinator.data.get(RESULTS_FORECAST_HOURLY) is None:
+            return []
 
         forecast = []
         for hour in range(0, 360, 1):
