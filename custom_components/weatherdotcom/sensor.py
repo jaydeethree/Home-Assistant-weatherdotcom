@@ -105,9 +105,13 @@ class WeatherSensor(CoordinatorEntity, SensorEntity):
     @property
     def name(self):
         """Return the name of the sensor."""
-        if self.entity_description.key in self.coordinator._tranfile.keys() or \
-                self.entity_description.key in self.coordinator._tranfile[FIELD_DAYPART].keys():
+        if self.entity_description.key in self.coordinator._tranfile:
             return self.coordinator._tranfile[self.entity_description.key]
+        if (
+            FIELD_DAYPART in self.coordinator._tranfile
+            and self.entity_description.key in self.coordinator._tranfile[FIELD_DAYPART]
+        ):
+            return self.coordinator._tranfile[FIELD_DAYPART][self.entity_description.key]
 
         return self.entity_description.name
 
