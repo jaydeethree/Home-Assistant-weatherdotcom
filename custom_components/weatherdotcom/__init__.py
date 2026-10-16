@@ -54,14 +54,18 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry):
         tranfile='',
     )
 
-    tfiledir = f'{hass.config.config_dir}/custom_components/{DOMAIN}/weather_translations/'
-    tfilename = config.lang.split('-', 1)[0]
+    def _load_translation_file() -> dict:
+        tfiledir = f'{hass.config.config_dir}/custom_components/{DOMAIN}/weather_translations/'
+        tfilename = config.lang.split('-', 1)[0]
+        if os.path.isfile(f'{tfiledir}{tfilename}.json'):
+            return json.load_json(f'{tfiledir}{tfilename}.json')
+        _LOGGER.warning(
+            'Sensor translation file %s.json does not exist. Defaulting to en-US.',
+            tfilename,
+        )
+        return json.load_json(f'{tfiledir}en.json')
 
-    if os.path.isfile(f'{tfiledir}{tfilename}.json'):
-        config.tranfile = await hass.async_add_executor_job(json.load_json, f'{tfiledir}{tfilename}.json')
-    else:
-        config.tranfile = await hass.async_add_executor_job(json.load_json, f'{tfiledir}en.json')
-        _LOGGER.warning(f'Sensor translation file {tfilename}.json does not exist. Defaulting to en-US.')
+    config.tranfile = await hass.async_add_executor_job(_load_translation_file)
 
     weathercoordinator = WeatherUpdateCoordinator(hass, config)
     await weathercoordinator.async_config_entry_first_refresh()
