@@ -162,75 +162,22 @@ class WeatherUpdateCoordinator(DataUpdateCoordinator):
         self.current_latitude = latitude
         self.current_longitude = longitude
 
-        headers = {
-            'Accept-Encoding': 'gzip',
-            "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36"
-        }
-        current_error = False
-        daily_error = False
-        hourly_error = False
-        result_current = None
-        result_forecast_daily = None
-        result_forecast_hourly = None
+        result_current, current_error = await self._async_fetch_data(
+            _RESOURCECURRENT, latitude, longitude, "current"
+        )
+        result_forecast_daily, daily_error = await self._async_fetch_data(
+            _RESOURCEFORECASTDAILY, latitude, longitude, "daily"
+        )
+        if result_forecast_daily is not None:
+            # If the result includes max temperature data for today,
+            # update that data in storage.
+            temp_max_list = result_forecast_daily.get(FIELD_TEMPERATUREMAX)
+            if temp_max_list and temp_max_list[0] is not None:
+                await self._store.async_save(temp_max_list[0], round(time.time()))
 
-        for attempt in range(2):
-            try:
-                async with async_timeout.timeout(10):
-                    url = self._build_url(_RESOURCECURRENT, latitude, longitude)
-                    response = await self._session.get(url, headers=headers)
-                    result_current = await response.json(content_type=None)
-                    if result_current is None:
-                        raise ValueError('No weather data found')
-                    self._check_errors(url, result_current)
-                    break
-            except (ValueError, asyncio.TimeoutError, aiohttp.ClientError) as err:
-                if attempt == 1:
-                    _LOGGER.error('Error getting current weather. Exception: %s. Details: %s', type(err), err)
-                    current_error = True
-                else:
-                    _LOGGER.warning('Error getting current weather, will retry. Exception: %s. Details: %s', type(err), err)
-                    await asyncio.sleep(5)
-
-        for attempt in range(2):
-            try:
-                async with async_timeout.timeout(10):
-                    url = self._build_url(_RESOURCEFORECASTDAILY, latitude, longitude)
-                    response = await self._session.get(url, headers=headers)
-                    result_forecast_daily = await response.json(content_type=None)
-                    if result_forecast_daily is None:
-                        raise ValueError('No weather data found')
-                    self._check_errors(url, result_forecast_daily)
-                    # If the result includes max temperature data for today,
-                    # update that data in storage.
-                    temp_max_list = result_forecast_daily.get(FIELD_TEMPERATUREMAX)
-                    if temp_max_list and temp_max_list[0] is not None:
-                        await self._store.async_save(temp_max_list[0], round(time.time()))
-                    break
-            except (ValueError, asyncio.TimeoutError, aiohttp.ClientError) as err:
-                if attempt == 1:
-                    _LOGGER.error('Error getting daily weather. Exception: %s. Details: %s', type(err), err)
-                    daily_error = True
-                else:
-                    _LOGGER.warning('Error getting daily weather, will retry. Exception: %s. Details: %s', type(err), err)
-                    await asyncio.sleep(5)
-
-        for attempt in range(2):
-            try:
-                async with async_timeout.timeout(10):
-                    url = self._build_url(_RESOURCEFORECASTHOURLY, latitude, longitude)
-                    response = await self._session.get(url, headers=headers)
-                    result_forecast_hourly = await response.json(content_type=None)
-                    if result_forecast_hourly is None:
-                        raise ValueError('No weather data found')
-                    self._check_errors(url, result_forecast_hourly)
-                    break
-            except (ValueError, asyncio.TimeoutError, aiohttp.ClientError) as err:
-                if attempt == 1:
-                    _LOGGER.error('Error getting hourly weather. Exception: %s. Details: %s', type(err), err)
-                    hourly_error = True
-                else:
-                    _LOGGER.warning('Error getting hourly weather, will retry. Exception: %s. Details: %s', type(err), err)
-                    await asyncio.sleep(5)
+        result_forecast_hourly, hourly_error = await self._async_fetch_data(
+            _RESOURCEFORECASTHOURLY, latitude, longitude, "hourly"
+        )
 
         if current_error and daily_error and hourly_error:
             raise UpdateFailed('Failed to get weather data')
@@ -242,6 +189,32 @@ class WeatherUpdateCoordinator(DataUpdateCoordinator):
             }
             self.data = result
             return result
+
+    async def _async_fetch_data(
+        self, resource: str, latitude: float, longitude: float, description: str
+    ) -> tuple[dict[str, Any] | None, bool]:
+        """Fetch weather data for a specific resource with retry."""
+        headers = {
+            'Accept-Encoding': 'gzip',
+            "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36"
+        }
+        for attempt in range(2):
+            try:
+                async with async_timeout.timeout(10):
+                    url = self._build_url(resource, latitude, longitude)
+                    response = await self._session.get(url, headers=headers)
+                    result = await response.json(content_type=None)
+                    if result is None:
+                        raise ValueError('No weather data found')
+                    self._check_errors(url, result)
+                    return result, False
+            except (ValueError, asyncio.TimeoutError, aiohttp.ClientError) as err:
+                if attempt == 1:
+                    _LOGGER.error('Error getting %s weather. Exception: %s. Details: %s', description, type(err), err)
+                    return None, True
+                _LOGGER.warning('Error getting %s weather, will retry. Exception: %s. Details: %s', description, type(err), err)
+                await asyncio.sleep(5)
+        return None, True
 
     def _build_url(self, baseurl: str, latitude: float, longitude: float) -> str:
         baseurl += '&language={language}'
