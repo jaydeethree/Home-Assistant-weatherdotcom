@@ -145,15 +145,14 @@ class WeatherSensor(CoordinatorEntity, SensorEntity):
 
 
 def _get_sensor_data(
-        sensors: dict[str, Any],
+        sensors: dict[str, Any] | None,
         kind: str,
         unit_system: str
 ) -> Any:
     """Get sensor data."""
     # windGust is often null. When it is, set it to windSpeed instead.
-    if sensors[RESULTS_CURRENT] == None:
+    if not sensors or sensors.get(RESULTS_CURRENT) is None:
         return None
-    if kind == FIELD_WINDGUST and sensors[RESULTS_CURRENT][kind] == None:
-        return sensors[RESULTS_CURRENT][FIELD_WINDSPEED]
-    else:
-        return sensors[RESULTS_CURRENT][kind]
+    if kind == FIELD_WINDGUST and sensors[RESULTS_CURRENT].get(kind) is None:
+        return sensors[RESULTS_CURRENT].get(FIELD_WINDSPEED)
+    return sensors[RESULTS_CURRENT].get(kind)
