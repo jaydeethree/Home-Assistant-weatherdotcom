@@ -351,7 +351,7 @@ current_condition_sensor_descriptions = [
         icon="mdi:image",
         entity_registry_enabled_default=False,
         unit_fn=lambda _: None,
-        value_fn=lambda data, _: cast(int, data) or 44,
+        value_fn=lambda data, _: cast(int, data) if data is not None else 44,
     ),
     WeatherSensorEntityDescription(
         key="snow1Hour",
