@@ -111,11 +111,9 @@ class WeatherFlowHandler(config_entries.ConfigFlow, domain=DOMAIN):
                     ): vol.All(vol.In(LANG_CODES)),
                     vol.Required(CONF_LOCATION_SOURCE, default=LOCATION_TYPE_LATLONG): selector.SelectSelector(
                         selector.SelectSelectorConfig(
-                            options=[
-                                {"value": LOCATION_TYPE_ENTITY, "label": "Entity (zone, device_tracker, or person)"},
-                                {"value": LOCATION_TYPE_LATLONG, "label": "Latitude/longitude"},
-                            ],
+                            options=[LOCATION_TYPE_LATLONG, LOCATION_TYPE_ENTITY],
                             mode=selector.SelectSelectorMode.LIST,
+                            translation_key="location_source_options"
                         )
                     ),
                 }
