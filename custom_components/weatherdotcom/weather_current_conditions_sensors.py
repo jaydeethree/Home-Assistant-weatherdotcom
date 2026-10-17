@@ -5,24 +5,43 @@ from typing import Callable, Any, cast, Final
 from datetime import UTC, datetime
 
 from .const import (
+    FIELD_CLOUD_CEILING,
+    FIELD_CLOUD_COVER,
+    FIELD_CLOUD_COVER_PHRASE,
+    FIELD_DAYPART,
     FIELD_DESCRIPTION,
     FIELD_DEW_POINT,
     FIELD_FEELS_LIKE,
+    FIELD_HEAT_INDEX,
     FIELD_HUMIDITY,
+    FIELD_ICONCODE,
+    FIELD_PRECIPCHANCE,
+    FIELD_PRECIP_1HOUR,
+    FIELD_PRECIP_6HOUR,
+    FIELD_PRECIP_24HOUR,
     FIELD_PRESSURE,
+    FIELD_PRESSURE_TENDENCY_TREND,
+    FIELD_QPF,
+    FIELD_SNOW_1HOUR,
+    FIELD_SNOW_6HOUR,
+    FIELD_SNOW_24HOUR,
     FIELD_TEMP,
     FIELD_UV_INDEX,
+    FIELD_VALIDTIMELOCAL,
+    FIELD_VALIDTIMEUTC,
     FIELD_WINDDIR,
     FIELD_WINDDIRECTIONCARDINAL,
     FIELD_WINDGUST,
     FIELD_WINDSPEED,
+    FIELD_WIND_CHILL,
     ICON_SNOWFLAKE,
     ICON_THERMOMETER,
     ICON_UMBRELLA,
-    ICON_WIND
+    ICON_WIND,
+    RESULTS_FORECAST_DAILY,
 )
 from homeassistant.components.sensor import SensorEntityDescription, SensorDeviceClass, SensorStateClass
-from homeassistant.const import PERCENTAGE, UV_INDEX, DEGREE, UnitOfLength, UnitOfTemperature, \
+from homeassistant.const import CONF_LATITUDE, CONF_LONGITUDE, PERCENTAGE, UV_INDEX, DEGREE, UnitOfLength, UnitOfTemperature, \
     UnitOfVolumetricFlux, UnitOfPressure, UnitOfSpeed
 from homeassistant.helpers.typing import StateType
 
@@ -89,7 +108,7 @@ def _get_extra_attributes(
     if not selected_attributes or not coordinator_data:
         return None
 
-    daily_data = coordinator_data.get("daily")
+    daily_data = coordinator_data.get(RESULTS_FORECAST_DAILY)
     # Everything relies on daily_data, so if it's empty then return early.
     if not isinstance(daily_data, dict):
         return None
@@ -108,7 +127,7 @@ def _get_extra_attributes(
     if not needed_daypart_attrs and not needed_day_attrs:
         return result or None
 
-    dayparts = daily_data.get("daypart")
+    dayparts = daily_data.get(FIELD_DAYPART)
     daypart_data = (
         dayparts[0]
         if (isinstance(dayparts, list) and dayparts and isinstance(dayparts[0], dict))
@@ -120,9 +139,9 @@ def _get_extra_attributes(
         result[attr_name] = val if val is not None else [0] * 30
 
     if needed_day_attrs:
-        daypart_icon_code = daypart_data.get("iconCode") or []
-        daypart_cloud_cover = daypart_data.get("cloudCover") or []
-        daypart_relative_humidity = daypart_data.get("relativeHumidity") or []
+        daypart_icon_code = daypart_data.get(FIELD_ICONCODE) or []
+        daypart_cloud_cover = daypart_data.get(FIELD_CLOUD_COVER) or []
+        daypart_relative_humidity = daypart_data.get(FIELD_HUMIDITY) or []
 
         # Weather.com sets index 0 to None after 15:00 local time
         # When None, shift day 0 to index 1 (tonight's forecast)
@@ -164,7 +183,7 @@ class WeatherSensorEntityDescription(SensorEntityDescription):
 
 current_condition_sensor_descriptions = [
     WeatherSensorEntityDescription(
-        key="validTimeLocal",
+        key=FIELD_VALIDTIMELOCAL,
         name="Local Observation Time",
         icon="mdi:clock",
         value_fn=lambda data, _: cast(str, data),
@@ -235,7 +254,7 @@ current_condition_sensor_descriptions = [
         value_fn=lambda data, _: cast(float, data),
     ),
     WeatherSensorEntityDescription(
-        key="temperatureHeatIndex",
+        key=FIELD_HEAT_INDEX,
         name="Heat Index",
         icon=ICON_THERMOMETER,
         state_class=SensorStateClass.MEASUREMENT,
@@ -244,7 +263,7 @@ current_condition_sensor_descriptions = [
         value_fn=lambda data, _: cast(float, data),
     ),
     WeatherSensorEntityDescription(
-        key="temperatureWindChill",
+        key=FIELD_WIND_CHILL,
         name="Wind Chill",
         icon=ICON_THERMOMETER,
         state_class=SensorStateClass.MEASUREMENT,
@@ -253,7 +272,7 @@ current_condition_sensor_descriptions = [
         value_fn=lambda data, _: cast(float, data),
     ),
     WeatherSensorEntityDescription(
-        key="precip1Hour",
+        key=FIELD_PRECIP_1HOUR,
         name="Precipitation - Last hour",
         icon=ICON_UMBRELLA,
         state_class=SensorStateClass.MEASUREMENT,
@@ -262,7 +281,7 @@ current_condition_sensor_descriptions = [
         value_fn=lambda data, _: cast(float, data) or 0,
     ),
     WeatherSensorEntityDescription(
-        key="precip6Hour",
+        key=FIELD_PRECIP_6HOUR,
         name="Precipitation - Last 6 hours",
         icon=ICON_UMBRELLA,
         state_class=SensorStateClass.MEASUREMENT,
@@ -271,7 +290,7 @@ current_condition_sensor_descriptions = [
         value_fn=lambda data, _: cast(float, data) or 0,
     ),
     WeatherSensorEntityDescription(
-        key="precip24Hour",
+        key=FIELD_PRECIP_24HOUR,
         name="Precipitation - Last 24 hours",
         icon=ICON_UMBRELLA,
         state_class=SensorStateClass.MEASUREMENT,
@@ -307,7 +326,7 @@ current_condition_sensor_descriptions = [
         value_fn=lambda data, _: cast(float, data),
     ),
     WeatherSensorEntityDescription(
-        key="cloudCeiling",
+        key=FIELD_CLOUD_CEILING,
         name="Cloud Ceiling",
         icon="mdi:clouds",
         state_class=SensorStateClass.MEASUREMENT,
@@ -316,31 +335,31 @@ current_condition_sensor_descriptions = [
         value_fn=lambda data, _: cast(int, data) or 0,
     ),
     WeatherSensorEntityDescription(
-        key="pressureTendencyTrend",
+        key=FIELD_PRESSURE_TENDENCY_TREND,
         name="Pressure Tendency Trend",
         icon="mdi:gauge",
         value_fn=lambda data, _: cast(str, data),
     ),
     WeatherSensorEntityDescription(
-        key="cloudCoverPhrase",
+        key=FIELD_CLOUD_COVER_PHRASE,
         name="Cloud Cover Phrase",
         icon="mdi:clouds",
         value_fn=lambda data, _: cast(str, data),
     ),
     WeatherSensorEntityDescription(
-        key="latitude",
+        key=CONF_LATITUDE,
         name="Latitude",
         icon="mdi:latitude",
         value_fn=lambda data, _: cast(float, data),
     ),
     WeatherSensorEntityDescription(
-        key="longitude",
+        key=CONF_LONGITUDE,
         name="Longitude",
         icon="mdi:longitude",
         value_fn=lambda data, _: cast(float, data),
     ),
     WeatherSensorEntityDescription(
-        key="iconCode",
+        key=FIELD_ICONCODE,
         name="Icon Code",
         icon="mdi:image",
         entity_registry_enabled_default=False,
@@ -348,7 +367,7 @@ current_condition_sensor_descriptions = [
         value_fn=lambda data, _: cast(int, data) if data is not None else 44,
     ),
     WeatherSensorEntityDescription(
-        key="snow1Hour",
+        key=FIELD_SNOW_1HOUR,
         name="Snowfall - Last hour",
         icon=ICON_SNOWFLAKE,
         state_class=SensorStateClass.MEASUREMENT,
@@ -357,7 +376,7 @@ current_condition_sensor_descriptions = [
         value_fn=lambda data, _: cast(float, data) or 0,
     ),
     WeatherSensorEntityDescription(
-        key="snow6Hour",
+        key=FIELD_SNOW_6HOUR,
         name="Snowfall - Last 6 hours",
         icon=ICON_SNOWFLAKE,
         state_class=SensorStateClass.MEASUREMENT,
@@ -366,7 +385,7 @@ current_condition_sensor_descriptions = [
         value_fn=lambda data, _: cast(float, data) or 0,
     ),
     WeatherSensorEntityDescription(
-        key="snow24Hour",
+        key=FIELD_SNOW_24HOUR,
         name="Snowfall - Last 24 hours",
         icon=ICON_SNOWFLAKE,
         state_class=SensorStateClass.MEASUREMENT,
@@ -375,7 +394,7 @@ current_condition_sensor_descriptions = [
         value_fn=lambda data, _: cast(float, data) or 0,
     ),
     WeatherSensorEntityDescription(
-        key="validTimeUtc",
+        key=FIELD_VALIDTIMEUTC,
         name="Forecast Details",
         icon="mdi:cloud-clock",
         entity_registry_enabled_default=False,
