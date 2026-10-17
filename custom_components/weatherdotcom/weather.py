@@ -40,7 +40,6 @@ from .const import (
     RESULTS_FORECAST_DAILY,
     RESULTS_FORECAST_HOURLY,
 )
-from .store import WeatherDotComStorage
 
 import logging
 
@@ -187,7 +186,7 @@ class WeatherDotComForecast(WeatherDotCom):
         )
         self._attr_unique_id = f"{coordinator.location_name},{WEATHER_DOMAIN}".lower()
         self._attr_device_info = coordinator.device_info
-        self._store = WeatherDotComStorage(self.hass, coordinator.location_name)
+        self._store = coordinator._store
         self._stored_data = {}
 
     @property
