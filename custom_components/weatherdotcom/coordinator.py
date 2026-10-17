@@ -29,6 +29,7 @@ from homeassistant.const import (
     UnitOfVolumetricFlux
 )
 from .const import (
+    API_URL_METRIC,
     DOMAIN,
     ICON_CONDITION_MAP,
     FIELD_DAYPART,
@@ -102,7 +103,7 @@ class WeatherUpdateCoordinator(DataUpdateCoordinator):
 
         self.device_info = _get_device_info(self._location_name)
 
-        if self._unit_system_api == 'm':
+        if self._unit_system_api == API_URL_METRIC:
             self.units_of_measurement = (UnitOfTemperature.CELSIUS, UnitOfLength.MILLIMETERS, UnitOfLength.METERS,
                                          UnitOfSpeed.KILOMETERS_PER_HOUR, UnitOfPressure.MBAR,
                                          UnitOfVolumetricFlux.MILLIMETERS_PER_HOUR, PERCENTAGE)
