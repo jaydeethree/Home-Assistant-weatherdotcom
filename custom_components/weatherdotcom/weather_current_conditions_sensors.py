@@ -150,22 +150,16 @@ def _get_extra_attributes(
     return result or None
 
 
-@dataclass
-class WeatherRequiredKeysMixin:
-    """Mixin for required keys."""
-    value_fn: Callable[[dict[str, Any], str], StateType]
+@dataclass(frozen=True, kw_only=True)
+class WeatherSensorEntityDescription(SensorEntityDescription):
+    """Describes Weather.com Sensor entity."""
 
-
-@dataclass
-class WeatherSensorEntityDescription(
-    SensorEntityDescription, WeatherRequiredKeysMixin
-):
+    value_fn: Callable[[Any, str], StateType]
     attr_fn: Callable[
-        [dict[str, Any], list[str] | None],
+        [dict[str, Any] | None, list[str] | None],
         dict[str, Any] | None,
     ] | None = None
     unit_fn: Callable[[bool], str | None] = lambda _: None
-    """Describes Weather.com Sensor entity."""
 
 
 current_condition_sensor_descriptions = [
