@@ -201,9 +201,9 @@ class WeatherUpdateCoordinator(DataUpdateCoordinator):
                     self._check_errors(url, result_forecast_daily)
                     # If the result includes max temperature data for today,
                     # update that data in storage.
-                    temperature_max = result_forecast_daily[FIELD_TEMPERATUREMAX][0]
-                    if temperature_max != None:
-                        await self._store.async_save(temperature_max, round(time.time()))
+                    temp_max_list = result_forecast_daily.get(FIELD_TEMPERATUREMAX)
+                    if temp_max_list and temp_max_list[0] is not None:
+                        await self._store.async_save(temp_max_list[0], round(time.time()))
                     break
             except (ValueError, asyncio.TimeoutError, aiohttp.ClientError) as err:
                 if attempt == 1:
