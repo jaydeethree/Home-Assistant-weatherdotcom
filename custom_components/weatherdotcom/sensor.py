@@ -6,12 +6,14 @@ https://github.com/jaydeethree/Home-Assistant-weatherdotcom
 from __future__ import annotations
 
 import logging
+from typing import Any
 
 from homeassistant.components.sensor import SensorEntity
 from homeassistant.config_entries import ConfigEntry
 from homeassistant.core import HomeAssistant, callback
 from homeassistant.helpers.entity import generate_entity_id
 from homeassistant.helpers.entity_platform import AddEntitiesCallback
+from homeassistant.helpers.typing import StateType
 from homeassistant.helpers.update_coordinator import CoordinatorEntity
 from homeassistant.util.unit_system import METRIC_SYSTEM
 
@@ -25,10 +27,11 @@ from .const import (
     FIELD_WINDGUST,
     FIELD_WINDSPEED,
     RESULTS_CURRENT,
-    RESULTS_FORECAST_DAILY,
-    RESULTS_FORECAST_HOURLY
 )
-from .weather_current_conditions_sensors import *
+from .weather_current_conditions_sensors import (
+    WeatherSensorEntityDescription,
+    current_condition_sensor_descriptions,
+)
 
 _LOGGER = logging.getLogger(__name__)
 
