@@ -19,7 +19,7 @@ from homeassistant.const import (
     CONF_NAME
 )
 from homeassistant.core import callback
-from homeassistant.helpers.aiohttp_client import async_create_clientsession
+from homeassistant.helpers.aiohttp_client import async_get_clientsession
 
 from .const import (
     DOMAIN,
@@ -65,7 +65,7 @@ class WeatherFlowHandler(config_entries.ConfigFlow, domain=DOMAIN):
             'Accept-Encoding': 'gzip',
             "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/111.0.0.0 Safari/537.36"
         }
-        session = async_create_clientsession(self.hass)
+        session = async_get_clientsession(self.hass)
         try:
             async with async_timeout.timeout(10):
                 # Use hardcoded values for the initial test API call. User-supplied values will be used for the created entities.
