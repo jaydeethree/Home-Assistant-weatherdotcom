@@ -5,6 +5,7 @@ from __future__ import annotations
 import asyncio
 from dataclasses import dataclass
 from datetime import UTC, datetime, timedelta
+from http import HTTPStatus
 import logging
 import time
 from typing import Any
@@ -13,7 +14,7 @@ import aiohttp
 import async_timeout
 
 from homeassistant.core import HomeAssistant
-from homeassistant.exceptions import HomeAssistantError
+from homeassistant.exceptions import ConfigEntryAuthFailed, HomeAssistantError
 from homeassistant.helpers.aiohttp_client import async_get_clientsession
 from homeassistant.helpers.device_registry import DeviceEntryType, DeviceInfo
 from homeassistant.helpers.update_coordinator import DataUpdateCoordinator, UpdateFailed
@@ -203,6 +204,9 @@ class WeatherUpdateCoordinator(DataUpdateCoordinator):
                 async with async_timeout.timeout(10):
                     url = self._build_url(resource, latitude, longitude)
                     response = await self._session.get(url, headers=headers)
+                    if response.status in (HTTPStatus.UNAUTHORIZED, HTTPStatus.FORBIDDEN):
+                        raise ConfigEntryAuthFailed("Invalid API key")
+                    response.raise_for_status()
                     result = await response.json(content_type=None)
                     if result is None:
                         raise ValueError('No weather data found')
