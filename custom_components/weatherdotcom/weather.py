@@ -199,8 +199,9 @@ class WeatherDotComForecast(SingleCoordinatorWeatherEntity):
         if not self.coordinator.data or self.coordinator.data.get(RESULTS_FORECAST_DAILY) is None:
             return []
 
-        days = [0, 2, 4, 6, 8, 10, 12, 14, 16, 18, 20, 22, 24, 26, 28]
-        if self.coordinator.get_forecast_daily(FIELD_TEMP, 0) is None:
+        daily_times = self.coordinator.data[RESULTS_FORECAST_DAILY].get(FIELD_VALIDTIMEUTC) or []
+        days = list(range(0, len(daily_times) * 2, 2))
+        if days and self.coordinator.get_forecast_daily(FIELD_TEMP, 0) is None:
             days[0] += 1
 
         forecast = []
@@ -270,8 +271,9 @@ class WeatherDotComForecast(SingleCoordinatorWeatherEntity):
         if not self.coordinator.data or self.coordinator.data.get(RESULTS_FORECAST_HOURLY) is None:
             return []
 
+        hourly_times = self.coordinator.data[RESULTS_FORECAST_HOURLY].get(FIELD_VALIDTIMEUTC) or []
         forecast = []
-        for hour in range(0, 360, 1):
+        for hour in range(len(hourly_times)):
             forecast.append(Forecast({
                 ATTR_FORECAST_CLOUD_COVERAGE:
                     self.coordinator.get_forecast_hourly(FIELD_CLOUD_COVER, hour),
