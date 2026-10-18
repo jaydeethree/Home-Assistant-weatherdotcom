@@ -1,3 +1,12 @@
+Unreleased
+* Significant code clean-up and modernization, including:
+  * Vastly improved error handling
+  * Deduplicated and simplified several parts of the codebase
+  * Migrated from the old ways of doing things to the modern ways of doing those things (e.g. switch from `hass.data[DOMAIN]` to `entry.runtime_data`)
+  * Added several constants and adopted those constants throughout the codebase
+* Fixed a bug where it wasn't possible to use a latitude or longitude of 0
+* Fixed a bug where icon code 0 (Tornado) would be replaced by icon code 44 (Not Available)
+
 v1.4.1
 * Once again, thank you to @francis110 for all the work you did on this release!
 * Added the option to make forecast details available through a special sensor - please see the README for details
