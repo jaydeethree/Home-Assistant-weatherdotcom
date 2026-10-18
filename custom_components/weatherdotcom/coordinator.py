@@ -68,14 +68,13 @@ class WeatherUpdateCoordinatorConfig:
     unit_system_api: str
     unit_system: str
     lang: str
+    tranfile: dict[str, Any] | str
 
-    update_interval = MIN_TIME_BETWEEN_UPDATES
-    tranfile: str
-
+    update_interval: timedelta = MIN_TIME_BETWEEN_UPDATES
     location_entity_id: str | None = None
     # For legacy services that have not migrated
-    latitude: str | None = None
-    longitude: str | None = None
+    latitude: float | None = None
+    longitude: float | None = None
 
 class WeatherUpdateCoordinator(DataUpdateCoordinator):
     """The Weather.com update coordinator."""
