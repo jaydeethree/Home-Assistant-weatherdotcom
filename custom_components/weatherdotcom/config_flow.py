@@ -4,7 +4,6 @@ import asyncio
 import logging
 from http import HTTPStatus
 import aiohttp
-import async_timeout
 import voluptuous as vol
 from homeassistant import config_entries
 from homeassistant.helpers import entity_registry as er
@@ -61,7 +60,7 @@ class WeatherFlowHandler(config_entries.ConfigFlow, domain=DOMAIN):
         }
         session = async_get_clientsession(self.hass)
         try:
-            async with async_timeout.timeout(10):
+            async with asyncio.timeout(10):
                 # Use hardcoded values for the initial test API call. User-supplied values will be used for the created entities.
                 url = 'https://api.weather.com/v3/wx/observations/current?geocode=37.3355,-121.8930&format=json&units=e&apiKey=%s&language=en-US' % api_key
                 response = await session.get(url, headers=headers)
