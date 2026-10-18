@@ -6,11 +6,8 @@ https://github.com/jaydeethree/Home-Assistant-weatherdotcom
 
 import time
 
-from . import WeatherUpdateCoordinator
-from homeassistant.config_entries import ConfigEntry
+from . import WeatherDotComConfigEntry, WeatherUpdateCoordinator
 from .const import (
-    DOMAIN,
-
     TEMPUNIT,
     LENGTHUNIT,
     SPEEDUNIT,
@@ -73,10 +70,10 @@ ENTITY_ID_FORMAT = WEATHER_DOMAIN + ".{}"
 
 
 async def async_setup_entry(
-        hass: HomeAssistant, entry: ConfigEntry, async_add_entities: AddEntitiesCallback
+        hass: HomeAssistant, entry: WeatherDotComConfigEntry, async_add_entities: AddEntitiesCallback
 ) -> None:
     """Add weather entity."""
-    coordinator: WeatherUpdateCoordinator = hass.data[DOMAIN][entry.entry_id]
+    coordinator = entry.runtime_data
     async_add_entities([
         WeatherDotComForecast(coordinator),
     ])

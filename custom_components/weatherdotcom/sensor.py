@@ -9,7 +9,6 @@ import logging
 from typing import Any
 
 from homeassistant.components.sensor import SensorEntity
-from homeassistant.config_entries import ConfigEntry
 from homeassistant.const import CONF_LATITUDE, CONF_LONGITUDE
 from homeassistant.core import HomeAssistant, callback
 from homeassistant.helpers.entity import generate_entity_id
@@ -18,12 +17,12 @@ from homeassistant.helpers.typing import StateType
 from homeassistant.helpers.update_coordinator import CoordinatorEntity
 from homeassistant.util.unit_system import METRIC_SYSTEM
 
+from . import WeatherDotComConfigEntry
 from .coordinator import WeatherUpdateCoordinator
 
 from .const import (
     CONF_ATTRIBUTION,
     CONF_EXTRA_ATTRIBUTES,
-    DOMAIN,
     FIELD_DAYPART,
     FIELD_VALIDTIMEUTC,
     FIELD_WINDGUST,
@@ -44,10 +43,10 @@ SENSOR_DESCRIPTIONS: tuple[WeatherSensorEntityDescription, ...] = (
 
 
 async def async_setup_entry(
-        hass: HomeAssistant, entry: ConfigEntry, async_add_entities: AddEntitiesCallback
+        hass: HomeAssistant, entry: WeatherDotComConfigEntry, async_add_entities: AddEntitiesCallback
 ) -> None:
     """Add Weather.com entities from a config_entry."""
-    coordinator: WeatherUpdateCoordinator = hass.data[DOMAIN][entry.entry_id]
+    coordinator = entry.runtime_data
     sensors = [
         WeatherSensor(
             coordinator, 
