@@ -10,10 +10,8 @@ import time
 from typing import Any
 
 import aiohttp
-import async_timeout
 
 from homeassistant.core import HomeAssistant
-from homeassistant.exceptions import HomeAssistantError
 from homeassistant.helpers.aiohttp_client import async_get_clientsession
 from homeassistant.helpers.device_registry import DeviceEntryType, DeviceInfo
 from homeassistant.helpers.update_coordinator import DataUpdateCoordinator, UpdateFailed
@@ -199,7 +197,7 @@ class WeatherUpdateCoordinator(DataUpdateCoordinator):
         }
         for attempt in range(2):
             try:
-                async with async_timeout.timeout(10):
+                async with asyncio.timeout(10):
                     url = self._build_url(resource, latitude, longitude)
                     response = await self._session.get(url, headers=headers)
                     response.raise_for_status()
@@ -242,7 +240,7 @@ class WeatherUpdateCoordinator(DataUpdateCoordinator):
             )
 
     def get_current(self, field):
-        if self.data[RESULTS_CURRENT] == None:
+        if self.data[RESULTS_CURRENT] is None:
             return None
         return self.data[RESULTS_CURRENT][field]
 
@@ -270,8 +268,8 @@ class WeatherUpdateCoordinator(DataUpdateCoordinator):
         for condition, iconcodes in cls.icon_condition_map.items():
             if icon_code in iconcodes:
                 return condition
-        if icon_code != None:
-            _LOGGER.warning(f'Unmapped icon code from Weather.com API: {icon_code}')
+        if icon_code is not None:
+            _LOGGER.warning('Unmapped icon code from Weather.com API: %s', icon_code)
         return None
 
     @classmethod
@@ -279,10 +277,6 @@ class WeatherUpdateCoordinator(DataUpdateCoordinator):
         if timestamp_secs is None:
             return None
         return datetime.fromtimestamp(timestamp_secs, tz=UTC).strftime('%Y-%m-%dT%H:%M:%SZ')
-
-
-class InvalidApiKey(HomeAssistantError):
-    """Error to indicate there is an invalid api key."""
 
 
 def _get_device_info(name: str) -> DeviceInfo:
