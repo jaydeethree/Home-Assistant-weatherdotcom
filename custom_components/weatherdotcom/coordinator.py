@@ -231,13 +231,8 @@ class WeatherUpdateCoordinator(DataUpdateCoordinator):
         if 'errors' not in response:
             return
         if errors := response['errors']:
-            raise ValueError(
-                f'Error from {url}: '
-                '; '.join([
-                    e['message']
-                    for e in errors
-                ])
-            )
+            messages = '; '.join([e['message'] for e in errors])
+            raise ValueError(f'Weather.com API error: {messages}')
 
     def get_current(self, field):
         if self.data[RESULTS_CURRENT] is None:
