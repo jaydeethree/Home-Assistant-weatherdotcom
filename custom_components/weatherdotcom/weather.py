@@ -79,7 +79,7 @@ async def async_setup_entry(
     ])
 
 
-class WeatherDotCom(SingleCoordinatorWeatherEntity):
+class WeatherDotComForecast(SingleCoordinatorWeatherEntity):
 
     @property
     def native_temperature(self) -> float:
@@ -166,9 +166,6 @@ class WeatherDotCom(SingleCoordinatorWeatherEntity):
     def uv_index(self) -> float:
         """Return the UV index."""
         return self.coordinator.get_current(FIELD_UV_INDEX)
-
-
-class WeatherDotComForecast(WeatherDotCom):
 
     def __init__(
             self,
