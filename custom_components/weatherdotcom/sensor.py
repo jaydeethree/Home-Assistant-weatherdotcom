@@ -10,6 +10,7 @@ from typing import Any
 
 from homeassistant.components.sensor import SensorEntity
 from homeassistant.config_entries import ConfigEntry
+from homeassistant.const import CONF_LATITUDE, CONF_LONGITUDE
 from homeassistant.core import HomeAssistant, callback
 from homeassistant.helpers.entity import generate_entity_id
 from homeassistant.helpers.entity_platform import AddEntitiesCallback
@@ -24,6 +25,7 @@ from .const import (
     CONF_EXTRA_ATTRIBUTES,
     DOMAIN,
     FIELD_DAYPART,
+    FIELD_VALIDTIMEUTC,
     FIELD_WINDGUST,
     FIELD_WINDSPEED,
     RESULTS_CURRENT,
@@ -83,9 +85,9 @@ class WeatherSensor(CoordinatorEntity, SensorEntity):
         )
         self._unit_system = coordinator.unit_system
         self._attr_device_info = coordinator.device_info
-        if description.key == 'latitude':
+        if description.key == CONF_LATITUDE:
             self._sensor_data = coordinator._get_coordinates()[0]
-        elif description.key == 'longitude':
+        elif description.key == CONF_LONGITUDE:
             self._sensor_data = coordinator._get_coordinates()[1]
         else:
             self._sensor_data = _get_sensor_data(
@@ -96,7 +98,7 @@ class WeatherSensor(CoordinatorEntity, SensorEntity):
     @property
     def entity_registry_enabled_default(self) -> bool:
         """Return if the entity should be enabled when first added to the registry."""
-        if self.entity_description.key == "validTimeUtc":
+        if self.entity_description.key == FIELD_VALIDTIMEUTC:
             return bool(self._extra_attributes)
         return self.entity_description.entity_registry_enabled_default
 
@@ -136,9 +138,9 @@ class WeatherSensor(CoordinatorEntity, SensorEntity):
     @callback
     def _handle_coordinator_update(self) -> None:
         """Handle data update."""
-        if self.entity_description.key == 'latitude':
+        if self.entity_description.key == CONF_LATITUDE:
             self._sensor_data = getattr(self.coordinator, "current_latitude", getattr(self.coordinator, "_latitude", None))
-        elif self.entity_description.key == 'longitude':
+        elif self.entity_description.key == CONF_LONGITUDE:
             self._sensor_data = getattr(self.coordinator, "current_longitude", getattr(self.coordinator, "_longitude", None))
         else:
             self._sensor_data = _get_sensor_data(
