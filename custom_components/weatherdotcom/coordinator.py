@@ -203,6 +203,7 @@ class WeatherUpdateCoordinator(DataUpdateCoordinator):
                 async with async_timeout.timeout(10):
                     url = self._build_url(resource, latitude, longitude)
                     response = await self._session.get(url, headers=headers)
+                    response.raise_for_status()
                     result = await response.json(content_type=None)
                     if result is None:
                         raise ValueError('No weather data found')
