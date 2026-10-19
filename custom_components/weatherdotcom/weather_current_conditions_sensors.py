@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 from dataclasses import dataclass
-from typing import Callable, Any, cast, Final
+from typing import Callable, Any, Final
 from datetime import UTC, datetime
 
 from .const import (
@@ -168,7 +168,7 @@ def _get_extra_attributes(
 class WeatherSensorEntityDescription(SensorEntityDescription):
     """Describes Weather.com Sensor entity."""
 
-    value_fn: Callable[[Any, str], StateType]
+    value_fn: Callable[[Any], StateType]
     attr_fn: Callable[
         [dict[str, Any] | None, list[str] | None],
         dict[str, Any] | None,
@@ -181,13 +181,13 @@ current_condition_sensor_descriptions: tuple[WeatherSensorEntityDescription, ...
         key=FIELD_VALIDTIMELOCAL,
         name="Local Observation Time",
         icon="mdi:clock",
-        value_fn=lambda data, _: cast(str, data),
+        value_fn=lambda data: data,
     ),
     WeatherSensorEntityDescription(
         key=FIELD_DESCRIPTION,
         name="Weather Description",
         icon="mdi:note-text",
-        value_fn=lambda data, _: cast(str, data),
+        value_fn=lambda data: data,
     ),
     WeatherSensorEntityDescription(
         key=FIELD_HUMIDITY,
@@ -196,7 +196,7 @@ current_condition_sensor_descriptions: tuple[WeatherSensorEntityDescription, ...
         device_class=SensorDeviceClass.HUMIDITY,
         state_class=SensorStateClass.MEASUREMENT,
         unit_fn=lambda _: PERCENTAGE,
-        value_fn=lambda data, _: cast(int, data),
+        value_fn=lambda data: data,
     ),
     WeatherSensorEntityDescription(
         key=FIELD_UV_INDEX,
@@ -204,7 +204,7 @@ current_condition_sensor_descriptions: tuple[WeatherSensorEntityDescription, ...
         icon="mdi:sunglasses",
         state_class=SensorStateClass.MEASUREMENT,
         unit_fn=lambda _: UV_INDEX,
-        value_fn=lambda data, _: cast(int, data),
+        value_fn=lambda data: data,
     ),
     WeatherSensorEntityDescription(
         key=FIELD_WINDDIR,
@@ -212,14 +212,14 @@ current_condition_sensor_descriptions: tuple[WeatherSensorEntityDescription, ...
         icon=ICON_WIND,
         state_class=SensorStateClass.MEASUREMENT,
         unit_fn=lambda _: DEGREE,
-        value_fn=lambda data, _: cast(int, data),
+        value_fn=lambda data: data,
     ),
     WeatherSensorEntityDescription(
         key=FIELD_WINDDIRECTIONCARDINAL,
         name="Wind Direction - Cardinal",
         icon=ICON_WIND,
         unit_fn=lambda _: None,
-        value_fn=lambda data, _: cast(str, data),
+        value_fn=lambda data: data,
     ),
     WeatherSensorEntityDescription(
         key=FIELD_DEW_POINT,
@@ -228,7 +228,7 @@ current_condition_sensor_descriptions: tuple[WeatherSensorEntityDescription, ...
         state_class=SensorStateClass.MEASUREMENT,
         device_class=SensorDeviceClass.TEMPERATURE,
         unit_fn=lambda metric: UnitOfTemperature.CELSIUS if metric else UnitOfTemperature.FAHRENHEIT,
-        value_fn=lambda data, _: cast(float, data),
+        value_fn=lambda data: data,
     ),
     WeatherSensorEntityDescription(
         key=FIELD_FEELS_LIKE,
@@ -237,7 +237,7 @@ current_condition_sensor_descriptions: tuple[WeatherSensorEntityDescription, ...
         state_class=SensorStateClass.MEASUREMENT,
         device_class=SensorDeviceClass.TEMPERATURE,
         unit_fn=lambda metric: UnitOfTemperature.CELSIUS if metric else UnitOfTemperature.FAHRENHEIT,
-        value_fn=lambda data, _: cast(float, data),
+        value_fn=lambda data: data,
     ),
     WeatherSensorEntityDescription(
         key=FIELD_TEMP,
@@ -246,7 +246,7 @@ current_condition_sensor_descriptions: tuple[WeatherSensorEntityDescription, ...
         state_class=SensorStateClass.MEASUREMENT,
         device_class=SensorDeviceClass.TEMPERATURE,
         unit_fn=lambda metric: UnitOfTemperature.CELSIUS if metric else UnitOfTemperature.FAHRENHEIT,
-        value_fn=lambda data, _: cast(float, data),
+        value_fn=lambda data: data,
     ),
     WeatherSensorEntityDescription(
         key=FIELD_HEAT_INDEX,
@@ -255,7 +255,7 @@ current_condition_sensor_descriptions: tuple[WeatherSensorEntityDescription, ...
         state_class=SensorStateClass.MEASUREMENT,
         device_class=SensorDeviceClass.TEMPERATURE,
         unit_fn=lambda metric: UnitOfTemperature.CELSIUS if metric else UnitOfTemperature.FAHRENHEIT,
-        value_fn=lambda data, _: cast(float, data),
+        value_fn=lambda data: data,
     ),
     WeatherSensorEntityDescription(
         key=FIELD_WIND_CHILL,
@@ -264,7 +264,7 @@ current_condition_sensor_descriptions: tuple[WeatherSensorEntityDescription, ...
         state_class=SensorStateClass.MEASUREMENT,
         device_class=SensorDeviceClass.TEMPERATURE,
         unit_fn=lambda metric: UnitOfTemperature.CELSIUS if metric else UnitOfTemperature.FAHRENHEIT,
-        value_fn=lambda data, _: cast(float, data),
+        value_fn=lambda data: data,
     ),
     WeatherSensorEntityDescription(
         key=FIELD_PRECIP_1HOUR,
@@ -273,7 +273,7 @@ current_condition_sensor_descriptions: tuple[WeatherSensorEntityDescription, ...
         state_class=SensorStateClass.MEASUREMENT,
         device_class=SensorDeviceClass.PRECIPITATION,
         unit_fn=lambda metric: UnitOfLength.MILLIMETERS if metric else UnitOfLength.INCHES,
-        value_fn=lambda data, _: cast(float, data) or 0,
+        value_fn=lambda data: data or 0,
     ),
     WeatherSensorEntityDescription(
         key=FIELD_PRECIP_6HOUR,
@@ -282,7 +282,7 @@ current_condition_sensor_descriptions: tuple[WeatherSensorEntityDescription, ...
         state_class=SensorStateClass.MEASUREMENT,
         device_class=SensorDeviceClass.PRECIPITATION,
         unit_fn=lambda metric: UnitOfLength.MILLIMETERS if metric else UnitOfLength.INCHES,
-        value_fn=lambda data, _: cast(float, data) or 0,
+        value_fn=lambda data: data or 0,
     ),
     WeatherSensorEntityDescription(
         key=FIELD_PRECIP_24HOUR,
@@ -291,7 +291,7 @@ current_condition_sensor_descriptions: tuple[WeatherSensorEntityDescription, ...
         state_class=SensorStateClass.MEASUREMENT,
         device_class=SensorDeviceClass.PRECIPITATION,
         unit_fn=lambda metric: UnitOfLength.MILLIMETERS if metric else UnitOfLength.INCHES,
-        value_fn=lambda data, _: cast(float, data) or 0,
+        value_fn=lambda data: data or 0,
     ),
     WeatherSensorEntityDescription(
         key=FIELD_PRESSURE,
@@ -300,7 +300,7 @@ current_condition_sensor_descriptions: tuple[WeatherSensorEntityDescription, ...
         state_class=SensorStateClass.MEASUREMENT,
         device_class=SensorDeviceClass.PRESSURE,
         unit_fn=lambda metric: UnitOfPressure.MBAR if metric else UnitOfPressure.INHG,
-        value_fn=lambda data, _: cast(float, data),
+        value_fn=lambda data: data,
     ),
     WeatherSensorEntityDescription(
         key=FIELD_WINDGUST,
@@ -309,7 +309,7 @@ current_condition_sensor_descriptions: tuple[WeatherSensorEntityDescription, ...
         state_class=SensorStateClass.MEASUREMENT,
         device_class=SensorDeviceClass.WIND_SPEED,
         unit_fn=lambda metric: UnitOfSpeed.KILOMETERS_PER_HOUR if metric else UnitOfSpeed.MILES_PER_HOUR,
-        value_fn=lambda data, _: cast(float, data),
+        value_fn=lambda data: data,
     ),
     WeatherSensorEntityDescription(
         key=FIELD_WINDSPEED,
@@ -318,7 +318,7 @@ current_condition_sensor_descriptions: tuple[WeatherSensorEntityDescription, ...
         state_class=SensorStateClass.MEASUREMENT,
         device_class=SensorDeviceClass.WIND_SPEED,
         unit_fn=lambda metric: UnitOfSpeed.KILOMETERS_PER_HOUR if metric else UnitOfSpeed.MILES_PER_HOUR,
-        value_fn=lambda data, _: cast(float, data),
+        value_fn=lambda data: data,
     ),
     WeatherSensorEntityDescription(
         key=FIELD_CLOUD_CEILING,
@@ -327,31 +327,31 @@ current_condition_sensor_descriptions: tuple[WeatherSensorEntityDescription, ...
         state_class=SensorStateClass.MEASUREMENT,
         device_class=SensorDeviceClass.DISTANCE,
         unit_fn=lambda metric: UnitOfLength.METERS if metric else UnitOfLength.FEET,
-        value_fn=lambda data, _: cast(int, data),
+        value_fn=lambda data: data,
     ),
     WeatherSensorEntityDescription(
         key=FIELD_PRESSURE_TENDENCY_TREND,
         name="Pressure Tendency Trend",
         icon="mdi:gauge",
-        value_fn=lambda data, _: cast(str, data),
+        value_fn=lambda data: data,
     ),
     WeatherSensorEntityDescription(
         key=FIELD_CLOUD_COVER_PHRASE,
         name="Cloud Cover Phrase",
         icon="mdi:clouds",
-        value_fn=lambda data, _: cast(str, data),
+        value_fn=lambda data: data,
     ),
     WeatherSensorEntityDescription(
         key=CONF_LATITUDE,
         name="Latitude",
         icon="mdi:latitude",
-        value_fn=lambda data, _: cast(float, data),
+        value_fn=lambda data: data,
     ),
     WeatherSensorEntityDescription(
         key=CONF_LONGITUDE,
         name="Longitude",
         icon="mdi:longitude",
-        value_fn=lambda data, _: cast(float, data),
+        value_fn=lambda data: data,
     ),
     WeatherSensorEntityDescription(
         key=FIELD_ICONCODE,
@@ -359,7 +359,7 @@ current_condition_sensor_descriptions: tuple[WeatherSensorEntityDescription, ...
         icon="mdi:image",
         entity_registry_enabled_default=False,
         unit_fn=lambda _: None,
-        value_fn=lambda data, _: cast(int, data) if data is not None else 44,
+        value_fn=lambda data: data if data is not None else 44,
     ),
     WeatherSensorEntityDescription(
         key=FIELD_SNOW_1HOUR,
@@ -368,7 +368,7 @@ current_condition_sensor_descriptions: tuple[WeatherSensorEntityDescription, ...
         state_class=SensorStateClass.MEASUREMENT,
         device_class=SensorDeviceClass.PRECIPITATION,
         unit_fn=lambda metric: UnitOfLength.MILLIMETERS if metric else UnitOfLength.INCHES,
-        value_fn=lambda data, _: cast(float, data) or 0,
+        value_fn=lambda data: data or 0,
     ),
     WeatherSensorEntityDescription(
         key=FIELD_SNOW_6HOUR,
@@ -377,7 +377,7 @@ current_condition_sensor_descriptions: tuple[WeatherSensorEntityDescription, ...
         state_class=SensorStateClass.MEASUREMENT,
         device_class=SensorDeviceClass.PRECIPITATION,
         unit_fn=lambda metric: UnitOfLength.MILLIMETERS if metric else UnitOfLength.INCHES,
-        value_fn=lambda data, _: cast(float, data) or 0,
+        value_fn=lambda data: data or 0,
     ),
     WeatherSensorEntityDescription(
         key=FIELD_SNOW_24HOUR,
@@ -386,7 +386,7 @@ current_condition_sensor_descriptions: tuple[WeatherSensorEntityDescription, ...
         state_class=SensorStateClass.MEASUREMENT,
         device_class=SensorDeviceClass.PRECIPITATION,
         unit_fn=lambda metric: UnitOfLength.MILLIMETERS if metric else UnitOfLength.INCHES,
-        value_fn=lambda data, _: cast(float, data) or 0,
+        value_fn=lambda data: data or 0,
     ),
     WeatherSensorEntityDescription(
         key=FIELD_VALIDTIMEUTC,
@@ -395,7 +395,7 @@ current_condition_sensor_descriptions: tuple[WeatherSensorEntityDescription, ...
         entity_registry_enabled_default=False,
         device_class=SensorDeviceClass.TIMESTAMP,
         unit_fn=lambda _: None,
-        value_fn=lambda data, _: datetime.fromtimestamp(data, UTC) if isinstance(data, (int, float)) and data > 0 else None,
+        value_fn=lambda data: datetime.fromtimestamp(data, UTC) if isinstance(data, (int, float)) and data > 0 else None,
         attr_fn=lambda coordinator_data, selected_attributes: (
             _get_extra_attributes(
                 coordinator_data,
