@@ -201,7 +201,7 @@ current_condition_sensor_descriptions = [
         device_class=SensorDeviceClass.HUMIDITY,
         state_class=SensorStateClass.MEASUREMENT,
         unit_fn=lambda _: PERCENTAGE,
-        value_fn=lambda data, _: cast(int, data) or 0,
+        value_fn=lambda data, _: cast(int, data),
     ),
     WeatherSensorEntityDescription(
         key=FIELD_UV_INDEX,
@@ -209,7 +209,7 @@ current_condition_sensor_descriptions = [
         icon="mdi:sunglasses",
         state_class=SensorStateClass.MEASUREMENT,
         unit_fn=lambda _: UV_INDEX,
-        value_fn=lambda data, _: cast(int, data) or 0,
+        value_fn=lambda data, _: cast(int, data),
     ),
     WeatherSensorEntityDescription(
         key=FIELD_WINDDIR,
@@ -217,14 +217,14 @@ current_condition_sensor_descriptions = [
         icon=ICON_WIND,
         state_class=SensorStateClass.MEASUREMENT,
         unit_fn=lambda _: DEGREE,
-        value_fn=lambda data, _: cast(int, data) or 0,
+        value_fn=lambda data, _: cast(int, data),
     ),
     WeatherSensorEntityDescription(
         key=FIELD_WINDDIRECTIONCARDINAL,
         name="Wind Direction - Cardinal",
         icon=ICON_WIND,
         unit_fn=lambda _: None,
-        value_fn=lambda data, _: cast(str, data) or "",
+        value_fn=lambda data, _: cast(str, data),
     ),
     WeatherSensorEntityDescription(
         key=FIELD_DEW_POINT,
@@ -332,7 +332,7 @@ current_condition_sensor_descriptions = [
         state_class=SensorStateClass.MEASUREMENT,
         device_class=SensorDeviceClass.DISTANCE,
         unit_fn=lambda metric: UnitOfLength.METERS if metric else UnitOfLength.FEET,
-        value_fn=lambda data, _: cast(int, data) or 0,
+        value_fn=lambda data, _: cast(int, data),
     ),
     WeatherSensorEntityDescription(
         key=FIELD_PRESSURE_TENDENCY_TREND,
