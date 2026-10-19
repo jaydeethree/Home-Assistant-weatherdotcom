@@ -5,6 +5,7 @@ from typing import Callable, Any, cast, Final
 from datetime import UTC, datetime
 
 from .const import (
+    EXTRA_ATTRIBUTE_KEYS_DAY,
     FIELD_CLOUD_CEILING,
     FIELD_CLOUD_COVER,
     FIELD_CLOUD_COVER_PHRASE,
@@ -15,13 +16,11 @@ from .const import (
     FIELD_HEAT_INDEX,
     FIELD_HUMIDITY,
     FIELD_ICONCODE,
-    FIELD_PRECIPCHANCE,
     FIELD_PRECIP_1HOUR,
     FIELD_PRECIP_6HOUR,
     FIELD_PRECIP_24HOUR,
     FIELD_PRESSURE,
     FIELD_PRESSURE_TENDENCY_TREND,
-    FIELD_QPF,
     FIELD_SNOW_1HOUR,
     FIELD_SNOW_6HOUR,
     FIELD_SNOW_24HOUR,
@@ -42,7 +41,7 @@ from .const import (
 )
 from homeassistant.components.sensor import SensorEntityDescription, SensorDeviceClass, SensorStateClass
 from homeassistant.const import CONF_LATITUDE, CONF_LONGITUDE, PERCENTAGE, UV_INDEX, DEGREE, UnitOfLength, UnitOfTemperature, \
-    UnitOfVolumetricFlux, UnitOfPressure, UnitOfSpeed
+    UnitOfPressure, UnitOfSpeed
 from homeassistant.helpers.typing import StateType
 
 
@@ -94,11 +93,7 @@ DAYPART_ATTRIBUTE_MAP: Final[dict[str, str]] = {
     "daypart_narrative": "narrative",
 }
 
-DAY_KEYS: Final[set[str]] = {
-    "day_icon_code",
-    "day_cloud_cover",
-    "day_relative_humidity",
-}
+DAY_KEYS: Final[set[str]] = set(EXTRA_ATTRIBUTE_KEYS_DAY)
 
 
 def _get_extra_attributes(
@@ -181,7 +176,7 @@ class WeatherSensorEntityDescription(SensorEntityDescription):
     unit_fn: Callable[[bool], str | None] = lambda _: None
 
 
-current_condition_sensor_descriptions = [
+current_condition_sensor_descriptions: tuple[WeatherSensorEntityDescription, ...] = (
     WeatherSensorEntityDescription(
         key=FIELD_VALIDTIMELOCAL,
         name="Local Observation Time",
@@ -408,4 +403,4 @@ current_condition_sensor_descriptions = [
             )
         ),
     )
-]
+)
