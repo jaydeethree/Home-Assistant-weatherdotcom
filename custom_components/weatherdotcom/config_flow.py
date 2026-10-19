@@ -63,15 +63,17 @@ class WeatherFlowHandler(config_entries.ConfigFlow, domain=DOMAIN):
             async with asyncio.timeout(10):
                 # Use hardcoded values for the initial test API call. User-supplied values will be used for the created entities.
                 url = 'https://api.weather.com/v3/wx/observations/current?geocode=37.3355,-121.8930&format=json&units=e&apiKey=%s&language=en-US' % api_key
-                response = await session.get(url, headers=headers)
+                async with session.get(url, headers=headers) as response:
+                    status = response.status
+                    reason = response.reason
         except (asyncio.TimeoutError, aiohttp.ClientError) as err:
             _LOGGER.error("Error connecting to Weather.com during config: %s", err)
             return "unknown_error"
 
-        if response.status != HTTPStatus.OK:
+        if status != HTTPStatus.OK:
             _LOGGER.error("Weather.com config responded with HTTP error %s: %s",
-                          response.status, response.reason,)
-            if response.status == HTTPStatus.UNAUTHORIZED:
+                          status, reason,)
+            if status == HTTPStatus.UNAUTHORIZED:
                 return "invalid_api_key"
             return "unknown_error"
 
