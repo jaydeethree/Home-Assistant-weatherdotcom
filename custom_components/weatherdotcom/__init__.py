@@ -1,6 +1,6 @@
 """The weather.com component."""
 import logging
-import os.path
+from pathlib import Path
 from typing import Final
 from homeassistant.config_entries import ConfigEntry
 from homeassistant.const import (
@@ -17,8 +17,6 @@ from homeassistant.util import json
 from .coordinator import WeatherUpdateCoordinator, WeatherUpdateCoordinatorConfig
 from .const import (
     CONF_LANG,
-    DOMAIN,
-    
     API_METRIC,
     API_IMPERIAL,
     API_URL_METRIC,
@@ -56,15 +54,16 @@ async def async_setup_entry(hass: HomeAssistant, entry: WeatherDotComConfigEntry
     )
 
     def _load_translation_file() -> dict:
-        tfiledir = f'{hass.config.config_dir}/custom_components/{DOMAIN}/weather_translations/'
+        tfiledir = Path(__file__).parent / "weather_translations"
         tfilename = config.lang.split('-', 1)[0]
-        if os.path.isfile(f'{tfiledir}{tfilename}.json'):
-            return json.load_json(f'{tfiledir}{tfilename}.json')
+        tfilepath = tfiledir / f"{tfilename}.json"
+        if tfilepath.is_file():
+            return json.load_json(tfilepath)
         _LOGGER.warning(
             'Sensor translation file %s.json does not exist. Defaulting to en-US.',
             tfilename,
         )
-        return json.load_json(f'{tfiledir}en.json')
+        return json.load_json(tfiledir / "en.json")
 
     config.tranfile = await hass.async_add_executor_job(_load_translation_file)
 
