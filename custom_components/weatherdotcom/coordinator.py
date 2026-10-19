@@ -90,6 +90,7 @@ class WeatherUpdateCoordinator(DataUpdateCoordinator):
         self.unit_system = config.unit_system
         self._lang = config.lang
         self.data = None
+        self._consecutive_failures = 0
         self._session = async_get_clientsession(self._hass)
         self._tranfile = config.tranfile
         self._store = WeatherDotComStorage(self._hass, self._location_name)
@@ -177,15 +178,23 @@ class WeatherUpdateCoordinator(DataUpdateCoordinator):
         )
 
         if current_error and daily_error and hourly_error:
-            raise UpdateFailed('Failed to get weather data')
-        else:
-            result = {
-                RESULTS_CURRENT: result_current,
-                RESULTS_FORECAST_DAILY: result_forecast_daily,
-                RESULTS_FORECAST_HOURLY: result_forecast_hourly,
-            }
-            self.data = result
-            return result
+            self._consecutive_failures += 1
+            if self._consecutive_failures >= 3 or self.data is None:
+                raise UpdateFailed('Failed to get weather data')
+            _LOGGER.warning(
+                'Failed to get weather data (failure %s of 3); retaining previous data',
+                self._consecutive_failures,
+            )
+            return self.data
+
+        self._consecutive_failures = 0
+        result = {
+            RESULTS_CURRENT: result_current,
+            RESULTS_FORECAST_DAILY: result_forecast_daily,
+            RESULTS_FORECAST_HOURLY: result_forecast_hourly,
+        }
+        self.data = result
+        return result
 
     async def _async_fetch_data(
         self, resource: str, latitude: float, longitude: float, description: str
