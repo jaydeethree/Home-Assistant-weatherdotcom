@@ -177,7 +177,7 @@ class WeatherFlowHandler(config_entries.ConfigFlow, domain=DOMAIN):
                 else:
                     errors["base"] = "unknown_error"
                     _LOGGER.error("Invalid latitude/longitude: %s, %s",
-                                  user_input.get(CONF_LATITUDE), user_input.get(CONF_LONGITUDE),)
+                                  state.attributes.get(CONF_LATITUDE), state.attributes.get(CONF_LONGITUDE),)
 
         default_entity = None
 
