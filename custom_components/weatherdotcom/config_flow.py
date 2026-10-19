@@ -331,7 +331,7 @@ class WeatherDotComOptionsFlow(config_entries.OptionsFlowWithReload):
             if entity_id := ent_reg.async_get_entity_id("sensor", DOMAIN, unique_id):
                 entity_entry = ent_reg.async_get(entity_id)
                 if entity_entry:
-                    if selected_attributes and entity_entry.disabled:
+                    if selected_attributes and entity_entry.disabled_by == er.RegistryEntryDisabler.INTEGRATION:
                         ent_reg.async_update_entity(entity_id, disabled_by=None)
                     elif not selected_attributes and not entity_entry.disabled_by:
                         ent_reg.async_update_entity(
