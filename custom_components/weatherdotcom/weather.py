@@ -8,6 +8,7 @@ import time
 
 from . import WeatherDotComConfigEntry, WeatherUpdateCoordinator
 from .const import (
+    CONF_ATTRIBUTION,
     TEMPUNIT,
     LENGTHUNIT,
     SPEEDUNIT,
@@ -80,9 +81,13 @@ async def async_setup_entry(
 
 
 class WeatherDotComForecast(SingleCoordinatorWeatherEntity):
+    _attr_attribution = CONF_ATTRIBUTION
+    _attr_supported_features = (
+        WeatherEntityFeature.FORECAST_DAILY | WeatherEntityFeature.FORECAST_HOURLY
+    )
 
     @property
-    def native_temperature(self) -> float:
+    def native_temperature(self) -> float | None:
         """
         Return the platform temperature in native units
         (i.e. not converted).
@@ -95,7 +100,7 @@ class WeatherDotComForecast(SingleCoordinatorWeatherEntity):
         return self.coordinator.units_of_measurement[TEMPUNIT]
 
     @property
-    def native_pressure(self) -> float:
+    def native_pressure(self) -> float | None:
         """Return the pressure in native units."""
         return self.coordinator.get_current(FIELD_PRESSURE)
 
@@ -105,12 +110,12 @@ class WeatherDotComForecast(SingleCoordinatorWeatherEntity):
         return self.coordinator.units_of_measurement[PRESSUREUNIT]
 
     @property
-    def humidity(self) -> float:
+    def humidity(self) -> float | None:
         """Return the relative humidity in native units."""
         return self.coordinator.get_current(FIELD_HUMIDITY)
 
     @property
-    def native_wind_speed(self) -> float:
+    def native_wind_speed(self) -> float | None:
         """Return the wind speed in native units."""
         return self.coordinator.get_current(FIELD_WINDSPEED)
 
@@ -120,12 +125,12 @@ class WeatherDotComForecast(SingleCoordinatorWeatherEntity):
         return self.coordinator.units_of_measurement[SPEEDUNIT]
 
     @property
-    def wind_bearing(self) -> str:
+    def wind_bearing(self) -> float | str | None:
         """Return the wind bearing."""
         return self.coordinator.get_current(FIELD_WINDDIR)
 
     @property
-    def native_visibility(self) -> float:
+    def native_visibility(self) -> float | None:
         """Return the visibility in native units."""
         return self.coordinator.get_current(FIELD_VISIBILITY)
 
@@ -142,28 +147,28 @@ class WeatherDotComForecast(SingleCoordinatorWeatherEntity):
         return self.coordinator.units_of_measurement[LENGTHUNIT]
 
     @property
-    def condition(self) -> str:
+    def condition(self) -> str | None:
         """Return the current condition."""
         icon = self.coordinator.get_current(FIELD_ICONCODE)
         return self.coordinator._iconcode_to_condition(icon)
 
     @property
-    def native_apparent_temperature(self) -> float:
+    def native_apparent_temperature(self) -> float | None:
         """Return the 'feels like' temperature."""
         return self.coordinator.get_current(FIELD_FEELS_LIKE)
 
     @property
-    def native_dew_point(self) -> float:
+    def native_dew_point(self) -> float | None:
         """Return the dew point."""
         return self.coordinator.get_current(FIELD_DEW_POINT)
 
     @property
-    def native_wind_gust_speed(self) -> float:
+    def native_wind_gust_speed(self) -> float | None:
         """Return the wind gust speed."""
         return self.coordinator.get_current(FIELD_WINDGUST)
 
     @property
-    def uv_index(self) -> float:
+    def uv_index(self) -> float | None:
         """Return the UV index."""
         return self.coordinator.get_current(FIELD_UV_INDEX)
 
@@ -171,8 +176,8 @@ class WeatherDotComForecast(SingleCoordinatorWeatherEntity):
             self,
             coordinator: WeatherUpdateCoordinator
     ):
-        super().__init__(coordinator)
         """Initialize the sensor."""
+        super().__init__(coordinator)
         self.hass = coordinator.hass
         self.entity_id = generate_entity_id(
             ENTITY_ID_FORMAT, f"{coordinator.location_name}", hass=self.hass
@@ -181,10 +186,6 @@ class WeatherDotComForecast(SingleCoordinatorWeatherEntity):
         self._attr_device_info = coordinator.device_info
         self._store = coordinator._store
         self._stored_data = {}
-
-    @property
-    def supported_features(self) -> WeatherEntityFeature:
-        return (WeatherEntityFeature.FORECAST_DAILY | WeatherEntityFeature.FORECAST_HOURLY)
 
     async def async_forecast_daily(self) -> list[Forecast] | None:
         self._stored_data = await self._store.async_load()
