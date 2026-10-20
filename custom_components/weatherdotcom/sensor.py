@@ -82,7 +82,6 @@ class WeatherSensor(CoordinatorEntity, SensorEntity):
         self.entity_id = generate_entity_id(
             entity_id_format, f"{self.coordinator.location_name}_{description.name}", hass=coordinator.hass
         )
-        self._unit_system = coordinator.unit_system
         self._attr_device_info = coordinator.device_info
         if description.key == CONF_LATITUDE:
             self._sensor_data = coordinator._get_coordinates()[0]
@@ -90,7 +89,7 @@ class WeatherSensor(CoordinatorEntity, SensorEntity):
             self._sensor_data = coordinator._get_coordinates()[1]
         else:
             self._sensor_data = _get_sensor_data(
-                coordinator.data, description.key, self._unit_system)
+                coordinator.data, description.key)
         self._attr_native_unit_of_measurement = self.entity_description.unit_fn(
             self.coordinator.hass.config.units is METRIC_SYSTEM)
 
@@ -122,7 +121,7 @@ class WeatherSensor(CoordinatorEntity, SensorEntity):
     @property
     def native_value(self) -> StateType:
         """Return the state."""
-        return self.entity_description.value_fn(self._sensor_data, self._unit_system)
+        return self.entity_description.value_fn(self._sensor_data)
 
     @property
     def extra_state_attributes(self) -> dict[str, Any] | None:
@@ -143,7 +142,7 @@ class WeatherSensor(CoordinatorEntity, SensorEntity):
             self._sensor_data = getattr(self.coordinator, "current_longitude", getattr(self.coordinator, "_longitude", None))
         else:
             self._sensor_data = _get_sensor_data(
-                self.coordinator.data, self.entity_description.key, self._unit_system
+                self.coordinator.data, self.entity_description.key
             )
         self.async_write_ha_state()
 
@@ -151,7 +150,6 @@ class WeatherSensor(CoordinatorEntity, SensorEntity):
 def _get_sensor_data(
         sensors: dict[str, Any] | None,
         kind: str,
-        unit_system: str
 ) -> Any:
     """Get sensor data."""
     # windGust is often null. When it is, set it to windSpeed instead.
