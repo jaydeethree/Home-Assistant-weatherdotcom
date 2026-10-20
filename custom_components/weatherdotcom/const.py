@@ -169,8 +169,3 @@ EXTRA_ATTRIBUTE_KEYS_DAYPART = [
     "daypart_qualifier_phrase",
     "daypart_narrative",
 ]
-EXTRA_ATTRIBUTE_KEYS = (
-    EXTRA_ATTRIBUTE_KEYS_DAILY
-    + EXTRA_ATTRIBUTE_KEYS_DAY
-    + EXTRA_ATTRIBUTE_KEYS_DAYPART
-)
