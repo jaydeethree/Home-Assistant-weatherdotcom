@@ -29,7 +29,7 @@ from homeassistant.const import (
 from .const import (
     API_URL_METRIC,
     DOMAIN,
-    ICON_CONDITION_MAP,
+    ICON_CODE_MAP,
     FIELD_DAYPART,
     FIELD_HUMIDITY,
     FIELD_TEMPERATUREMAX,
@@ -76,8 +76,6 @@ class WeatherUpdateCoordinatorConfig:
 
 class WeatherUpdateCoordinator(DataUpdateCoordinator):
     """The Weather.com update coordinator."""
-
-    icon_condition_map = ICON_CONDITION_MAP
 
     def __init__(
             self, hass: HomeAssistant, config: WeatherUpdateCoordinatorConfig
@@ -269,12 +267,12 @@ class WeatherUpdateCoordinator(DataUpdateCoordinator):
             return None
 
     @classmethod
-    def _iconcode_to_condition(cls, icon_code):
-        for condition, iconcodes in cls.icon_condition_map.items():
-            if icon_code in iconcodes:
-                return condition
-        if icon_code is not None:
-            _LOGGER.warning('Unmapped icon code from Weather.com API: %s', icon_code)
+    def _iconcode_to_condition(cls, icon_code: int | None) -> str | None:
+        if icon_code is None or icon_code == 44:
+            return None
+        if (condition := ICON_CODE_MAP.get(icon_code)) is not None:
+            return condition
+        _LOGGER.warning('Unmapped icon code from Weather.com API: %s', icon_code)
         return None
 
     @classmethod
