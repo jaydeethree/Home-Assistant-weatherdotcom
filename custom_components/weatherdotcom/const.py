@@ -62,6 +62,11 @@ ICON_CONDITION_MAP: Final[dict[str, list[int]]] = {
     ATTR_CONDITION_WINDY: [23, 24],
     ATTR_CONDITION_WINDY_VARIANT: []
 }
+ICON_CODE_MAP: Final[dict[int, str]] = {
+    code: condition
+    for condition, codes in ICON_CONDITION_MAP.items()
+    for code in codes
+}
 
 DEFAULT_LANG = 'en-US'
 API_IMPERIAL: Final = "imperial"
@@ -169,8 +174,3 @@ EXTRA_ATTRIBUTE_KEYS_DAYPART = [
     "daypart_qualifier_phrase",
     "daypart_narrative",
 ]
-EXTRA_ATTRIBUTE_KEYS = (
-    EXTRA_ATTRIBUTE_KEYS_DAILY
-    + EXTRA_ATTRIBUTE_KEYS_DAY
-    + EXTRA_ATTRIBUTE_KEYS_DAYPART
-)
