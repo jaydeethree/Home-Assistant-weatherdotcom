@@ -41,22 +41,11 @@ async def async_setup_entry(hass: HomeAssistant, entry: WeatherDotComConfigEntry
         unit_system_api = API_URL_IMPERIAL
         unit_system = API_IMPERIAL
 
-    # Initialize legacy and new instances
-    config = WeatherUpdateCoordinatorConfig(
-        api_key=entry.data[CONF_API_KEY],
-        location_name=entry.data[CONF_NAME],
-        unit_system_api=unit_system_api,
-        unit_system=unit_system,
-        lang=entry.data[CONF_LANG],
-        location_entity_id=entry.data.get(CONF_ENTITY_ID),
-        latitude=entry.data.get(CONF_LATITUDE),
-        longitude=entry.data.get(CONF_LONGITUDE),
-        tranfile='',
-    )
+    lang = entry.data[CONF_LANG]
 
     def _load_translation_file() -> dict:
         tfiledir = Path(__file__).parent / "weather_translations"
-        tfilename = config.lang.split('-', 1)[0]
+        tfilename = lang.split('-', 1)[0]
         tfilepath = tfiledir / f"{tfilename}.json"
         if tfilepath.is_file():
             return json.load_json(tfilepath)
@@ -66,7 +55,20 @@ async def async_setup_entry(hass: HomeAssistant, entry: WeatherDotComConfigEntry
         )
         return json.load_json(tfiledir / "en.json")
 
-    config.tranfile = await hass.async_add_executor_job(_load_translation_file)
+    tranfile = await hass.async_add_executor_job(_load_translation_file)
+
+    # Initialize legacy and new instances
+    config = WeatherUpdateCoordinatorConfig(
+        api_key=entry.data[CONF_API_KEY],
+        location_name=entry.data[CONF_NAME],
+        unit_system_api=unit_system_api,
+        unit_system=unit_system,
+        lang=lang,
+        location_entity_id=entry.data.get(CONF_ENTITY_ID),
+        latitude=entry.data.get(CONF_LATITUDE),
+        longitude=entry.data.get(CONF_LONGITUDE),
+        tranfile=tranfile,
+    )
 
     weathercoordinator = WeatherUpdateCoordinator(hass, config)
     await weathercoordinator.async_config_entry_first_refresh()
