@@ -158,11 +158,20 @@ class WeatherUpdateCoordinator(DataUpdateCoordinator):
         self.current_latitude = latitude
         self.current_longitude = longitude
 
-        result_current, current_error = await self._async_fetch_data(
-            _RESOURCECURRENT, latitude, longitude, "current"
-        )
-        result_forecast_daily, daily_error = await self._async_fetch_data(
-            _RESOURCEFORECASTDAILY, latitude, longitude, "daily"
+        (
+            (result_current, current_error),
+            (result_forecast_daily, daily_error),
+            (result_forecast_hourly, hourly_error),
+        ) = await asyncio.gather(
+            self._async_fetch_data(
+                _RESOURCECURRENT, latitude, longitude, "current"
+            ),
+            self._async_fetch_data(
+                _RESOURCEFORECASTDAILY, latitude, longitude, "daily"
+            ),
+            self._async_fetch_data(
+                _RESOURCEFORECASTHOURLY, latitude, longitude, "hourly"
+            ),
         )
         if result_forecast_daily is not None:
             # If the result includes max temperature data for today,
@@ -170,10 +179,6 @@ class WeatherUpdateCoordinator(DataUpdateCoordinator):
             temp_max_list = result_forecast_daily.get(FIELD_TEMPERATUREMAX)
             if temp_max_list and temp_max_list[0] is not None:
                 await self._store.async_save(temp_max_list[0], round(time.time()))
-
-        result_forecast_hourly, hourly_error = await self._async_fetch_data(
-            _RESOURCEFORECASTHOURLY, latitude, longitude, "hourly"
-        )
 
         if current_error and daily_error and hourly_error:
             self._consecutive_failures += 1
