@@ -271,13 +271,6 @@ class WeatherFlowHandler(config_entries.ConfigFlow, domain=DOMAIN):
         # Determine default location source from existing config, falling back to lat/long.
         default_source = conf_entry.data.get(CONF_LOCATION_SOURCE, LOCATION_TYPE_LATLONG)
 
-        if (
-            CONF_LATITUDE in conf_entry.data
-            and CONF_LONGITUDE in conf_entry.data
-            and CONF_ENTITY_ID not in conf_entry.data
-        ):
-            default_source = LOCATION_TYPE_LATLONG
-
         return self.async_show_form(
             step_id="reconfigure",
             data_schema=vol.Schema(
