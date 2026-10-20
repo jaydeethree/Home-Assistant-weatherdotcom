@@ -15,6 +15,7 @@ from homeassistant.core import HomeAssistant
 from homeassistant.util.unit_system import METRIC_SYSTEM
 from homeassistant.util import json
 from .coordinator import WeatherUpdateCoordinator, WeatherUpdateCoordinatorConfig
+from .store import WeatherDotComStorage
 from .const import (
     CONF_LANG,
     API_METRIC,
@@ -40,7 +41,7 @@ async def async_setup_entry(hass: HomeAssistant, entry: WeatherDotComConfigEntry
         unit_system_api = API_URL_IMPERIAL
         unit_system = API_IMPERIAL
 
-# Initialize legacy and new instances
+    # Initialize legacy and new instances
     config = WeatherUpdateCoordinatorConfig(
         api_key=entry.data[CONF_API_KEY],
         location_name=entry.data[CONF_NAME],
@@ -80,3 +81,9 @@ async def async_setup_entry(hass: HomeAssistant, entry: WeatherDotComConfigEntry
 async def async_unload_entry(hass: HomeAssistant, entry: WeatherDotComConfigEntry) -> bool:
     """Unload a config entry."""
     return await hass.config_entries.async_unload_platforms(entry, PLATFORMS)
+
+
+async def async_remove_entry(hass: HomeAssistant, entry: WeatherDotComConfigEntry) -> None:
+    """Remove a config entry and clean up persistent storage."""
+    if location_name := entry.data.get(CONF_NAME):
+        await WeatherDotComStorage(hass, location_name).async_remove()
