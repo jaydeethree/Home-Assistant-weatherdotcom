@@ -208,18 +208,19 @@ class WeatherUpdateCoordinator(DataUpdateCoordinator):
             try:
                 async with asyncio.timeout(10):
                     url = self._build_url(resource, latitude, longitude)
-                    response = await self._session.get(url, headers=headers)
-                    response.raise_for_status()
-                    result = await response.json(content_type=None)
+                    async with self._session.get(url, headers=headers) as response:
+                        response.raise_for_status()
+                        result = await response.json(content_type=None)
                     if result is None:
                         raise ValueError('No weather data found')
                     self._check_errors(url, result)
                     return result, False
             except (ValueError, asyncio.TimeoutError, aiohttp.ClientError) as err:
+                err_msg = str(err).replace(self._api_key, "REDACTED")
                 if attempt == 1:
-                    _LOGGER.error('Error getting %s weather. Exception: %s. Details: %s', description, type(err), err)
+                    _LOGGER.error('Error getting %s weather. Exception: %s. Details: %s', description, type(err), err_msg)
                     return None, True
-                _LOGGER.warning('Error getting %s weather, will retry. Exception: %s. Details: %s', description, type(err), err)
+                _LOGGER.warning('Error getting %s weather, will retry. Exception: %s. Details: %s', description, type(err), err_msg)
                 await asyncio.sleep(5)
         return None, True
 
