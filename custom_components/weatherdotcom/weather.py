@@ -185,20 +185,13 @@ class WeatherDotComForecast(SingleCoordinatorWeatherEntity):
         self._attr_unique_id = f"{coordinator.location_name},{WEATHER_DOMAIN}".lower()
         self._attr_device_info = coordinator.device_info
         self._store = coordinator._store
-        self._stored_data = {}
 
     async def async_forecast_daily(self) -> list[Forecast] | None:
-        self._stored_data = await self._store.async_load()
-        return self.forecast_daily
-
-    async def async_forecast_hourly(self) -> list[Forecast] | None:
-        return self.forecast_hourly
-    
-    @property
-    def forecast_daily(self) -> list[Forecast]:
         """Return the daily forecast in native units."""
         if not self.coordinator.data or self.coordinator.data.get(RESULTS_FORECAST_DAILY) is None:
             return []
+
+        stored_data = await self._store.async_load()
 
         daily_times = self.coordinator.data[RESULTS_FORECAST_DAILY].get(FIELD_VALIDTIMEUTC) or []
         days = list(range(0, len(daily_times) * 2, 2))
@@ -217,13 +210,13 @@ class WeatherDotComForecast(SingleCoordinatorWeatherEntity):
                 # If the API returns None, attempt to use the value that's in
                 # storage.
                 if (
-                    HIGH_TEMP_TODAY_TIMESTAMP_STORAGE in self._stored_data
+                    HIGH_TEMP_TODAY_TIMESTAMP_STORAGE in stored_data
                     and
-                    HIGH_TEMP_TODAY_STORAGE in self._stored_data
+                    HIGH_TEMP_TODAY_STORAGE in stored_data
                     and
-                    round(time.time()) - self._stored_data[HIGH_TEMP_TODAY_TIMESTAMP_STORAGE] < max_time_difference
+                    round(time.time()) - stored_data[HIGH_TEMP_TODAY_TIMESTAMP_STORAGE] < max_time_difference
                 ):
-                    temperature_max = self._stored_data[HIGH_TEMP_TODAY_STORAGE]
+                    temperature_max = stored_data[HIGH_TEMP_TODAY_STORAGE]
                 else:
                     _LOGGER.debug(
                         'Stored value for maximum temperature is old or missing'
@@ -266,8 +259,7 @@ class WeatherDotComForecast(SingleCoordinatorWeatherEntity):
             }))
         return forecast
 
-    @property
-    def forecast_hourly(self) -> list[Forecast]:
+    async def async_forecast_hourly(self) -> list[Forecast] | None:
         """Return the hourly forecast in native units."""
         if not self.coordinator.data or self.coordinator.data.get(RESULTS_FORECAST_HOURLY) is None:
             return []
