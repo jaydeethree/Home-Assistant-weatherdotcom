@@ -32,7 +32,7 @@ LOCATION_TYPE_ENTITY = 'entity'
 LOCATION_TYPE_LATLONG = 'latlong'
 
 # Language Supported Codes
-LANG_CODES = [
+LANG_CODES: Final[list[str]] = [
     'am-ET', 'ar-AE', 'az-AZ', 'bg-BG', 'bn-BD', 'bn-IN', 'bs-BA', 'ca-ES', 'cs-CZ', 'da-DK', 'de-DE', 'el-GR', 'en-GB',
     'en-IN', 'en-US', 'es-AR', 'es-ES', 'es-LA', 'es-MX', 'es-UN', 'es-US', 'et-EE', 'fa-IR', 'fi-FI', 'fr-CA', 'fr-FR',
     'gu-IN', 'he-IL', 'hi-IN', 'hr-HR', 'hu-HU', 'in-ID', 'is-IS', 'it-IT', 'iw-IL', 'ja-JP', 'jv-ID', 'ka-GE', 'kk-KZ',
@@ -124,8 +124,8 @@ ICON_WIND = 'mdi:weather-windy'
 HIGH_TEMP_TODAY_STORAGE = 'high_temp_today'
 HIGH_TEMP_TODAY_TIMESTAMP_STORAGE = 'high_temp_today_timestamp'
 
-CONF_EXTRA_ATTRIBUTES = "extra_attributes"
-EXTRA_ATTRIBUTE_KEYS_DAILY = [
+CONF_EXTRA_ATTRIBUTES: Final = "extra_attributes"
+EXTRA_ATTRIBUTE_KEYS_DAILY: Final[list[str]] = [
     "day",
     "daily_temp_max",
     "daily_temp_min",
@@ -142,12 +142,12 @@ EXTRA_ATTRIBUTE_KEYS_DAILY = [
     "moonrise",
     "moonset",
 ]
-EXTRA_ATTRIBUTE_KEYS_DAY = [
+EXTRA_ATTRIBUTE_KEYS_DAY: Final[list[str]] = [
     "day_icon_code",
     "day_cloud_cover",
     "day_relative_humidity",
 ]
-EXTRA_ATTRIBUTE_KEYS_DAYPART = [
+EXTRA_ATTRIBUTE_KEYS_DAYPART: Final[list[str]] = [
     "daypart_cloud_cover",
     "daypart_name",
     "daypart_icon_code",
