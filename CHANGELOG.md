@@ -9,6 +9,7 @@ Unreleased
 * Fixed a bug that caused unnecessary disk I/O on every refresh
 * When the integration is removed its temporary files in storage will now be cleaned up
 * The forecast details sensor now automatically enables itself when extra attributes are selected
+* Fixed a bug where reconfiguring a location from an entity to latitude/longitude would continue to use the entity's location
 
 v1.4.1
 * Once again, thank you to @francis110 for all the work you did on this release!
