@@ -11,6 +11,7 @@ from typing import Any
 
 import aiohttp
 
+from homeassistant.config_entries import ConfigEntry
 from homeassistant.core import HomeAssistant
 from homeassistant.helpers.aiohttp_client import async_get_clientsession
 from homeassistant.helpers.device_registry import DeviceEntryType, DeviceInfo
@@ -74,11 +75,14 @@ class WeatherUpdateCoordinatorConfig:
     latitude: float | None = None
     longitude: float | None = None
 
-class WeatherUpdateCoordinator(DataUpdateCoordinator):
+class WeatherUpdateCoordinator(DataUpdateCoordinator[dict[str, Any]]):
     """The Weather.com update coordinator."""
 
     def __init__(
-            self, hass: HomeAssistant, config: WeatherUpdateCoordinatorConfig
+            self,
+            hass: HomeAssistant,
+            config: WeatherUpdateCoordinatorConfig,
+            entry: ConfigEntry,
     ) -> None:
         """Initialize."""
         self._hass = hass
@@ -87,7 +91,6 @@ class WeatherUpdateCoordinator(DataUpdateCoordinator):
         self._unit_system_api = config.unit_system_api
         self.unit_system = config.unit_system
         self._lang = config.lang
-        self.data = None
         self._consecutive_failures = 0
         self._session = async_get_clientsession(self._hass)
         self._tranfile = config.tranfile
@@ -113,7 +116,8 @@ class WeatherUpdateCoordinator(DataUpdateCoordinator):
         super().__init__(
             hass,
             _LOGGER,
-            name="WeatherUpdateCoordinator",
+            config_entry=entry,
+            name=DOMAIN,
             update_interval=config.update_interval,
         )
 
@@ -191,13 +195,11 @@ class WeatherUpdateCoordinator(DataUpdateCoordinator):
             return self.data
 
         self._consecutive_failures = 0
-        result = {
+        return {
             RESULTS_CURRENT: result_current,
             RESULTS_FORECAST_DAILY: result_forecast_daily,
             RESULTS_FORECAST_HOURLY: result_forecast_hourly,
         }
-        self.data = result
-        return result
 
     async def _async_fetch_data(
         self, resource: str, latitude: float, longitude: float, description: str
