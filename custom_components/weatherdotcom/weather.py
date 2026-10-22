@@ -82,6 +82,9 @@ async def async_setup_entry(
 
 class WeatherDotComForecast(SingleCoordinatorWeatherEntity):
     _attr_attribution = CONF_ATTRIBUTION
+    # Use the device (location) name as the entity's friendly name.
+    _attr_has_entity_name = True
+    _attr_name = None
     _attr_supported_features = (
         WeatherEntityFeature.FORECAST_DAILY | WeatherEntityFeature.FORECAST_HOURLY
     )
