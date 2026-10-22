@@ -4,9 +4,11 @@ import asyncio
 import logging
 import random
 from http import HTTPStatus
+from typing import Any
 import aiohttp
 import voluptuous as vol
 from homeassistant import config_entries
+from homeassistant.config_entries import ConfigFlowResult
 from homeassistant.helpers import entity_registry as er
 from homeassistant.helpers import selector
 from homeassistant.const import (
@@ -91,7 +93,9 @@ class WeatherFlowHandler(config_entries.ConfigFlow, domain=DOMAIN):
 
         return None
 
-    async def async_step_user(self, user_input=None):
+    async def async_step_user(
+        self, user_input: dict[str, Any] | None = None
+    ) -> ConfigFlowResult:
         """Handle the first step initiated by the user."""
         errors = {}
         if user_input is not None:
@@ -128,7 +132,9 @@ class WeatherFlowHandler(config_entries.ConfigFlow, domain=DOMAIN):
             errors=errors,
         )
 
-    async def async_step_latlong(self, user_input=None):
+    async def async_step_latlong(
+        self, user_input: dict[str, Any] | None = None
+    ) -> ConfigFlowResult:
         """Handle the second step for latitude/longitude."""
         errors = {}
 
@@ -172,7 +178,9 @@ class WeatherFlowHandler(config_entries.ConfigFlow, domain=DOMAIN):
             errors=errors,
         )
 
-    async def async_step_entity(self, user_input=None):
+    async def async_step_entity(
+        self, user_input: dict[str, Any] | None = None
+    ) -> ConfigFlowResult:
         """Handle the second step for tracking entities."""
         errors = {}
 
@@ -227,7 +235,7 @@ class WeatherFlowHandler(config_entries.ConfigFlow, domain=DOMAIN):
                 return True
         return False
 
-    async def _async_validate_and_create(self):
+    async def _async_validate_and_create(self) -> ConfigFlowResult:
         """Validate API key and lat/long, then create the config entry."""
         api_key = self._data[CONF_API_KEY]
         location_name = self._data[CONF_NAME]
@@ -264,7 +272,9 @@ class WeatherFlowHandler(config_entries.ConfigFlow, domain=DOMAIN):
         )
 
 
-    async def async_step_reconfigure(self, user_input=None):
+    async def async_step_reconfigure(
+        self, user_input: dict[str, Any] | None = None
+    ) -> ConfigFlowResult:
         """Handle a reconfiguration flow initialized by the user."""
         errors = {}
         conf_entry = self._get_reconfigure_entry()
@@ -317,11 +327,15 @@ class WeatherFlowHandler(config_entries.ConfigFlow, domain=DOMAIN):
 class WeatherDotComOptionsFlow(config_entries.OptionsFlowWithReload):
     """Handle Weather.com options for sensor.forecast_details attribute."""
 
-    async def async_step_init(self, user_input=None):
+    async def async_step_init(
+        self, user_input: dict[str, Any] | None = None
+    ) -> ConfigFlowResult:
         """Handle the options flow."""
         return await self.async_step_extra_attributes(user_input)
 
-    async def async_step_extra_attributes(self, user_input=None):
+    async def async_step_extra_attributes(
+        self, user_input: dict[str, Any] | None = None
+    ) -> ConfigFlowResult:
         """Handle the extra weather attributes options."""
         if user_input is not None:
             selected_attributes = (
