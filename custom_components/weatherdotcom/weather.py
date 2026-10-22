@@ -95,19 +95,9 @@ class WeatherDotComForecast(SingleCoordinatorWeatherEntity):
         return self.coordinator.get_current(FIELD_TEMP)
 
     @property
-    def native_temperature_unit(self) -> str:
-        """Return the native unit of measurement for temperature."""
-        return self.coordinator.units_of_measurement[TEMPUNIT]
-
-    @property
     def native_pressure(self) -> float | None:
         """Return the pressure in native units."""
         return self.coordinator.get_current(FIELD_PRESSURE)
-
-    @property
-    def native_pressure_unit(self) -> str:
-        """Return the native unit of measurement for pressure."""
-        return self.coordinator.units_of_measurement[PRESSUREUNIT]
 
     @property
     def humidity(self) -> float | None:
@@ -120,11 +110,6 @@ class WeatherDotComForecast(SingleCoordinatorWeatherEntity):
         return self.coordinator.get_current(FIELD_WINDSPEED)
 
     @property
-    def native_wind_speed_unit(self) -> str:
-        """Return the native unit of measurement for wind speed."""
-        return self.coordinator.units_of_measurement[SPEEDUNIT]
-
-    @property
     def wind_bearing(self) -> float | str | None:
         """Return the wind bearing."""
         return self.coordinator.get_current(FIELD_WINDDIR)
@@ -133,18 +118,6 @@ class WeatherDotComForecast(SingleCoordinatorWeatherEntity):
     def native_visibility(self) -> float | None:
         """Return the visibility in native units."""
         return self.coordinator.get_current(FIELD_VISIBILITY)
-
-    @property
-    def native_visibility_unit(self) -> str:
-        """Return the native unit of measurement for visibility."""
-        return self.coordinator.visibility_unit
-
-    @property
-    def native_precipitation_unit(self) -> str:
-        """
-        Return the native unit of measurement for accumulated precipitation.
-        """
-        return self.coordinator.units_of_measurement[LENGTHUNIT]
 
     @property
     def condition(self) -> str | None:
@@ -178,12 +151,16 @@ class WeatherDotComForecast(SingleCoordinatorWeatherEntity):
     ):
         """Initialize the sensor."""
         super().__init__(coordinator)
-        self.hass = coordinator.hass
         self.entity_id = generate_entity_id(
-            ENTITY_ID_FORMAT, f"{coordinator.location_name}", hass=self.hass
+            ENTITY_ID_FORMAT, f"{coordinator.location_name}", hass=coordinator.hass
         )
         self._attr_unique_id = f"{coordinator.location_name},{WEATHER_DOMAIN}".lower()
         self._attr_device_info = coordinator.device_info
+        self._attr_native_temperature_unit = coordinator.units_of_measurement[TEMPUNIT]
+        self._attr_native_pressure_unit = coordinator.units_of_measurement[PRESSUREUNIT]
+        self._attr_native_wind_speed_unit = coordinator.units_of_measurement[SPEEDUNIT]
+        self._attr_native_visibility_unit = coordinator.visibility_unit
+        self._attr_native_precipitation_unit = coordinator.units_of_measurement[LENGTHUNIT]
         self._store = coordinator._store
 
     async def async_forecast_daily(self) -> list[Forecast] | None:
