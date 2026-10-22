@@ -259,10 +259,10 @@ class WeatherFlowHandler(config_entries.ConfigFlow, domain=DOMAIN):
         if self.source == config_entries.SOURCE_RECONFIGURE:
             # Replace (rather than merge) the entry data so that keys from the
             # previous location source (e.g. a stale entity_id after switching
-            # to lat/long) do not linger and take precedence.
+            # to lat/long) do not linger and take precedence. The title is left
+            # unchanged so that a user-customized title is preserved.
             return self.async_update_reload_and_abort(
                 self._get_reconfigure_entry(),
-                title=location_name,
                 data=entry_data,
             )
 
@@ -284,7 +284,11 @@ class WeatherFlowHandler(config_entries.ConfigFlow, domain=DOMAIN):
 
         if user_input is not None:
             self._data = dict(user_input)
-            self._data[CONF_NAME] = conf_entry.title
+            # Use the stored location name, not the entry title. The title can
+            # be renamed by the user, but the location name is used for unique
+            # IDs, the device identifier, and the storage key, so it must not
+            # change.
+            self._data[CONF_NAME] = conf_entry.data[CONF_NAME]
 
             if error := await self._async_validate_api_key(user_input.get(CONF_API_KEY)):
                 errors["base"] = error
