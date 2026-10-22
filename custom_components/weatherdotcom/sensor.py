@@ -79,13 +79,8 @@ class WeatherSensor(CoordinatorEntity, SensorEntity):
         self._attr_device_info = coordinator.device_info
         self._attr_native_unit_of_measurement = self.entity_description.unit_fn(
             self.coordinator.hass.config.units is METRIC_SYSTEM)
-
-    @property
-    def entity_registry_enabled_default(self) -> bool:
-        """Return if the entity should be enabled when first added to the registry."""
-        if self.entity_description.key == FIELD_VALIDTIMEUTC:
-            return bool(self._extra_attributes)
-        return self.entity_description.entity_registry_enabled_default
+        if description.key == FIELD_VALIDTIMEUTC:
+            self._attr_entity_registry_enabled_default = bool(extra_attributes)
 
     @property
     def available(self) -> bool:
