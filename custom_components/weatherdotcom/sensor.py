@@ -5,7 +5,6 @@ https://github.com/jaydeethree/Home-Assistant-weatherdotcom
 """
 from __future__ import annotations
 
-import logging
 from typing import Any
 
 from homeassistant.components.sensor import SensorEntity
@@ -34,7 +33,6 @@ from .weather_current_conditions_sensors import (
     current_condition_sensor_descriptions,
 )
 
-_LOGGER = logging.getLogger(__name__)
 
 async def async_setup_entry(
         hass: HomeAssistant, entry: WeatherDotComConfigEntry, async_add_entities: AddEntitiesCallback
