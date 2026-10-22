@@ -257,10 +257,13 @@ class WeatherFlowHandler(config_entries.ConfigFlow, domain=DOMAIN):
         unique_id = str(f"{DOMAIN}-{location_name}")
 
         if self.source == config_entries.SOURCE_RECONFIGURE:
+            # Replace (rather than merge) the entry data so that keys from the
+            # previous location source (e.g. a stale entity_id after switching
+            # to lat/long) do not linger and take precedence.
             return self.async_update_reload_and_abort(
                 self._get_reconfigure_entry(),
                 title=location_name,
-                data_updates=entry_data,
+                data=entry_data,
             )
 
         await self.async_set_unique_id(unique_id)

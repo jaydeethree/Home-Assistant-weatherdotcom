@@ -18,6 +18,9 @@ from .coordinator import WeatherUpdateCoordinator, WeatherUpdateCoordinatorConfi
 from .store import WeatherDotComStorage
 from .const import (
     CONF_LANG,
+    CONF_LOCATION_SOURCE,
+    LOCATION_TYPE_ENTITY,
+    LOCATION_TYPE_LATLONG,
     API_METRIC,
     API_IMPERIAL,
     API_URL_METRIC,
@@ -57,6 +60,19 @@ async def async_setup_entry(hass: HomeAssistant, entry: WeatherDotComConfigEntry
 
     tranfile = await hass.async_add_executor_job(_load_translation_file)
 
+    # Only pass the location fields for the configured location source. Entries
+    # reconfigured by older versions may contain stale keys from a previous
+    # location source. Entries without a location source predate that option
+    # and keep the legacy behavior of passing whatever is present.
+    location_source = entry.data.get(CONF_LOCATION_SOURCE)
+    location_entity_id = entry.data.get(CONF_ENTITY_ID)
+    latitude = entry.data.get(CONF_LATITUDE)
+    longitude = entry.data.get(CONF_LONGITUDE)
+    if location_source == LOCATION_TYPE_LATLONG:
+        location_entity_id = None
+    elif location_source == LOCATION_TYPE_ENTITY:
+        latitude = longitude = None
+
     # Initialize legacy and new instances
     config = WeatherUpdateCoordinatorConfig(
         api_key=entry.data[CONF_API_KEY],
@@ -64,9 +80,9 @@ async def async_setup_entry(hass: HomeAssistant, entry: WeatherDotComConfigEntry
         unit_system_api=unit_system_api,
         unit_system=unit_system,
         lang=lang,
-        location_entity_id=entry.data.get(CONF_ENTITY_ID),
-        latitude=entry.data.get(CONF_LATITUDE),
-        longitude=entry.data.get(CONF_LONGITUDE),
+        location_entity_id=location_entity_id,
+        latitude=latitude,
+        longitude=longitude,
         tranfile=tranfile,
     )
 
