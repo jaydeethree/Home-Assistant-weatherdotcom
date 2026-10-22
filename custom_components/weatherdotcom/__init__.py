@@ -70,7 +70,7 @@ async def async_setup_entry(hass: HomeAssistant, entry: WeatherDotComConfigEntry
         tranfile=tranfile,
     )
 
-    weathercoordinator = WeatherUpdateCoordinator(hass, config)
+    weathercoordinator = WeatherUpdateCoordinator(hass, config, entry)
     await weathercoordinator.async_config_entry_first_refresh()
 
     entry.runtime_data = weathercoordinator
