@@ -2,6 +2,7 @@
 from __future__ import annotations
 import asyncio
 import logging
+import random
 from http import HTTPStatus
 import aiohttp
 import voluptuous as vol
@@ -56,15 +57,18 @@ class WeatherFlowHandler(config_entries.ConfigFlow, domain=DOMAIN):
         """Validate the API key against the Weather.com endpoint."""
         headers = {
             'Accept-Encoding': 'gzip',
-            "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/111.0.0.0 Safari/537.36"
+            "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/155.0.0.0 Safari/537.36"
         }
         session = async_get_clientsession(self.hass)
         try:
             async with asyncio.timeout(10):
                 # Use hardcoded values for the initial test API call. User-supplied values will be used for the created entities.
                 url = "https://api.weather.com/v3/wx/observations/current"
+                random_latitude = round(random.uniform(36.0, 41.0), 6)
+                random_longitude = round(random.uniform(-120.0, -78.0), 6)
+                random_latlong = f"{random_latitude},{random_longitude}"
                 params = {
-                    "geocode": "37.3355,-121.8930",
+                    "geocode": random_latlong,
                     "format": "json",
                     "units": "e",
                     "apiKey": api_key or "",

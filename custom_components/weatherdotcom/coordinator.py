@@ -205,7 +205,7 @@ class WeatherUpdateCoordinator(DataUpdateCoordinator):
         """Fetch weather data for a specific resource with retry."""
         headers = {
             'Accept-Encoding': 'gzip',
-            "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36"
+            "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/155.0.0.0 Safari/537.36"
         }
         for attempt in range(2):
             try:
