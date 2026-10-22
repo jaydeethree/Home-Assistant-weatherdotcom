@@ -6,6 +6,9 @@ Unreleased
   * Added several constants and adopted those constants throughout the codebase
 * Fixed a bug where it wasn't possible to use a latitude or longitude of 0
 * Fixed a bug where icon code 0 (Tornado) would be replaced by icon code 44 (Not Available)
+* Fixed a bug that caused unnecessary disk I/O on every refresh
+* When the integration is removed its temporary files in storage will now be cleaned up
+* The forecast details sensor now automatically enables itself when extra attributes are selected
 
 v1.4.1
 * Once again, thank you to @francis110 for all the work you did on this release!
