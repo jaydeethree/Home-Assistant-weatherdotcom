@@ -102,9 +102,9 @@ class WeatherSensor(CoordinatorEntity, SensorEntity):
     def native_value(self) -> StateType:
         """Return the state."""
         if self.entity_description.key == CONF_LATITUDE:
-            data = getattr(self.coordinator, "current_latitude", getattr(self.coordinator, "_latitude", None))
+            data = self.coordinator.current_latitude
         elif self.entity_description.key == CONF_LONGITUDE:
-            data = getattr(self.coordinator, "current_longitude", getattr(self.coordinator, "_longitude", None))
+            data = self.coordinator.current_longitude
         else:
             data = _get_sensor_data(
                 self.coordinator.data, self.entity_description.key
