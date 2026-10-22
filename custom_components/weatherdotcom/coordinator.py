@@ -16,7 +16,6 @@ from homeassistant.core import HomeAssistant
 from homeassistant.helpers.aiohttp_client import async_get_clientsession
 from homeassistant.helpers.device_registry import DeviceEntryType, DeviceInfo
 from homeassistant.helpers.update_coordinator import DataUpdateCoordinator, UpdateFailed
-from homeassistant.util.unit_system import METRIC_SYSTEM
 from homeassistant.const import (
     CONF_LATITUDE,
     CONF_LONGITUDE,
@@ -32,13 +31,9 @@ from .const import (
     DOMAIN,
     ICON_CODE_MAP,
     FIELD_DAYPART,
-    FIELD_HUMIDITY,
     FIELD_TEMPERATUREMAX,
     FIELD_TEMPERATUREMIN,
     FIELD_VALIDTIMEUTC,
-    FIELD_WINDDIR,
-    FIELD_WINDGUST,
-    FIELD_WINDSPEED,
     RESULTS_CURRENT,
     RESULTS_FORECAST_DAILY,
     RESULTS_FORECAST_HOURLY
@@ -85,20 +80,21 @@ class WeatherUpdateCoordinator(DataUpdateCoordinator[dict[str, Any]]):
             entry: ConfigEntry,
     ) -> None:
         """Initialize."""
-        self._hass = hass
         self._api_key = config.api_key
         self._location_name = config.location_name
         self._unit_system_api = config.unit_system_api
         self.unit_system = config.unit_system
         self._lang = config.lang
         self._consecutive_failures = 0
-        self._session = async_get_clientsession(self._hass)
+        self._session = async_get_clientsession(hass)
         self._tranfile = config.tranfile
-        self._store = WeatherDotComStorage(self._hass, self._location_name)
+        self._store = WeatherDotComStorage(hass, self._location_name)
 
         self._location_entity_id = config.location_entity_id
         self._latitude = config.latitude
         self._longitude = config.longitude
+        self.current_latitude: float | None = config.latitude
+        self.current_longitude: float | None = config.longitude
 
         self.device_info = _get_device_info(self._location_name)
 
@@ -122,33 +118,25 @@ class WeatherUpdateCoordinator(DataUpdateCoordinator[dict[str, Any]]):
         )
 
     @property
-    def is_metric(self):
-        """Determine if this is the metric unit system."""
-        return self._hass.config.units is METRIC_SYSTEM
-
-    @property
     def location_name(self):
         """Return the location used for data."""
         return self._location_name
 
     def _get_coordinates(self) -> tuple[float | None, float | None]:
         """Fetch current latitude and longitude and obfuscate if needed."""
-        lat, long = None, None
-
         # New configuration attempt
-        if self._location_entity_id and (state := self._hass.states.get(self._location_entity_id)):
+        if self._location_entity_id and (state := self.hass.states.get(self._location_entity_id)):
             raw_lat = state.attributes.get(CONF_LATITUDE)
             raw_long = state.attributes.get(CONF_LONGITUDE)
             if raw_lat is not None and raw_long is not None:
                 return round(float(raw_lat), 2), round(float(raw_long), 2)
 
         # Fallback to legacy config if entity is missing
-        if lat is None or long is None:
-            if self._latitude is not None and self._longitude is not None:
-                return float(self._latitude), float(self._longitude)
-            else:
-                _LOGGER.error("Could not determine latitude/longitude from entity or prior config")
-                return None, None
+        if self._latitude is not None and self._longitude is not None:
+            return float(self._latitude), float(self._longitude)
+
+        _LOGGER.error("Could not determine latitude/longitude from entity or prior config")
+        return None, None
 
     async def _async_update_data(self) -> dict[str, Any]:
         return await self.get_weather()
