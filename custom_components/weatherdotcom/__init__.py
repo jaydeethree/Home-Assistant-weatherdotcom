@@ -21,8 +21,6 @@ from .const import (
     CONF_LOCATION_SOURCE,
     LOCATION_TYPE_ENTITY,
     LOCATION_TYPE_LATLONG,
-    API_METRIC,
-    API_IMPERIAL,
     API_URL_METRIC,
     API_URL_IMPERIAL
 )
@@ -39,10 +37,8 @@ async def async_setup_entry(hass: HomeAssistant, entry: WeatherDotComConfigEntry
     """Set up the Weather.com component."""
     if hass.config.units is METRIC_SYSTEM:
         unit_system_api = API_URL_METRIC
-        unit_system = API_METRIC
     else:
         unit_system_api = API_URL_IMPERIAL
-        unit_system = API_IMPERIAL
 
     lang = entry.data[CONF_LANG]
 
@@ -78,7 +74,6 @@ async def async_setup_entry(hass: HomeAssistant, entry: WeatherDotComConfigEntry
         api_key=entry.data[CONF_API_KEY],
         location_name=entry.data[CONF_NAME],
         unit_system_api=unit_system_api,
-        unit_system=unit_system,
         lang=lang,
         location_entity_id=location_entity_id,
         latitude=latitude,

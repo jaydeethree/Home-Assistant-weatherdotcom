@@ -69,8 +69,6 @@ ICON_CODE_MAP: Final[dict[int, str]] = {
 }
 
 DEFAULT_LANG = 'en-US'
-API_IMPERIAL: Final = "imperial"
-API_METRIC: Final = "metric"
 API_URL_IMPERIAL: Final = "e"
 API_URL_METRIC: Final = "m"
 

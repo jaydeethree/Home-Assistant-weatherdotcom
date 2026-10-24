@@ -57,9 +57,8 @@ class WeatherUpdateCoordinatorConfig:
     api_key: str
     location_name: str
     unit_system_api: str
-    unit_system: str
     lang: str
-    tranfile: dict[str, Any] | str
+    tranfile: dict[str, Any]
 
     update_interval: timedelta = MIN_TIME_BETWEEN_UPDATES
     location_entity_id: str | None = None
@@ -80,7 +79,6 @@ class WeatherUpdateCoordinator(DataUpdateCoordinator[dict[str, Any]]):
         self._api_key = config.api_key
         self._location_name = config.location_name
         self._unit_system_api = config.unit_system_api
-        self.unit_system = config.unit_system
         self._lang = config.lang
         self._consecutive_failures = 0
         self._session = async_get_clientsession(hass)
