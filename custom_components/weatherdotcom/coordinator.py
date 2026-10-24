@@ -80,7 +80,11 @@ class WeatherUpdateCoordinator(DataUpdateCoordinator[dict[str, Any]]):
         self._location_name = config.location_name
         self._unit_system_api = config.unit_system_api
         self._lang = config.lang
-        self._consecutive_failures = 0
+        self._consecutive_failures: dict[str, int] = {
+            RESULTS_CURRENT: 0,
+            RESULTS_FORECAST_DAILY: 0,
+            RESULTS_FORECAST_HOURLY: 0,
+        }
         self._session = async_get_clientsession(hass)
         self._tranfile = config.tranfile
         self._store = WeatherDotComStorage(hass, self._location_name)
@@ -173,29 +177,32 @@ class WeatherUpdateCoordinator(DataUpdateCoordinator[dict[str, Any]]):
             if temp_max_list and temp_max_list[0] is not None:
                 await self._store.async_save(temp_max_list[0], round(time.time()))
 
+        prev_data = self.data or {}
+        results: dict[str, Any] = {}
+        for key, result, has_error in (
+            (RESULTS_CURRENT, result_current, current_error),
+            (RESULTS_FORECAST_DAILY, result_forecast_daily, daily_error),
+            (RESULTS_FORECAST_HOURLY, result_forecast_hourly, hourly_error),
+        ):
+            if has_error:
+                self._consecutive_failures[key] += 1
+                results[key] = (
+                    prev_data.get(key) if self._consecutive_failures[key] < 3 else None
+                )
+            else:
+                self._consecutive_failures[key] = 0
+                results[key] = result
+
         if current_error and daily_error and hourly_error:
-            self._consecutive_failures += 1
-            if self._consecutive_failures >= 3 or self.data is None:
+            min_failures = min(self._consecutive_failures.values())
+            if min_failures >= 3 or self.data is None:
                 raise UpdateFailed('Failed to get weather data')
             _LOGGER.warning(
                 'Failed to get weather data (failure %s of 3); retaining previous data',
-                self._consecutive_failures,
+                min_failures,
             )
-            return self.data
 
-        self._consecutive_failures = 0
-        prev_data = self.data or {}
-        return {
-            RESULTS_CURRENT: (
-                prev_data.get(RESULTS_CURRENT) if current_error else result_current
-            ),
-            RESULTS_FORECAST_DAILY: (
-                prev_data.get(RESULTS_FORECAST_DAILY) if daily_error else result_forecast_daily
-            ),
-            RESULTS_FORECAST_HOURLY: (
-                prev_data.get(RESULTS_FORECAST_HOURLY) if hourly_error else result_forecast_hourly
-            ),
-        }
+        return results
 
     async def _async_fetch_data(
         self, resource: str, latitude: float, longitude: float, description: str
