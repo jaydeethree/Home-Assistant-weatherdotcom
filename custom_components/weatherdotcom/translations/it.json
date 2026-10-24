@@ -34,6 +34,7 @@
     },
     "error": {
       "invalid_api_key": "La chiave API non è valida.",
+      "invalid_coordinates": "La latitudine deve essere compresa tra -90 e 90 e la longitudine tra -180 e 180.",
       "invalid_location_entity": "L'entità selezionata non ha attributi di latitudine e longitudine validi.",
       "unknown_error": "Si è verificato un errore imprevisto. "
     },

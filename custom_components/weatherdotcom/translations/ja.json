@@ -34,6 +34,7 @@
     },
     "error": {
       "invalid_api_key": "APIキーが無効です。",
+      "invalid_coordinates": "緯度は-90から90の間、経度は-180から180の間である必要があります。",
       "invalid_location_entity": "選択したエンティティには有効な緯度と経度の属性がありません。",
       "unknown_error": "予期しないエラーが発生しました。"
     },

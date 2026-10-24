@@ -119,7 +119,7 @@ class WeatherFlowHandler(config_entries.ConfigFlow, domain=DOMAIN):
                     vol.Required(
                         CONF_LANG,
                         default=DEFAULT_LANG,
-                    ): vol.All(vol.In(LANG_CODES)),
+                    ): vol.In(LANG_CODES),
                     vol.Required(CONF_LOCATION_SOURCE, default=LOCATION_TYPE_LATLONG): selector.SelectSelector(
                         selector.SelectSelectorConfig(
                             options=[LOCATION_TYPE_LATLONG, LOCATION_TYPE_ENTITY],
@@ -143,7 +143,7 @@ class WeatherFlowHandler(config_entries.ConfigFlow, domain=DOMAIN):
             if self._validate_latlong(lat=user_input.get(CONF_LATITUDE), long=user_input.get(CONF_LONGITUDE)):
                 return await self._async_validate_and_create()
             else:
-                errors["base"] = "unknown_error"
+                errors["base"] = "invalid_coordinates"
                 _LOGGER.error("Invalid latitude/longitude: %s, %s",
                               user_input.get(CONF_LATITUDE), user_input.get(CONF_LONGITUDE),)
 
@@ -197,7 +197,7 @@ class WeatherFlowHandler(config_entries.ConfigFlow, domain=DOMAIN):
                 if self._validate_latlong(entity=state):
                     return await self._async_validate_and_create()
                 else:
-                    errors["base"] = "unknown_error"
+                    errors["base"] = "invalid_coordinates"
                     _LOGGER.error("Invalid latitude/longitude: %s, %s",
                                   state.attributes.get(CONF_LATITUDE), state.attributes.get(CONF_LONGITUDE),)
 
@@ -315,7 +315,7 @@ class WeatherFlowHandler(config_entries.ConfigFlow, domain=DOMAIN):
                             CONF_LANG,
                             DEFAULT_LANG,
                         ),
-                    ): vol.All(vol.In(LANG_CODES)),
+                    ): vol.In(LANG_CODES),
                     vol.Required(
                         CONF_LOCATION_SOURCE,
                         default=default_source,
