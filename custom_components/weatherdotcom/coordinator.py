@@ -42,13 +42,9 @@ from .store import WeatherDotComStorage
 
 _LOGGER = logging.getLogger(__name__)
 
-_RESOURCESHARED = '&format=json&apiKey={apiKey}&units={units}'
-_RESOURCECURRENT = ('https://api.weather.com/v3/wx/observations/current'
-                    '?geocode={latitude},{longitude}')
-_RESOURCEFORECASTDAILY = ('https://api.weather.com/v3/wx/forecast/daily/15day'
-                          '?geocode={latitude},{longitude}')
-_RESOURCEFORECASTHOURLY = ('https://api.weather.com/v3/wx/forecast/hourly/15day'
-                           '?geocode={latitude},{longitude}')
+_RESOURCECURRENT = 'https://api.weather.com/v3/wx/observations/current'
+_RESOURCEFORECASTDAILY = 'https://api.weather.com/v3/wx/forecast/daily/15day'
+_RESOURCEFORECASTHOURLY = 'https://api.weather.com/v3/wx/forecast/hourly/15day'
 
 MIN_TIME_BETWEEN_UPDATES = timedelta(minutes=20)
 
@@ -210,16 +206,22 @@ class WeatherUpdateCoordinator(DataUpdateCoordinator[dict[str, Any]]):
             'Accept-Encoding': 'gzip',
             "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/155.0.0.0 Safari/537.36"
         }
+        params = {
+            "geocode": f"{latitude},{longitude}",
+            "language": self._lang,
+            "format": "json",
+            "apiKey": self._api_key,
+            "units": self._unit_system_api,
+        }
         for attempt in range(2):
             try:
                 async with asyncio.timeout(10):
-                    url = self._build_url(resource, latitude, longitude)
-                    async with self._session.get(url, headers=headers) as response:
+                    async with self._session.get(resource, params=params, headers=headers) as response:
                         response.raise_for_status()
                         result = await response.json(content_type=None)
                     if result is None:
                         raise ValueError('No weather data found')
-                    self._check_errors(url, result)
+                    self._check_errors(result)
                     return result, False
             except (ValueError, asyncio.TimeoutError, aiohttp.ClientError) as err:
                 err_msg = str(err).replace(self._api_key, "REDACTED")
@@ -230,20 +232,7 @@ class WeatherUpdateCoordinator(DataUpdateCoordinator[dict[str, Any]]):
                 await asyncio.sleep(5)
         return None, True
 
-    def _build_url(self, baseurl: str, latitude: float, longitude: float) -> str:
-        baseurl += '&language={language}'
-        baseurl += _RESOURCESHARED
-
-        return baseurl.format(
-            apiKey=self._api_key,
-            language=self._lang,
-            latitude=latitude,
-            longitude=longitude,
-            units=self._unit_system_api
-        )
-
-    def _check_errors(self, url: str, response: dict):
-        # _LOGGER.debug(f'Checking errors from {url} in {response}')
+    def _check_errors(self, response: dict):
         if 'errors' not in response:
             return
         if errors := response['errors']:
