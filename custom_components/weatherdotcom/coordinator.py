@@ -183,10 +183,17 @@ class WeatherUpdateCoordinator(DataUpdateCoordinator[dict[str, Any]]):
             return self.data
 
         self._consecutive_failures = 0
+        prev_data = self.data or {}
         return {
-            RESULTS_CURRENT: result_current,
-            RESULTS_FORECAST_DAILY: result_forecast_daily,
-            RESULTS_FORECAST_HOURLY: result_forecast_hourly,
+            RESULTS_CURRENT: (
+                prev_data.get(RESULTS_CURRENT) if current_error else result_current
+            ),
+            RESULTS_FORECAST_DAILY: (
+                prev_data.get(RESULTS_FORECAST_DAILY) if daily_error else result_forecast_daily
+            ),
+            RESULTS_FORECAST_HOURLY: (
+                prev_data.get(RESULTS_FORECAST_HOURLY) if hourly_error else result_forecast_hourly
+            ),
         }
 
     async def _async_fetch_data(
