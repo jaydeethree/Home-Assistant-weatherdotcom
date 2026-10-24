@@ -32,8 +32,10 @@ from .const import (
     EXTRA_ATTRIBUTE_KEYS_DAILY,
     EXTRA_ATTRIBUTE_KEYS_DAY,
     EXTRA_ATTRIBUTE_KEYS_DAYPART,
+    FIELD_VALIDTIMEUTC,
     CONF_EXTRA_ATTRIBUTES
 )
+from .sensor import get_sensor_unique_id
 
 _LOGGER = logging.getLogger(__name__)
 
@@ -354,7 +356,7 @@ class WeatherDotComOptionsFlow(config_entries.OptionsFlowWithReload):
             # Auto-enable / disable Forecast Details sensor based on whether attributes are selected
             ent_reg = er.async_get(self.hass)
             location_name = self.config_entry.data.get(CONF_NAME, "")
-            unique_id = f"{location_name},validtimeutc".lower()
+            unique_id = get_sensor_unique_id(location_name, FIELD_VALIDTIMEUTC)
             if entity_id := ent_reg.async_get_entity_id("sensor", DOMAIN, unique_id):
                 entity_entry = ent_reg.async_get(entity_id)
                 if entity_entry:

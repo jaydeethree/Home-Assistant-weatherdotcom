@@ -34,6 +34,11 @@ from .weather_current_conditions_sensors import (
 )
 
 
+def get_sensor_unique_id(location_name: str, key: str) -> str:
+    """Build the unique_id for a Weather.com sensor."""
+    return f"{location_name},{key}".lower()
+
+
 async def async_setup_entry(
         hass: HomeAssistant, entry: WeatherDotComConfigEntry, async_add_entities: AddEntitiesCallback
 ) -> None:
@@ -70,7 +75,9 @@ class WeatherSensor(CoordinatorEntity[WeatherUpdateCoordinator], SensorEntity):
         # for now all entities are of type 'sensor' so this is okay.
         entity_id_format = "sensor.{}"
 
-        self._attr_unique_id = f"{self.coordinator.location_name},{description.key}".lower()
+        self._attr_unique_id = get_sensor_unique_id(
+            self.coordinator.location_name, description.key
+        )
         self.entity_id = generate_entity_id(
             entity_id_format, f"{self.coordinator.location_name}_{description.name}", hass=coordinator.hass
         )
