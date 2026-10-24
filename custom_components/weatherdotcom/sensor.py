@@ -20,7 +20,7 @@ from . import WeatherDotComConfigEntry
 from .coordinator import WeatherUpdateCoordinator
 
 from .const import (
-    CONF_ATTRIBUTION,
+    ATTRIBUTION,
     CONF_EXTRA_ATTRIBUTES,
     FIELD_DAYPART,
     FIELD_VALIDTIMEUTC,
@@ -58,7 +58,7 @@ async def async_setup_entry(
 class WeatherSensor(CoordinatorEntity[WeatherUpdateCoordinator], SensorEntity):
     """Implementing the Weather.com sensor."""
     _attr_has_entity_name = True
-    _attr_attribution = CONF_ATTRIBUTION
+    _attr_attribution = ATTRIBUTION
     entity_description: WeatherSensorEntityDescription
 
     def __init__(

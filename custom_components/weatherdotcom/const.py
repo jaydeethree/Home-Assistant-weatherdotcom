@@ -24,7 +24,7 @@ from homeassistant.components.weather import (
 )
 
 DOMAIN = 'weatherdotcom'
-CONF_ATTRIBUTION = 'Data provided by the Weather.com weather service'
+ATTRIBUTION: Final = 'Data provided by the Weather.com weather service'
 CONF_LANG = 'lang'
 CONF_LOCATION_SOURCE = 'location_source'
 
