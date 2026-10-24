@@ -8,7 +8,7 @@ import time
 
 from . import WeatherDotComConfigEntry, WeatherUpdateCoordinator
 from .const import (
-    CONF_ATTRIBUTION,
+    ATTRIBUTION,
     TEMPUNIT,
     LENGTHUNIT,
     SPEEDUNIT,
@@ -81,7 +81,7 @@ async def async_setup_entry(
 
 
 class WeatherDotComForecast(SingleCoordinatorWeatherEntity):
-    _attr_attribution = CONF_ATTRIBUTION
+    _attr_attribution = ATTRIBUTION
     # Use the device (location) name as the entity's friendly name.
     _attr_has_entity_name = True
     _attr_name = None
