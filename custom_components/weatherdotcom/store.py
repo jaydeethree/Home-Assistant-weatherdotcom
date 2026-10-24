@@ -6,6 +6,7 @@ from typing import Any
 
 from homeassistant.core import HomeAssistant
 from homeassistant.helpers.storage import Store
+from homeassistant.util import slugify
 
 from .const import (
     DOMAIN,
@@ -25,7 +26,7 @@ class WeatherDotComStorage:
         self._store = Store(
             hass,
             STORAGE_VERSION,
-            STORAGE_KEY.format(domain=DOMAIN, location_name=location_name.lower()),
+            STORAGE_KEY.format(domain=DOMAIN, location_name=slugify(location_name)),
         )
         self._data: dict[str, Any] | None = None
 
