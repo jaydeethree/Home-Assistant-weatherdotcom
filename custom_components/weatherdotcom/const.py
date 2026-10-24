@@ -174,3 +174,12 @@ EXTRA_ATTRIBUTE_KEYS_DAYPART: Final[list[str]] = [
     "daypart_qualifier_phrase",
     "daypart_narrative",
 ]
+
+HEADERS: Final[dict[str, str]] = {
+    "Accept-Encoding": "gzip",
+    "user-agent": (
+        "Mozilla/5.0 (Windows NT 10.0; Win64; x64) "
+        "AppleWebKit/537.36 (KHTML, like Gecko) "
+        "Chrome/155.0.0.0 Safari/537.36"
+    ),
+}

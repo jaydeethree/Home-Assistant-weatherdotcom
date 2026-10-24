@@ -26,6 +26,7 @@ from .const import (
     CONF_LANG,
     CONF_LOCATION_SOURCE,
     DEFAULT_LANG,
+    HEADERS,
     LANG_CODES,
     LOCATION_TYPE_ENTITY,
     LOCATION_TYPE_LATLONG,
@@ -59,10 +60,6 @@ class WeatherFlowHandler(config_entries.ConfigFlow, domain=DOMAIN):
 
     async def _async_validate_api_key(self, api_key: str | None) -> str | None:
         """Validate the API key against the Weather.com endpoint."""
-        headers = {
-            'Accept-Encoding': 'gzip',
-            "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/155.0.0.0 Safari/537.36"
-        }
         session = async_get_clientsession(self.hass)
         try:
             async with asyncio.timeout(10):
@@ -78,7 +75,7 @@ class WeatherFlowHandler(config_entries.ConfigFlow, domain=DOMAIN):
                     "apiKey": api_key or "",
                     "language": "en-US",
                 }
-                async with session.get(url, params=params, headers=headers) as response:
+                async with session.get(url, params=params, headers=HEADERS) as response:
                     status = response.status
                     reason = response.reason
         except (asyncio.TimeoutError, aiohttp.ClientError) as err:
