@@ -245,9 +245,9 @@ class WeatherUpdateCoordinator(DataUpdateCoordinator[dict[str, Any]]):
             raise ValueError(f'Weather.com API error: {messages}')
 
     def get_current(self, field):
-        if self.data[RESULTS_CURRENT] is None:
+        if not self.data or self.data.get(RESULTS_CURRENT) is None:
             return None
-        return self.data[RESULTS_CURRENT][field]
+        return self.data[RESULTS_CURRENT].get(field)
 
     def get_forecast_daily(self, field, period=0):
         try:
@@ -259,13 +259,13 @@ class WeatherUpdateCoordinator(DataUpdateCoordinator[dict[str, Any]]):
                 # Those fields exist per-day, rather than per dayPart, so the period is halved
                 return self.data[RESULTS_FORECAST_DAILY][field][int(period / 2)]
             return self.data[RESULTS_FORECAST_DAILY][FIELD_DAYPART][0][field][period]
-        except (IndexError, TypeError):
+        except (IndexError, KeyError, TypeError):
             return None
 
     def get_forecast_hourly(self, field, hour):
         try:
             return self.data[RESULTS_FORECAST_HOURLY][field][hour]
-        except (IndexError, TypeError):
+        except (IndexError, KeyError, TypeError):
             return None
 
     @classmethod
