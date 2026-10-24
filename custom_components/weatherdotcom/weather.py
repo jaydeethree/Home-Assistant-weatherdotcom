@@ -89,6 +89,24 @@ class WeatherDotComForecast(SingleCoordinatorWeatherEntity):
         WeatherEntityFeature.FORECAST_DAILY | WeatherEntityFeature.FORECAST_HOURLY
     )
 
+    def __init__(
+            self,
+            coordinator: WeatherUpdateCoordinator
+    ):
+        """Initialize the sensor."""
+        super().__init__(coordinator)
+        self.entity_id = generate_entity_id(
+            ENTITY_ID_FORMAT, f"{coordinator.location_name}", hass=coordinator.hass
+        )
+        self._attr_unique_id = f"{coordinator.location_name},{WEATHER_DOMAIN}".lower()
+        self._attr_device_info = coordinator.device_info
+        self._attr_native_temperature_unit = coordinator.units_of_measurement[TEMPUNIT]
+        self._attr_native_pressure_unit = coordinator.units_of_measurement[PRESSUREUNIT]
+        self._attr_native_wind_speed_unit = coordinator.units_of_measurement[SPEEDUNIT]
+        self._attr_native_visibility_unit = coordinator.visibility_unit
+        self._attr_native_precipitation_unit = coordinator.units_of_measurement[LENGTHUNIT]
+        self._store = coordinator._store
+
     @property
     def native_temperature(self) -> float | None:
         """
@@ -147,24 +165,6 @@ class WeatherDotComForecast(SingleCoordinatorWeatherEntity):
     def uv_index(self) -> float | None:
         """Return the UV index."""
         return self.coordinator.get_current(FIELD_UV_INDEX)
-
-    def __init__(
-            self,
-            coordinator: WeatherUpdateCoordinator
-    ):
-        """Initialize the sensor."""
-        super().__init__(coordinator)
-        self.entity_id = generate_entity_id(
-            ENTITY_ID_FORMAT, f"{coordinator.location_name}", hass=coordinator.hass
-        )
-        self._attr_unique_id = f"{coordinator.location_name},{WEATHER_DOMAIN}".lower()
-        self._attr_device_info = coordinator.device_info
-        self._attr_native_temperature_unit = coordinator.units_of_measurement[TEMPUNIT]
-        self._attr_native_pressure_unit = coordinator.units_of_measurement[PRESSUREUNIT]
-        self._attr_native_wind_speed_unit = coordinator.units_of_measurement[SPEEDUNIT]
-        self._attr_native_visibility_unit = coordinator.visibility_unit
-        self._attr_native_precipitation_unit = coordinator.units_of_measurement[LENGTHUNIT]
-        self._store = coordinator._store
 
     async def async_forecast_daily(self) -> list[Forecast] | None:
         """Return the daily forecast in native units."""
