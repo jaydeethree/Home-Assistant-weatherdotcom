@@ -131,9 +131,15 @@ class WeatherUpdateCoordinator(DataUpdateCoordinator[dict[str, Any]]):
             if raw_lat is not None and raw_long is not None:
                 return round(float(raw_lat), 2), round(float(raw_long), 2)
 
-        # Fallback to legacy config if entity is missing
+        # Fallback to legacy config or last known coordinates if entity is missing
         if self._latitude is not None and self._longitude is not None:
             return float(self._latitude), float(self._longitude)
+        if self.current_latitude is not None and self.current_longitude is not None:
+            _LOGGER.warning(
+                "Could not determine latitude/longitude from %s; using last known coordinates",
+                self._location_entity_id,
+            )
+            return self.current_latitude, self.current_longitude
 
         _LOGGER.error("Could not determine latitude/longitude from entity or prior config")
         return None, None
