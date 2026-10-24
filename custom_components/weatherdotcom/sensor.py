@@ -83,7 +83,11 @@ class WeatherSensor(CoordinatorEntity, SensorEntity):
     @property
     def available(self) -> bool:
         """Return if weather data is available."""
-        return super().available and self.coordinator.data is not None
+        if not super().available or self.coordinator.data is None:
+            return False
+        if self.entity_description.key in (CONF_LATITUDE, CONF_LONGITUDE):
+            return True
+        return self.coordinator.data.get(RESULTS_CURRENT) is not None
 
     @property
     def name(self):
