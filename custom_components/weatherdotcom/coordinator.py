@@ -29,6 +29,7 @@ from homeassistant.const import (
 from .const import (
     API_URL_METRIC,
     DOMAIN,
+    HEADERS,
     ICON_CODE_MAP,
     FIELD_DAYPART,
     FIELD_TEMPERATUREMAX,
@@ -202,10 +203,6 @@ class WeatherUpdateCoordinator(DataUpdateCoordinator[dict[str, Any]]):
         self, resource: str, latitude: float, longitude: float, description: str
     ) -> tuple[dict[str, Any] | None, bool]:
         """Fetch weather data for a specific resource with retry."""
-        headers = {
-            'Accept-Encoding': 'gzip',
-            "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/155.0.0.0 Safari/537.36"
-        }
         params = {
             "geocode": f"{latitude},{longitude}",
             "language": self._lang,
@@ -216,7 +213,7 @@ class WeatherUpdateCoordinator(DataUpdateCoordinator[dict[str, Any]]):
         for attempt in range(2):
             try:
                 async with asyncio.timeout(10):
-                    async with self._session.get(resource, params=params, headers=headers) as response:
+                    async with self._session.get(resource, params=params, headers=HEADERS) as response:
                         response.raise_for_status()
                         result = await response.json(content_type=None)
                     if result is None:
