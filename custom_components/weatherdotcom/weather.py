@@ -4,7 +4,32 @@ For more details about this platform, please refer to the documentation at
 https://github.com/jaydeethree/Home-Assistant-weatherdotcom
 """
 
+import logging
 import time
+
+from homeassistant.components.weather import (
+    ATTR_FORECAST_CLOUD_COVERAGE,
+    ATTR_FORECAST_CONDITION,
+    ATTR_FORECAST_HUMIDITY,
+    ATTR_FORECAST_NATIVE_APPARENT_TEMP,
+    ATTR_FORECAST_NATIVE_DEW_POINT,
+    ATTR_FORECAST_NATIVE_PRECIPITATION,
+    ATTR_FORECAST_NATIVE_TEMP,
+    ATTR_FORECAST_NATIVE_TEMP_LOW,
+    ATTR_FORECAST_NATIVE_WIND_GUST_SPEED,
+    ATTR_FORECAST_NATIVE_WIND_SPEED,
+    ATTR_FORECAST_PRECIPITATION_PROBABILITY,
+    ATTR_FORECAST_TIME,
+    ATTR_FORECAST_UV_INDEX,
+    ATTR_FORECAST_WIND_BEARING,
+    SingleCoordinatorWeatherEntity,
+    WeatherEntityFeature,
+    Forecast,
+    DOMAIN as WEATHER_DOMAIN
+)
+from homeassistant.core import HomeAssistant
+from homeassistant.helpers.entity import generate_entity_id
+from homeassistant.helpers.entity_platform import AddEntitiesCallback
 
 from . import WeatherDotComConfigEntry, WeatherUpdateCoordinator
 from .const import (
@@ -37,33 +62,6 @@ from .const import (
     RESULTS_FORECAST_DAILY,
     RESULTS_FORECAST_HOURLY,
 )
-
-import logging
-
-from homeassistant.components.weather import (
-    ATTR_FORECAST_CLOUD_COVERAGE,
-    ATTR_FORECAST_CONDITION,
-    ATTR_FORECAST_HUMIDITY,
-    ATTR_FORECAST_NATIVE_APPARENT_TEMP,
-    ATTR_FORECAST_NATIVE_DEW_POINT,
-    ATTR_FORECAST_NATIVE_PRECIPITATION,
-    ATTR_FORECAST_NATIVE_TEMP,
-    ATTR_FORECAST_NATIVE_TEMP_LOW,
-    ATTR_FORECAST_NATIVE_WIND_GUST_SPEED,
-    ATTR_FORECAST_NATIVE_WIND_SPEED,
-    ATTR_FORECAST_PRECIPITATION_PROBABILITY,
-    ATTR_FORECAST_TIME,
-    ATTR_FORECAST_UV_INDEX,
-    ATTR_FORECAST_WIND_BEARING,
-    SingleCoordinatorWeatherEntity,
-    WeatherEntityFeature,
-    Forecast,
-    DOMAIN as WEATHER_DOMAIN
-)
-
-from homeassistant.core import HomeAssistant
-from homeassistant.helpers.entity import generate_entity_id
-from homeassistant.helpers.entity_platform import AddEntitiesCallback
 
 _LOGGER = logging.getLogger(__name__)
 
