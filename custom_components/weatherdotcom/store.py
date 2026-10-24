@@ -35,6 +35,12 @@ class WeatherDotComStorage:
         return self._data
 
     async def async_save(self, high_temp_today, high_temp_today_timestamp) -> None:
+        current = await self.async_load()
+        if (
+            current.get(HIGH_TEMP_TODAY_STORAGE) == high_temp_today
+            and high_temp_today_timestamp - current.get(HIGH_TEMP_TODAY_TIMESTAMP_STORAGE, 0) < 7200
+        ):
+            return
         data_to_save = {
             HIGH_TEMP_TODAY_STORAGE: high_temp_today,
             HIGH_TEMP_TODAY_TIMESTAMP_STORAGE: high_temp_today_timestamp,
