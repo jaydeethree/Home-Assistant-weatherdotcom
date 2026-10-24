@@ -50,7 +50,7 @@ async def async_setup_entry(
     async_add_entities(sensors)
 
 
-class WeatherSensor(CoordinatorEntity, SensorEntity):
+class WeatherSensor(CoordinatorEntity[WeatherUpdateCoordinator], SensorEntity):
     """Implementing the Weather.com sensor."""
     _attr_has_entity_name = True
     _attr_attribution = CONF_ATTRIBUTION
@@ -80,6 +80,16 @@ class WeatherSensor(CoordinatorEntity, SensorEntity):
         if description.key == FIELD_VALIDTIMEUTC:
             self._attr_entity_registry_enabled_default = bool(extra_attributes)
 
+        if description.key in coordinator._tranfile:
+            self._attr_name = coordinator._tranfile[description.key]
+        elif (
+            FIELD_DAYPART in coordinator._tranfile
+            and description.key in coordinator._tranfile[FIELD_DAYPART]
+        ):
+            self._attr_name = coordinator._tranfile[FIELD_DAYPART][description.key]
+        else:
+            self._attr_name = description.name
+
     @property
     def available(self) -> bool:
         """Return if weather data is available."""
@@ -88,19 +98,6 @@ class WeatherSensor(CoordinatorEntity, SensorEntity):
         if self.entity_description.key in (CONF_LATITUDE, CONF_LONGITUDE):
             return True
         return self.coordinator.data.get(RESULTS_CURRENT) is not None
-
-    @property
-    def name(self):
-        """Return the name of the sensor."""
-        if self.entity_description.key in self.coordinator._tranfile:
-            return self.coordinator._tranfile[self.entity_description.key]
-        if (
-            FIELD_DAYPART in self.coordinator._tranfile
-            and self.entity_description.key in self.coordinator._tranfile[FIELD_DAYPART]
-        ):
-            return self.coordinator._tranfile[FIELD_DAYPART][self.entity_description.key]
-
-        return self.entity_description.name
 
     @property
     def native_value(self) -> StateType:
