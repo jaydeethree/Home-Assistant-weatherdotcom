@@ -46,8 +46,8 @@ async def async_setup_entry(
     coordinator = entry.runtime_data
     sensors = [
         WeatherSensor(
-            coordinator, 
-            description, 
+            coordinator,
+            description,
             entry.options.get(CONF_EXTRA_ATTRIBUTES),
             ) for description in current_condition_sensor_descriptions
     ]
