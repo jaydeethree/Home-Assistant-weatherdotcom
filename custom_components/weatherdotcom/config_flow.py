@@ -141,11 +141,11 @@ class WeatherFlowHandler(config_entries.ConfigFlow, domain=DOMAIN):
         if user_input is not None:
             self._data.update(user_input)
             if self._validate_latlong(lat=user_input.get(CONF_LATITUDE), long=user_input.get(CONF_LONGITUDE)):
-                return await self._async_validate_and_create()
+                return await self._async_create_entry()
             else:
                 errors["base"] = "invalid_coordinates"
-                _LOGGER.error("Invalid latitude/longitude: %s, %s",
-                              user_input.get(CONF_LATITUDE), user_input.get(CONF_LONGITUDE),)
+                _LOGGER.warning("Invalid latitude/longitude: %s, %s",
+                                user_input.get(CONF_LATITUDE), user_input.get(CONF_LONGITUDE),)
 
         default_latitude = self.hass.config.latitude
         default_longitude = self.hass.config.longitude
@@ -195,11 +195,11 @@ class WeatherFlowHandler(config_entries.ConfigFlow, domain=DOMAIN):
             else:
                 self._data.update(user_input)
                 if self._validate_latlong(entity=state):
-                    return await self._async_validate_and_create()
+                    return await self._async_create_entry()
                 else:
                     errors["base"] = "invalid_coordinates"
-                    _LOGGER.error("Invalid latitude/longitude: %s, %s",
-                                  state.attributes.get(CONF_LATITUDE), state.attributes.get(CONF_LONGITUDE),)
+                    _LOGGER.warning("Invalid latitude/longitude: %s, %s",
+                                    state.attributes.get(CONF_LATITUDE), state.attributes.get(CONF_LONGITUDE),)
 
         default_entity = None
 
@@ -235,8 +235,8 @@ class WeatherFlowHandler(config_entries.ConfigFlow, domain=DOMAIN):
                 return True
         return False
 
-    async def _async_validate_and_create(self) -> ConfigFlowResult:
-        """Validate API key and lat/long, then create the config entry."""
+    async def _async_create_entry(self) -> ConfigFlowResult:
+        """Create or update the config entry."""
         api_key = self._data[CONF_API_KEY]
         location_name = self._data[CONF_NAME]
         location_source = self._data.get(CONF_LOCATION_SOURCE)
