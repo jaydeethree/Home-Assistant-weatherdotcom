@@ -34,11 +34,6 @@ from homeassistant.helpers.entity_platform import AddEntitiesCallback
 from . import WeatherDotComConfigEntry, WeatherUpdateCoordinator
 from .const import (
     ATTRIBUTION,
-    TEMPUNIT,
-    LENGTHUNIT,
-    SPEEDUNIT,
-    PRESSUREUNIT,
-
     FIELD_CLOUD_COVER,
     FIELD_DEW_POINT,
     FIELD_FEELS_LIKE,
@@ -99,11 +94,11 @@ class WeatherDotComForecast(SingleCoordinatorWeatherEntity):
         )
         self._attr_unique_id = f"{coordinator.location_name},{WEATHER_DOMAIN}".lower()
         self._attr_device_info = coordinator.device_info
-        self._attr_native_temperature_unit = coordinator.units_of_measurement[TEMPUNIT]
-        self._attr_native_pressure_unit = coordinator.units_of_measurement[PRESSUREUNIT]
-        self._attr_native_wind_speed_unit = coordinator.units_of_measurement[SPEEDUNIT]
-        self._attr_native_visibility_unit = coordinator.visibility_unit
-        self._attr_native_precipitation_unit = coordinator.units_of_measurement[LENGTHUNIT]
+        self._attr_native_temperature_unit = coordinator.units.temperature
+        self._attr_native_pressure_unit = coordinator.units.pressure
+        self._attr_native_wind_speed_unit = coordinator.units.speed
+        self._attr_native_visibility_unit = coordinator.units.visibility
+        self._attr_native_precipitation_unit = coordinator.units.precipitation
         self._store = coordinator.store
 
     @property

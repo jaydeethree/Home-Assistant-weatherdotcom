@@ -19,12 +19,10 @@ from homeassistant.helpers.update_coordinator import DataUpdateCoordinator, Upda
 from homeassistant.const import (
     CONF_LATITUDE,
     CONF_LONGITUDE,
-    PERCENTAGE,
     UnitOfPressure,
     UnitOfTemperature,
     UnitOfLength,
     UnitOfSpeed,
-    UnitOfVolumetricFlux
 )
 from .const import (
     API_URL_METRIC,
@@ -48,6 +46,36 @@ _RESOURCEFORECASTDAILY = 'https://api.weather.com/v3/wx/forecast/daily/15day'
 _RESOURCEFORECASTHOURLY = 'https://api.weather.com/v3/wx/forecast/hourly/15day'
 
 MIN_TIME_BETWEEN_UPDATES = timedelta(minutes=20)
+
+
+@dataclass(frozen=True, kw_only=True)
+class WeatherUnits:
+    """Units of measurement for a unit system."""
+
+    temperature: str
+    precipitation: str
+    distance: str
+    speed: str
+    pressure: str
+    visibility: str
+
+
+METRIC_UNITS = WeatherUnits(
+    temperature=UnitOfTemperature.CELSIUS,
+    precipitation=UnitOfLength.MILLIMETERS,
+    distance=UnitOfLength.METERS,
+    speed=UnitOfSpeed.KILOMETERS_PER_HOUR,
+    pressure=UnitOfPressure.MBAR,
+    visibility=UnitOfLength.KILOMETERS,
+)
+IMPERIAL_UNITS = WeatherUnits(
+    temperature=UnitOfTemperature.FAHRENHEIT,
+    precipitation=UnitOfLength.INCHES,
+    distance=UnitOfLength.FEET,
+    speed=UnitOfSpeed.MILES_PER_HOUR,
+    pressure=UnitOfPressure.INHG,
+    visibility=UnitOfLength.MILES,
+)
 
 
 @dataclass
@@ -96,17 +124,9 @@ class WeatherUpdateCoordinator(DataUpdateCoordinator[dict[str, Any]]):
         self.current_longitude: float | None = config.longitude
 
         self.device_info = _get_device_info(self._location_name)
-
-        if self._unit_system_api == API_URL_METRIC:
-            self.units_of_measurement = (UnitOfTemperature.CELSIUS, UnitOfLength.MILLIMETERS, UnitOfLength.METERS,
-                                         UnitOfSpeed.KILOMETERS_PER_HOUR, UnitOfPressure.MBAR,
-                                         UnitOfVolumetricFlux.MILLIMETERS_PER_HOUR, PERCENTAGE)
-            self.visibility_unit = UnitOfLength.KILOMETERS
-        else:
-            self.units_of_measurement = (UnitOfTemperature.FAHRENHEIT, UnitOfLength.INCHES, UnitOfLength.FEET,
-                                         UnitOfSpeed.MILES_PER_HOUR, UnitOfPressure.INHG,
-                                         UnitOfVolumetricFlux.INCHES_PER_HOUR, PERCENTAGE)
-            self.visibility_unit = UnitOfLength.MILES
+        self.units = (
+            METRIC_UNITS if self._unit_system_api == API_URL_METRIC else IMPERIAL_UNITS
+        )
 
         super().__init__(
             hass,
