@@ -103,7 +103,7 @@ class WeatherDotComForecast(SingleCoordinatorWeatherEntity):
         self._attr_native_wind_speed_unit = coordinator.units_of_measurement[SPEEDUNIT]
         self._attr_native_visibility_unit = coordinator.visibility_unit
         self._attr_native_precipitation_unit = coordinator.units_of_measurement[LENGTHUNIT]
-        self._store = coordinator._store
+        self._store = coordinator.store
 
     @property
     def native_temperature(self) -> float | None:
@@ -142,7 +142,7 @@ class WeatherDotComForecast(SingleCoordinatorWeatherEntity):
     def condition(self) -> str | None:
         """Return the current condition."""
         icon = self.coordinator.get_current(FIELD_ICONCODE)
-        return self.coordinator._iconcode_to_condition(icon)
+        return self.coordinator.iconcode_to_condition(icon)
 
     @property
     def native_apparent_temperature(self) -> float | None:
@@ -206,7 +206,7 @@ class WeatherDotComForecast(SingleCoordinatorWeatherEntity):
                 ATTR_FORECAST_CLOUD_COVERAGE:
                     self.coordinator.get_forecast_daily(FIELD_CLOUD_COVER, period),
                 ATTR_FORECAST_CONDITION:
-                    self.coordinator._iconcode_to_condition(
+                    self.coordinator.iconcode_to_condition(
                         self.coordinator.get_forecast_daily(
                             FIELD_ICONCODE, period)
                     ),
@@ -224,7 +224,7 @@ class WeatherDotComForecast(SingleCoordinatorWeatherEntity):
                         FIELD_TEMPERATUREMIN, period),
 
                 ATTR_FORECAST_TIME:
-                    self.coordinator._format_timestamp(
+                    self.coordinator.format_timestamp(
                         self.coordinator.get_forecast_daily(
                             FIELD_VALIDTIMEUTC, period)),
                 ATTR_FORECAST_UV_INDEX:
@@ -249,7 +249,7 @@ class WeatherDotComForecast(SingleCoordinatorWeatherEntity):
                 ATTR_FORECAST_CLOUD_COVERAGE:
                     self.coordinator.get_forecast_hourly(FIELD_CLOUD_COVER, hour),
                 ATTR_FORECAST_CONDITION:
-                    self.coordinator._iconcode_to_condition(
+                    self.coordinator.iconcode_to_condition(
                         self.coordinator.get_forecast_hourly(
                             FIELD_ICONCODE, hour)
                     ),
@@ -268,7 +268,7 @@ class WeatherDotComForecast(SingleCoordinatorWeatherEntity):
                 ATTR_FORECAST_NATIVE_TEMP:
                     self.coordinator.get_forecast_hourly(FIELD_TEMP, hour),
                 ATTR_FORECAST_TIME:
-                    self.coordinator._format_timestamp(
+                    self.coordinator.format_timestamp(
                         self.coordinator.get_forecast_hourly(
                             FIELD_VALIDTIMEUTC, hour)),
                 ATTR_FORECAST_UV_INDEX:

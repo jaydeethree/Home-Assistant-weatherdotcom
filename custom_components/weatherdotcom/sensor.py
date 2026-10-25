@@ -87,13 +87,13 @@ class WeatherSensor(CoordinatorEntity[WeatherUpdateCoordinator], SensorEntity):
         if description.key == FIELD_VALIDTIMEUTC:
             self._attr_entity_registry_enabled_default = bool(extra_attributes)
 
-        if description.key in coordinator._tranfile:
-            self._attr_name = coordinator._tranfile[description.key]
+        if description.key in coordinator.tranfile:
+            self._attr_name = coordinator.tranfile[description.key]
         elif (
-            FIELD_DAYPART in coordinator._tranfile
-            and description.key in coordinator._tranfile[FIELD_DAYPART]
+            FIELD_DAYPART in coordinator.tranfile
+            and description.key in coordinator.tranfile[FIELD_DAYPART]
         ):
-            self._attr_name = coordinator._tranfile[FIELD_DAYPART][description.key]
+            self._attr_name = coordinator.tranfile[FIELD_DAYPART][description.key]
         else:
             self._attr_name = description.name
 
