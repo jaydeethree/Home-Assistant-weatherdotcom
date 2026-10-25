@@ -11,7 +11,7 @@ from homeassistant.components.sensor import SensorEntity
 from homeassistant.const import CONF_LATITUDE, CONF_LONGITUDE
 from homeassistant.core import HomeAssistant
 from homeassistant.helpers.entity import generate_entity_id
-from homeassistant.helpers.entity_platform import AddEntitiesCallback
+from homeassistant.helpers.entity_platform import AddConfigEntryEntitiesCallback
 from homeassistant.helpers.typing import StateType
 from homeassistant.helpers.update_coordinator import CoordinatorEntity
 
@@ -35,7 +35,7 @@ from .weather_current_conditions_sensors import (
 
 
 async def async_setup_entry(
-        hass: HomeAssistant, entry: WeatherDotComConfigEntry, async_add_entities: AddEntitiesCallback
+        hass: HomeAssistant, entry: WeatherDotComConfigEntry, async_add_entities: AddConfigEntryEntitiesCallback
 ) -> None:
     """Add Weather.com entities from a config_entry."""
     coordinator = entry.runtime_data

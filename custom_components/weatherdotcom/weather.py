@@ -29,7 +29,7 @@ from homeassistant.components.weather import (
 )
 from homeassistant.core import HomeAssistant
 from homeassistant.helpers.entity import generate_entity_id
-from homeassistant.helpers.entity_platform import AddEntitiesCallback
+from homeassistant.helpers.entity_platform import AddConfigEntryEntitiesCallback
 
 from . import WeatherDotComConfigEntry, WeatherUpdateCoordinator
 from .const import (
@@ -65,7 +65,7 @@ MAX_HIGH_TEMP_AGE_SECONDS = 14 * 60 * 60
 
 
 async def async_setup_entry(
-        hass: HomeAssistant, entry: WeatherDotComConfigEntry, async_add_entities: AddEntitiesCallback
+        hass: HomeAssistant, entry: WeatherDotComConfigEntry, async_add_entities: AddConfigEntryEntitiesCallback
 ) -> None:
     """Add weather entity."""
     coordinator = entry.runtime_data
