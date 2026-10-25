@@ -15,6 +15,7 @@ Unreleased
 * Fixed a bug where location names that differed only by case (capital vs. lowercase) would collide and fail to create entities
 * Fixed a bug where location names containing special characters (such as `/`) would fail to save cached temperature data to storage
 * If a tracked location entity temporarily loses its coordinates, the integration will now fall back to the last known coordinates
+* Excluded the Forecast Details sensor's extra attributes from the Home Assistant recorder to prevent database bloat
 
 v1.4.1
 * Once again, thank you to @francis110 for all the work you did on this release!
