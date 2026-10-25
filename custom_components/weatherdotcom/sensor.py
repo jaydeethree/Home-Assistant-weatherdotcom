@@ -21,6 +21,9 @@ from .coordinator import WeatherUpdateCoordinator
 from .const import (
     ATTRIBUTION,
     CONF_EXTRA_ATTRIBUTES,
+    EXTRA_ATTRIBUTE_KEYS_DAILY,
+    EXTRA_ATTRIBUTE_KEYS_DAY,
+    EXTRA_ATTRIBUTE_KEYS_DAYPART,
     FIELD_DAYPART,
     FIELD_VALIDTIMEUTC,
     FIELD_WINDGUST,
@@ -55,6 +58,9 @@ class WeatherSensor(CoordinatorEntity[WeatherUpdateCoordinator], SensorEntity):
     """Implementing the Weather.com sensor."""
     _attr_has_entity_name = True
     _attr_attribution = ATTRIBUTION
+    _unrecorded_attributes = frozenset(
+        EXTRA_ATTRIBUTE_KEYS_DAILY + EXTRA_ATTRIBUTE_KEYS_DAY + EXTRA_ATTRIBUTE_KEYS_DAYPART
+    )
     entity_description: WeatherSensorEntityDescription
 
     def __init__(
