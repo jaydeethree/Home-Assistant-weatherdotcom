@@ -31,7 +31,8 @@ from homeassistant.core import HomeAssistant
 from homeassistant.helpers.entity import generate_entity_id
 from homeassistant.helpers.entity_platform import AddConfigEntryEntitiesCallback
 
-from . import WeatherDotComConfigEntry, WeatherUpdateCoordinator
+from . import WeatherDotComConfigEntry
+from .coordinator import WeatherUpdateCoordinator
 from .const import (
     ATTRIBUTION,
     FIELD_CLOUD_COVER,
