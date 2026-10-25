@@ -225,7 +225,7 @@ class WeatherUpdateCoordinator(DataUpdateCoordinator[dict[str, Any]]):
                         raise ValueError('No weather data found')
                     self._check_errors(result)
                     return result, False
-            except (ValueError, asyncio.TimeoutError, aiohttp.ClientError) as err:
+            except (ValueError, TimeoutError, aiohttp.ClientError) as err:
                 err_msg = str(err).replace(self._api_key, "REDACTED")
                 if attempt == 1:
                     _LOGGER.error('Error getting %s weather. Exception: %s. Details: %s', description, type(err), err_msg)
