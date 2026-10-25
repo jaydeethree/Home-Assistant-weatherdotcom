@@ -231,7 +231,10 @@ class WeatherUpdateCoordinator(DataUpdateCoordinator[dict[str, Any]]):
         if 'errors' not in response:
             return
         if errors := response['errors']:
-            messages = '; '.join([e['message'] for e in errors])
+            messages = '; '.join([
+                e.get('message', str(e)) if isinstance(e, dict) else str(e)
+                for e in errors
+            ])
             raise ValueError(f'Weather.com API error: {messages}')
 
     def get_current(self, field):
