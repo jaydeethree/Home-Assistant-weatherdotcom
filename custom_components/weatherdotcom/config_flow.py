@@ -34,9 +34,9 @@ from .const import (
     EXTRA_ATTRIBUTE_KEYS_DAY,
     EXTRA_ATTRIBUTE_KEYS_DAYPART,
     FIELD_VALIDTIMEUTC,
-    CONF_EXTRA_ATTRIBUTES,
-    get_sensor_unique_id,
+    CONF_EXTRA_ATTRIBUTES
 )
+from .helpers import get_sensor_unique_id
 
 _LOGGER = logging.getLogger(__name__)
 

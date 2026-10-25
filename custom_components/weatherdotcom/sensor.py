@@ -27,8 +27,8 @@ from .const import (
     FIELD_WINDGUST,
     FIELD_WINDSPEED,
     RESULTS_CURRENT,
-    get_sensor_unique_id,
 )
+from .helpers import get_sensor_unique_id
 from .weather_current_conditions_sensors import (
     WeatherSensorEntityDescription,
     current_condition_sensor_descriptions,

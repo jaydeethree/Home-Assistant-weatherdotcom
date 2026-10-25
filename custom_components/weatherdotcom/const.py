@@ -181,8 +181,3 @@ HEADERS: Final[dict[str, str]] = {
         "Chrome/155.0.0.0 Safari/537.36"
     ),
 }
-
-
-def get_sensor_unique_id(location_name: str, key: str) -> str:
-    """Build the unique_id for a Weather.com sensor."""
-    return f"{location_name},{key}".lower()
