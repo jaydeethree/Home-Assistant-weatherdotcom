@@ -78,7 +78,7 @@ class WeatherFlowHandler(config_entries.ConfigFlow, domain=DOMAIN):
                 async with session.get(url, params=params, headers=HEADERS) as response:
                     status = response.status
                     reason = response.reason
-        except (asyncio.TimeoutError, aiohttp.ClientError) as err:
+        except (TimeoutError, aiohttp.ClientError) as err:
             err_msg = str(err).replace(api_key, "REDACTED") if api_key else str(err)
             _LOGGER.error("Error connecting to Weather.com during config: %s", err_msg)
             return "unknown_error"
