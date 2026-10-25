@@ -112,7 +112,7 @@ class WeatherUpdateCoordinator(DataUpdateCoordinator[dict[str, Any]]):
             hass,
             _LOGGER,
             config_entry=entry,
-            name=DOMAIN,
+            name=f"{DOMAIN} ({self._location_name})",
             update_interval=config.update_interval,
         )
 
