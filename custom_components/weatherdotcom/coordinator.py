@@ -148,7 +148,10 @@ class WeatherUpdateCoordinator(DataUpdateCoordinator[dict[str, Any]]):
             raw_lat = state.attributes.get(CONF_LATITUDE)
             raw_long = state.attributes.get(CONF_LONGITUDE)
             if raw_lat is not None and raw_long is not None:
-                return round(float(raw_lat), 2), round(float(raw_long), 2)
+                try:
+                    return round(float(raw_lat), 2), round(float(raw_long), 2)
+                except (TypeError, ValueError):
+                    pass
 
         # Fallback to legacy config or last known coordinates if entity is missing
         if self._latitude is not None and self._longitude is not None:
