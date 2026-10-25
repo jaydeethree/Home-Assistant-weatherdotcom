@@ -86,8 +86,8 @@ class WeatherUpdateCoordinator(DataUpdateCoordinator[dict[str, Any]]):
             RESULTS_FORECAST_HOURLY: 0,
         }
         self._session = async_get_clientsession(hass)
-        self._tranfile = config.tranfile
-        self._store = WeatherDotComStorage(hass, self._location_name)
+        self.tranfile = config.tranfile
+        self.store = WeatherDotComStorage(hass, self._location_name)
 
         self._location_entity_id = config.location_entity_id
         self._latitude = config.latitude
@@ -175,7 +175,7 @@ class WeatherUpdateCoordinator(DataUpdateCoordinator[dict[str, Any]]):
             # update that data in storage.
             temp_max_list = result_forecast_daily.get(FIELD_TEMPERATUREMAX)
             if temp_max_list and temp_max_list[0] is not None:
-                await self._store.async_save(temp_max_list[0], round(time.time()))
+                await self.store.async_save(temp_max_list[0], round(time.time()))
 
         prev_data = self.data or {}
         results: dict[str, Any] = {}
@@ -269,7 +269,7 @@ class WeatherUpdateCoordinator(DataUpdateCoordinator[dict[str, Any]]):
             return None
 
     @classmethod
-    def _iconcode_to_condition(cls, icon_code: int | None) -> str | None:
+    def iconcode_to_condition(cls, icon_code: int | None) -> str | None:
         if icon_code is None or icon_code == 44:
             return None
         if (condition := ICON_CODE_MAP.get(icon_code)) is not None:
@@ -278,7 +278,7 @@ class WeatherUpdateCoordinator(DataUpdateCoordinator[dict[str, Any]]):
         return None
 
     @classmethod
-    def _format_timestamp(cls, timestamp_secs):
+    def format_timestamp(cls, timestamp_secs):
         if timestamp_secs is None:
             return None
         return datetime.fromtimestamp(timestamp_secs, tz=UTC).strftime('%Y-%m-%dT%H:%M:%SZ')
