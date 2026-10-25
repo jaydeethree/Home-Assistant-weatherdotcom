@@ -98,6 +98,16 @@ class WeatherFlowHandler(config_entries.ConfigFlow, domain=DOMAIN):
         """Handle the first step initiated by the user."""
         errors = {}
         if user_input is not None:
+            location_name = user_input[CONF_NAME]
+            unique_id = f"{DOMAIN}-{location_name.lower()}"
+            for entry in self._async_current_entries():
+                if (
+                    entry.unique_id and entry.unique_id.lower() == unique_id
+                ) or entry.data.get(CONF_NAME, "").lower() == location_name.lower():
+                    return self.async_abort(reason="already_configured")
+            await self.async_set_unique_id(unique_id)
+            self._abort_if_unique_id_configured()
+
             self._data = user_input
             if error := await self._async_validate_api_key(user_input.get(CONF_API_KEY)):
                 errors["base"] = error
@@ -262,15 +272,6 @@ class WeatherFlowHandler(config_entries.ConfigFlow, domain=DOMAIN):
                 self._get_reconfigure_entry(),
                 data=entry_data,
             )
-
-        unique_id = f"{DOMAIN}-{location_name.lower()}"
-        for entry in self._async_current_entries():
-            if (
-                entry.unique_id and entry.unique_id.lower() == unique_id
-            ) or entry.data.get(CONF_NAME, "").lower() == location_name.lower():
-                return self.async_abort(reason="already_configured")
-        await self.async_set_unique_id(unique_id)
-        self._abort_if_unique_id_configured()
 
         return self.async_create_entry(
             title=location_name,
