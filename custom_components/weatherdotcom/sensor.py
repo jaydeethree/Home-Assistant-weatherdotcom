@@ -27,16 +27,12 @@ from .const import (
     FIELD_WINDGUST,
     FIELD_WINDSPEED,
     RESULTS_CURRENT,
+    get_sensor_unique_id,
 )
 from .weather_current_conditions_sensors import (
     WeatherSensorEntityDescription,
     current_condition_sensor_descriptions,
 )
-
-
-def get_sensor_unique_id(location_name: str, key: str) -> str:
-    """Build the unique_id for a Weather.com sensor."""
-    return f"{location_name},{key}".lower()
 
 
 async def async_setup_entry(
