@@ -66,6 +66,7 @@ from .const import (
 _LOGGER = logging.getLogger(__name__)
 
 ENTITY_ID_FORMAT = WEATHER_DOMAIN + ".{}"
+MAX_HIGH_TEMP_AGE_SECONDS = 14 * 60 * 60
 
 
 async def async_setup_entry(
@@ -183,8 +184,6 @@ class WeatherDotComForecast(SingleCoordinatorWeatherEntity):
             # temperature instead of None.
             temperature_max = self.coordinator.get_forecast_daily(FIELD_TEMPERATUREMAX, period)
             if period in [0, 1] and temperature_max is None:
-                # This is 14 hours in seconds.
-                max_time_difference = 14 * 60 * 60
                 # If the API returns None, attempt to use the value that's in
                 # storage.
                 if (
@@ -192,7 +191,7 @@ class WeatherDotComForecast(SingleCoordinatorWeatherEntity):
                     and
                     HIGH_TEMP_TODAY_STORAGE in stored_data
                     and
-                    round(time.time()) - stored_data[HIGH_TEMP_TODAY_TIMESTAMP_STORAGE] < max_time_difference
+                    round(time.time()) - stored_data[HIGH_TEMP_TODAY_TIMESTAMP_STORAGE] < MAX_HIGH_TEMP_AGE_SECONDS
                 ):
                     temperature_max = stored_data[HIGH_TEMP_TODAY_STORAGE]
                 else:

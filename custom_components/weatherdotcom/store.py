@@ -17,6 +17,7 @@ from .const import (
 
 STORAGE_KEY = '{domain}.{location_name}'
 STORAGE_VERSION = 1
+MIN_SAVE_INTERVAL_SECONDS = 2 * 60 * 60
 
 
 class WeatherDotComStorage:
@@ -39,7 +40,7 @@ class WeatherDotComStorage:
         current = await self.async_load()
         if (
             current.get(HIGH_TEMP_TODAY_STORAGE) == high_temp_today
-            and high_temp_today_timestamp - current.get(HIGH_TEMP_TODAY_TIMESTAMP_STORAGE, 0) < 7200
+            and high_temp_today_timestamp - current.get(HIGH_TEMP_TODAY_TIMESTAMP_STORAGE, 0) < MIN_SAVE_INTERVAL_SECONDS
         ):
             return
         data_to_save = {
