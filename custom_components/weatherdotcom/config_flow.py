@@ -253,8 +253,6 @@ class WeatherFlowHandler(config_entries.ConfigFlow, domain=DOMAIN):
         else:
             entry_data[CONF_ENTITY_ID] = self._data[CONF_ENTITY_ID]
 
-        unique_id = str(f"{DOMAIN}-{location_name}")
-
         if self.source == config_entries.SOURCE_RECONFIGURE:
             # Replace (rather than merge) the entry data so that keys from the
             # previous location source (e.g. a stale entity_id after switching
@@ -265,6 +263,12 @@ class WeatherFlowHandler(config_entries.ConfigFlow, domain=DOMAIN):
                 data=entry_data,
             )
 
+        unique_id = f"{DOMAIN}-{location_name.lower()}"
+        for entry in self._async_current_entries():
+            if (
+                entry.unique_id and entry.unique_id.lower() == unique_id
+            ) or entry.data.get(CONF_NAME, "").lower() == location_name.lower():
+                return self.async_abort(reason="already_configured")
         await self.async_set_unique_id(unique_id)
         self._abort_if_unique_id_configured()
 
