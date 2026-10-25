@@ -33,6 +33,7 @@
       }
     },
     "error": {
+      "already_configured": "يوجد بالفعل تكامل Weather.com بهذا الاسم. ",
       "invalid_api_key": "مفتاح API غير صالح.",
       "invalid_coordinates": "يجب أن يكون خط العرض بين -90 و90، وخط الطول بين -180 و180.",
       "invalid_location_entity": "لا يحتوي الكيان المحدد على سمات خط الطول وخط العرض الصالحة.",

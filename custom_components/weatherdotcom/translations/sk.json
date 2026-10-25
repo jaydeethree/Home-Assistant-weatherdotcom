@@ -33,6 +33,7 @@
       }
     },
     "error": {
+      "already_configured": "Integrácia Weather.com s týmto názvom už existuje. ",
       "invalid_api_key": "Kľúč API je neplatný.",
       "invalid_coordinates": "Zemepisná šírka musí byť medzi -90 a 90 a zemepisná dĺžka medzi -180 a 180.",
       "invalid_location_entity": "Vybratá entita nemá platné atribúty zemepisnej šírky a dĺžky.",
