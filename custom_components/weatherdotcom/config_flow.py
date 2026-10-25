@@ -36,7 +36,7 @@ from .const import (
     FIELD_VALIDTIMEUTC,
     CONF_EXTRA_ATTRIBUTES
 )
-from .sensor import get_sensor_unique_id
+from .helpers import get_sensor_unique_id
 
 _LOGGER = logging.getLogger(__name__)
 
