@@ -22,6 +22,7 @@ from homeassistant.components.weather import (
     ATTR_FORECAST_TIME,
     ATTR_FORECAST_UV_INDEX,
     ATTR_FORECAST_WIND_BEARING,
+    ENTITY_ID_FORMAT,
     SingleCoordinatorWeatherEntity,
     WeatherEntityFeature,
     Forecast,
@@ -61,7 +62,6 @@ from .const import (
 
 _LOGGER = logging.getLogger(__name__)
 
-ENTITY_ID_FORMAT = WEATHER_DOMAIN + ".{}"
 MAX_HIGH_TEMP_AGE_SECONDS = 14 * 60 * 60
 
 
@@ -76,6 +76,8 @@ async def async_setup_entry(
 
 
 class WeatherDotComForecast(SingleCoordinatorWeatherEntity):
+    """Implementation of a Weather.com weather entity."""
+
     _attr_attribution = ATTRIBUTION
     # Use the device (location) name as the entity's friendly name.
     _attr_has_entity_name = True
@@ -87,7 +89,7 @@ class WeatherDotComForecast(SingleCoordinatorWeatherEntity):
     def __init__(
             self,
             coordinator: WeatherUpdateCoordinator
-    ):
+    ) -> None:
         """Initialize the sensor."""
         super().__init__(coordinator)
         self.entity_id = generate_entity_id(
