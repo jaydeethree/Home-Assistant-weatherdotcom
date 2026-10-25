@@ -277,7 +277,7 @@ class WeatherUpdateCoordinator(DataUpdateCoordinator[dict[str, Any]]):
                 FIELD_VALIDTIMEUTC,
             ]:
                 # Those fields exist per-day, rather than per dayPart, so the period is halved
-                return self.data[RESULTS_FORECAST_DAILY][field][int(period / 2)]
+                return self.data[RESULTS_FORECAST_DAILY][field][period // 2]
             return self.data[RESULTS_FORECAST_DAILY][FIELD_DAYPART][0][field][period]
         except (IndexError, KeyError, TypeError):
             return None
