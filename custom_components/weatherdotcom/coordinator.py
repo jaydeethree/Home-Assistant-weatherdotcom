@@ -288,8 +288,8 @@ class WeatherUpdateCoordinator(DataUpdateCoordinator[dict[str, Any]]):
         except (IndexError, KeyError, TypeError):
             return None
 
-    @classmethod
-    def iconcode_to_condition(cls, icon_code: int | None) -> str | None:
+    @staticmethod
+    def iconcode_to_condition(icon_code: int | None) -> str | None:
         if icon_code is None or icon_code == 44:
             return None
         if (condition := ICON_CODE_MAP.get(icon_code)) is not None:
@@ -297,8 +297,8 @@ class WeatherUpdateCoordinator(DataUpdateCoordinator[dict[str, Any]]):
         _LOGGER.warning('Unmapped icon code from Weather.com API: %s', icon_code)
         return None
 
-    @classmethod
-    def format_timestamp(cls, timestamp_secs):
+    @staticmethod
+    def format_timestamp(timestamp_secs):
         if timestamp_secs is None:
             return None
         return datetime.fromtimestamp(timestamp_secs, tz=UTC).strftime('%Y-%m-%dT%H:%M:%SZ')
