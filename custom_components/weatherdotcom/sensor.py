@@ -108,10 +108,7 @@ class WeatherSensor(CoordinatorEntity[WeatherUpdateCoordinator], SensorEntity):
         if self.entity_description.key in (CONF_LATITUDE, CONF_LONGITUDE):
             return True
         if self.entity_description.key == FIELD_VALIDTIMEUTC:
-            return (
-                self.coordinator.data.get(RESULTS_CURRENT) is not None
-                and self.coordinator.data.get(RESULTS_FORECAST_DAILY) is not None
-            )
+            return self.coordinator.data.get(RESULTS_FORECAST_DAILY) is not None
         return self.coordinator.data.get(RESULTS_CURRENT) is not None
 
     @property
@@ -143,8 +140,15 @@ def _get_sensor_data(
         kind: str,
 ) -> Any:
     """Get sensor data."""
+    if not sensors:
+        return None
+    if kind == FIELD_VALIDTIMEUTC:
+        daily = sensors.get(RESULTS_FORECAST_DAILY)
+        if not daily or not (valid_times := daily.get(FIELD_VALIDTIMEUTC)):
+            return None
+        return valid_times[0]
     # windGust is often null. When it is, set it to windSpeed instead.
-    if not sensors or sensors.get(RESULTS_CURRENT) is None:
+    if sensors.get(RESULTS_CURRENT) is None:
         return None
     if kind == FIELD_WINDGUST and sensors[RESULTS_CURRENT].get(kind) is None:
         return sensors[RESULTS_CURRENT].get(FIELD_WINDSPEED)
