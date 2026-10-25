@@ -14,7 +14,6 @@ from homeassistant.helpers.entity import generate_entity_id
 from homeassistant.helpers.entity_platform import AddEntitiesCallback
 from homeassistant.helpers.typing import StateType
 from homeassistant.helpers.update_coordinator import CoordinatorEntity
-from homeassistant.util.unit_system import METRIC_SYSTEM
 
 from . import WeatherDotComConfigEntry
 from .coordinator import WeatherUpdateCoordinator
@@ -79,7 +78,8 @@ class WeatherSensor(CoordinatorEntity[WeatherUpdateCoordinator], SensorEntity):
         )
         self._attr_device_info = coordinator.device_info
         self._attr_native_unit_of_measurement = self.entity_description.unit_fn(
-            self.coordinator.hass.config.units is METRIC_SYSTEM)
+            self.coordinator.units
+        )
         if description.key == FIELD_VALIDTIMEUTC:
             self._attr_entity_registry_enabled_default = bool(extra_attributes)
 
