@@ -54,6 +54,7 @@ class WeatherUnits:
 
     temperature: str
     precipitation: str
+    snow: str
     distance: str
     speed: str
     pressure: str
@@ -63,6 +64,7 @@ class WeatherUnits:
 METRIC_UNITS = WeatherUnits(
     temperature=UnitOfTemperature.CELSIUS,
     precipitation=UnitOfLength.MILLIMETERS,
+    snow=UnitOfLength.CENTIMETERS,
     distance=UnitOfLength.METERS,
     speed=UnitOfSpeed.KILOMETERS_PER_HOUR,
     pressure=UnitOfPressure.MBAR,
@@ -71,6 +73,7 @@ METRIC_UNITS = WeatherUnits(
 IMPERIAL_UNITS = WeatherUnits(
     temperature=UnitOfTemperature.FAHRENHEIT,
     precipitation=UnitOfLength.INCHES,
+    snow=UnitOfLength.INCHES,
     distance=UnitOfLength.FEET,
     speed=UnitOfSpeed.MILES_PER_HOUR,
     pressure=UnitOfPressure.INHG,

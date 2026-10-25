@@ -347,7 +347,7 @@ current_condition_sensor_descriptions: tuple[WeatherSensorEntityDescription, ...
         icon=ICON_SNOWFLAKE,
         state_class=SensorStateClass.MEASUREMENT,
         device_class=SensorDeviceClass.PRECIPITATION,
-        unit_fn=lambda units: units.precipitation,
+        unit_fn=lambda units: units.snow,
         value_fn=lambda data: data or 0,
     ),
     WeatherSensorEntityDescription(
@@ -356,7 +356,7 @@ current_condition_sensor_descriptions: tuple[WeatherSensorEntityDescription, ...
         icon=ICON_SNOWFLAKE,
         state_class=SensorStateClass.MEASUREMENT,
         device_class=SensorDeviceClass.PRECIPITATION,
-        unit_fn=lambda units: units.precipitation,
+        unit_fn=lambda units: units.snow,
         value_fn=lambda data: data or 0,
     ),
     WeatherSensorEntityDescription(
@@ -365,7 +365,7 @@ current_condition_sensor_descriptions: tuple[WeatherSensorEntityDescription, ...
         icon=ICON_SNOWFLAKE,
         state_class=SensorStateClass.MEASUREMENT,
         device_class=SensorDeviceClass.PRECIPITATION,
-        unit_fn=lambda units: units.precipitation,
+        unit_fn=lambda units: units.snow,
         value_fn=lambda data: data or 0,
     ),
     WeatherSensorEntityDescription(
