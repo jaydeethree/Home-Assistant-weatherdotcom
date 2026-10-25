@@ -250,7 +250,12 @@ class WeatherUpdateCoordinator(DataUpdateCoordinator[dict[str, Any]]):
                     return result, False
             except (ValueError, TimeoutError, aiohttp.ClientError) as err:
                 err_msg = str(err).replace(self._api_key, "REDACTED")
-                if attempt == 1:
+                is_client_error = (
+                    isinstance(err, aiohttp.ClientResponseError)
+                    and 400 <= err.status < 500
+                    and err.status != 429
+                )
+                if attempt == 1 or is_client_error:
                     _LOGGER.error('Error getting %s weather. Exception: %s. Details: %s', description, type(err), err_msg)
                     return None, True
                 _LOGGER.warning('Error getting %s weather, will retry. Exception: %s. Details: %s', description, type(err), err_msg)
