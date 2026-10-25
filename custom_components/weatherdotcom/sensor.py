@@ -26,6 +26,7 @@ from .const import (
     FIELD_WINDGUST,
     FIELD_WINDSPEED,
     RESULTS_CURRENT,
+    RESULTS_FORECAST_DAILY,
 )
 from .helpers import get_sensor_unique_id
 from .weather_current_conditions_sensors import (
@@ -100,6 +101,11 @@ class WeatherSensor(CoordinatorEntity[WeatherUpdateCoordinator], SensorEntity):
             return False
         if self.entity_description.key in (CONF_LATITUDE, CONF_LONGITUDE):
             return True
+        if self.entity_description.key == FIELD_VALIDTIMEUTC:
+            return (
+                self.coordinator.data.get(RESULTS_CURRENT) is not None
+                and self.coordinator.data.get(RESULTS_FORECAST_DAILY) is not None
+            )
         return self.coordinator.data.get(RESULTS_CURRENT) is not None
 
     @property
