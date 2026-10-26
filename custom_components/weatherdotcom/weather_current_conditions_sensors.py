@@ -1,7 +1,10 @@
+"""Sensor entity descriptions for Weather.com."""
+
 from __future__ import annotations
 
+from collections.abc import Callable
 from dataclasses import dataclass
-from typing import Callable, Any, Final
+from typing import Any, Final
 from datetime import UTC, datetime
 
 from .const import (
