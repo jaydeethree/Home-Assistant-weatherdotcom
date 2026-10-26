@@ -7,7 +7,7 @@ from __future__ import annotations
 
 from typing import Any
 
-from homeassistant.components.sensor import SensorEntity
+from homeassistant.components.sensor import ENTITY_ID_FORMAT, SensorEntity
 from homeassistant.const import CONF_LATITUDE, CONF_LONGITUDE
 from homeassistant.core import HomeAssistant
 from homeassistant.helpers.entity import generate_entity_id
@@ -68,20 +68,16 @@ class WeatherSensor(CoordinatorEntity[WeatherUpdateCoordinator], SensorEntity):
             coordinator: WeatherUpdateCoordinator,
             description: WeatherSensorEntityDescription,
             extra_attributes: list[str] | None = None,
-    ):
+    ) -> None:
         super().__init__(coordinator)
         self.entity_description = description
         self._extra_attributes = extra_attributes
-
-        # This will cause problems if we ever add another type of entity, but
-        # for now all entities are of type 'sensor' so this is okay.
-        entity_id_format = "sensor.{}"
 
         self._attr_unique_id = get_sensor_unique_id(
             self.coordinator.location_name, description.key
         )
         self.entity_id = generate_entity_id(
-            entity_id_format, f"{self.coordinator.location_name}_{description.name}", hass=coordinator.hass
+            ENTITY_ID_FORMAT, f"{self.coordinator.location_name}_{description.name}", hass=coordinator.hass
         )
         self._attr_device_info = coordinator.device_info
         self._attr_native_unit_of_measurement = self.entity_description.unit_fn(
