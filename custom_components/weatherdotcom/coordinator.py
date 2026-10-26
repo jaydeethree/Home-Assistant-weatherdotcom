@@ -46,6 +46,7 @@ _RESOURCEFORECASTDAILY = 'https://api.weather.com/v3/wx/forecast/daily/15day'
 _RESOURCEFORECASTHOURLY = 'https://api.weather.com/v3/wx/forecast/hourly/15day'
 
 MIN_TIME_BETWEEN_UPDATES = timedelta(minutes=20)
+MAX_CONSECUTIVE_FAILURES = 3
 
 
 @dataclass(frozen=True, kw_only=True)
@@ -218,7 +219,9 @@ class WeatherUpdateCoordinator(DataUpdateCoordinator[dict[str, Any]]):
             if has_error:
                 self._consecutive_failures[key] += 1
                 results[key] = (
-                    prev_data.get(key) if self._consecutive_failures[key] < 3 else None
+                    prev_data.get(key)
+                    if self._consecutive_failures[key] < MAX_CONSECUTIVE_FAILURES
+                    else None
                 )
             else:
                 self._consecutive_failures[key] = 0
@@ -226,11 +229,12 @@ class WeatherUpdateCoordinator(DataUpdateCoordinator[dict[str, Any]]):
 
         if current_error and daily_error and hourly_error:
             min_failures = min(self._consecutive_failures.values())
-            if min_failures >= 3 or self.data is None:
+            if min_failures >= MAX_CONSECUTIVE_FAILURES or self.data is None:
                 raise UpdateFailed('Failed to get weather data')
             _LOGGER.warning(
-                'Failed to get weather data (failure %s of 3); retaining previous data',
+                'Failed to get weather data (failure %s of %s); retaining previous data',
                 min_failures,
+                MAX_CONSECUTIVE_FAILURES,
             )
 
         return results
@@ -252,7 +256,7 @@ class WeatherUpdateCoordinator(DataUpdateCoordinator[dict[str, Any]]):
                     async with self._session.get(resource, params=params, headers=HEADERS) as response:
                         response.raise_for_status()
                         result = await response.json(content_type=None)
-                    if result is None:
+                    if not isinstance(result, dict):
                         raise ValueError('No weather data found')
                     self._check_errors(result)
                     return result, False
