@@ -2,7 +2,6 @@
 from __future__ import annotations
 import asyncio
 import logging
-import random
 from http import HTTPStatus
 from typing import Any
 import aiohttp
@@ -66,11 +65,8 @@ class WeatherFlowHandler(config_entries.ConfigFlow, domain=DOMAIN):
             async with asyncio.timeout(10):
                 # Use hardcoded values for the initial test API call. User-supplied values will be used for the created entities.
                 url = "https://api.weather.com/v3/wx/observations/current"
-                random_latitude = round(random.uniform(36.0, 41.0), 6)
-                random_longitude = round(random.uniform(-120.0, -78.0), 6)
-                random_latlong = f"{random_latitude},{random_longitude}"
                 params = {
-                    "geocode": random_latlong,
+                    "geocode": "37.3355,-121.8930",
                     "format": "json",
                     "units": "e",
                     "apiKey": api_key or "",
