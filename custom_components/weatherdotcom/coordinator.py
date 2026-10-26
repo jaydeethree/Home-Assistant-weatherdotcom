@@ -201,7 +201,12 @@ class WeatherUpdateCoordinator(DataUpdateCoordinator[dict[str, Any]]):
             # update that data in storage.
             temp_max_list = result_forecast_daily.get(FIELD_TEMPERATUREMAX)
             if temp_max_list and temp_max_list[0] is not None:
-                await self.store.async_save(temp_max_list[0], round(time.time()))
+                try:
+                    await self.store.async_save(temp_max_list[0], round(time.time()))
+                except OSError as err:
+                    _LOGGER.warning(
+                        "Failed to save high temperature to storage: %s", err
+                    )
 
         prev_data = self.data or {}
         results: dict[str, Any] = {}
