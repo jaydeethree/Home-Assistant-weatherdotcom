@@ -12,7 +12,7 @@ Unreleased
 * Fixed a bug where reconfiguring a location from an entity to latitude/longitude would continue to use the entity's location
 * Fixed a bug where reconfiguring an integration entry that had been renamed would create duplicate entities and reset the entry's name
 * Updated the wind direction sensor to use Home Assistant's `wind_direction` device class and `measurement_angle` state class
-* Fixed a bug where location names that differed only by case (capital vs. lowercase) would collide and fail to create entities
+* Fixed a bug where location names that differed only by case (capital vs. lowercase) or punctuation would collide and cause errors
 * Fixed a bug where location names containing special characters (such as `/`) would fail to save cached temperature data to storage
 * If a tracked location entity temporarily loses its coordinates, the integration will now fall back to the last known coordinates
 * Excluded the Forecast Details sensor's extra attributes from the Home Assistant recorder to prevent database bloat
