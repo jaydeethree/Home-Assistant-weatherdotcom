@@ -2,45 +2,45 @@
   "config": {
     "step": {
       "user": {
-        "description": "Configure a integração do Weather.com. ",
+        "description": "Configure a integração do Weather.com. Siga as instruções no README do GitHub para obter uma chave de API.",
         "data": {
           "api_key": "Chave de API",
-          "name": "Nome do local",
-          "lang": "Linguagem",
-          "location_source": "Fonte de localização"
+          "name": "Nome da localização",
+          "lang": "Idioma",
+          "location_source": "Fonte da localização"
         }
       },
       "latlong": {
-        "description": "Insira as coordenadas geográficas a serem usadas para a previsão do tempo.",
+        "description": "Insira as coordenadas geográficas a utilizar para a previsão meteorológica.",
         "data": {
           "latitude": "Latitude",
           "longitude": "Longitude"
         }
       },
       "entity": {
-        "description": "Selecione uma entidade ou zona de rastreamento do Home Assistant para obter as coordenadas.",
+        "description": "Selecione uma entidade de rastreamento ou zona do Home Assistant para obter as coordenadas.",
         "data": {
           "entity_id": "Entidade de localização"
         }
       },
       "reconfigure": {
-        "description": "Reconfigure a integração do Weather.com. ",
+        "description": "Reconfigure a integração do Weather.com. Pode alterar a chave de API, o idioma ou a fonte da localização.",
         "data": {
           "api_key": "Chave de API",
-          "lang": "Linguagem",
-          "location_source": "Fonte de localização"
+          "lang": "Idioma",
+          "location_source": "Fonte da localização"
         }
       }
     },
     "error": {
-      "already_configured": "Já existe uma integração Weather.com com este nome. ",
+      "already_configured": "Já existe uma integração do Weather.com com este nome. Escolha um nome diferente.",
       "invalid_api_key": "A chave de API é inválida.",
-      "invalid_coordinates": "A latitude deve estar entre -90 e 90 e a longitude entre -180 e 180.",
-      "invalid_location_entity": "A entidade selecionada não possui atributos válidos de latitude e longitude.",
-      "unknown_error": "Ocorreu um erro inesperado. "
+      "invalid_coordinates": "A latitude deve estar entre -90 e 90, e a longitude entre -180 e 180.",
+      "invalid_location_entity": "A entidade selecionada não possui atributos de latitude e longitude válidos.",
+      "unknown_error": "Ocorreu um erro inesperado. Verifique os registos do Home Assistant para obter mais detalhes."
     },
     "abort": {
-      "already_configured": "Já existe uma integração Weather.com com este nome. ",
+      "already_configured": "Já existe uma integração do Weather.com com este nome. Escolha um nome diferente.",
       "reconfigure_successful": "A integração do Weather.com foi reconfigurada com sucesso."
     }
   },
@@ -48,7 +48,20 @@
     "location_source_options": {
       "options": {
         "latlong": "Latitude/Longitude",
-        "entity": "Entidade (zona, device_tracker ou pessoa)"
+        "entity": "Entidade (zona, localizador de dispositivo ou pessoa)"
+      }
+    }
+  },
+  "options": {
+    "step": {
+      "extra_attributes": {
+        "title": "Atributos meteorológicos adicionais",
+        "description": "Selecione os atributos a adicionar ao sensor de Detalhes da Previsão. Consulte **Configuração Avançada** no README do GitHub através de **Ajuda** (?) acima.",
+        "data": {
+          "daily_attributes": "Atributos diários",
+          "day_attributes": "Atributos do dia",
+          "daypart_attributes": "Atributos por período do dia"
+        }
       }
     }
   }

@@ -2,12 +2,12 @@
   "config": {
     "step": {
       "user": {
-        "description": "Weather.com 統合をセットアップします。 ",
+        "description": "Weather.com 統合を設定します。API キーを取得するには、GitHub の README に記載されている手順に従ってください。",
         "data": {
-          "api_key": "APIキー",
-          "name": "地名",
+          "api_key": "API キー",
+          "name": "場所の名前",
           "lang": "言語",
-          "location_source": "位置情報源"
+          "location_source": "位置情報ソース"
         }
       },
       "latlong": {
@@ -18,37 +18,50 @@
         }
       },
       "entity": {
-        "description": "座標を取得するホーム アシスタントの追跡エンティティまたはゾーンを選択します。",
+        "description": "座標を取得する Home Assistant の追跡エンティティまたはゾーンを選択します。",
         "data": {
-          "entity_id": "位置エンティティ"
+          "entity_id": "場所のエンティティ"
         }
       },
       "reconfigure": {
-        "description": "Weather.com 統合を再構成します。 ",
+        "description": "Weather.com 統合を再設定します。API キー、言語、または位置情報ソースを変更できます。",
         "data": {
-          "api_key": "APIキー",
+          "api_key": "API キー",
           "lang": "言語",
-          "location_source": "位置情報源"
+          "location_source": "位置情報ソース"
         }
       }
     },
     "error": {
-      "already_configured": "この名前の Weather.com 統合はすでに存在します。",
-      "invalid_api_key": "APIキーが無効です。",
-      "invalid_coordinates": "緯度は-90から90の間、経度は-180から180の間である必要があります。",
-      "invalid_location_entity": "選択したエンティティには有効な緯度と経度の属性がありません。",
-      "unknown_error": "予期しないエラーが発生しました。"
+      "already_configured": "この名前の Weather.com 統合は既に存在します。別の名前を選択してください。",
+      "invalid_api_key": "API キーが無効です。",
+      "invalid_coordinates": "緯度は -90 から 90 の間、経度は -180 から 180 の間である必要があります。",
+      "invalid_location_entity": "選択したエンティティに有効な緯度および経度の属性がありません。",
+      "unknown_error": "予期しないエラーが発生しました。詳細については Home Assistant のログを確認してください。"
     },
     "abort": {
-      "already_configured": "この名前の Weather.com 統合はすでに存在します。",
-      "reconfigure_successful": "Weather.com 統合は正常に再構成されました。"
+      "already_configured": "この名前の Weather.com 統合は既に存在します。別の名前を選択してください。",
+      "reconfigure_successful": "Weather.com 統合が正常に再設定されました。"
     }
   },
   "selector": {
     "location_source_options": {
       "options": {
-        "latlong": "緯度・経度",
-        "entity": "エンティティ (ゾーン、device_tracker、または人物)"
+        "latlong": "緯度/経度",
+        "entity": "エンティティ (ゾーン、デバイス トラッカー、または人物)"
+      }
+    }
+  },
+  "options": {
+    "step": {
+      "extra_attributes": {
+        "title": "追加の天気属性",
+        "description": "予報詳細センサーに追加する属性を選択します。上部にある **ヘルプ** (?) から GitHub README の **高度な設定** を参照してください。",
+        "data": {
+          "daily_attributes": "日次属性",
+          "day_attributes": "昼間属性",
+          "daypart_attributes": "時間帯別属性"
+        }
       }
     }
   }

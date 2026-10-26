@@ -2,7 +2,7 @@
   "config": {
     "step": {
       "user": {
-        "description": "Richten Sie die Weather.com-Integration ein. ",
+        "description": "Richten Sie die Weather.com-Integration ein. Befolgen Sie die Anweisungen in der GitHub-README-Datei, um einen API-Schlüssel zu erhalten.",
         "data": {
           "api_key": "API-Schlüssel",
           "name": "Standortname",
@@ -11,20 +11,20 @@
         }
       },
       "latlong": {
-        "description": "Geben Sie die geografischen Koordinaten ein, die für die Wettervorhersage verwendet werden sollen.",
+        "description": "Geben Sie die geografischen Koordinaten für die Wettervorhersage ein.",
         "data": {
-          "latitude": "Breite",
-          "longitude": "Länge"
+          "latitude": "Breitengrad",
+          "longitude": "Längengrad"
         }
       },
       "entity": {
-        "description": "Wählen Sie eine Home Assistant-Tracking-Entität oder -Zone aus, aus der Sie Koordinaten abrufen möchten.",
+        "description": "Wählen Sie eine Home Assistant-Tracking-Entität oder -Zone aus, von der Koordinaten bezogen werden sollen.",
         "data": {
-          "entity_id": "Standortentität"
+          "entity_id": "Standort-Entität"
         }
       },
       "reconfigure": {
-        "description": "Konfigurieren Sie die Weather.com-Integration neu. ",
+        "description": "Konfigurieren Sie die Weather.com-Integration neu. Sie können den API-Schlüssel, die Sprache oder die Standortquelle ändern.",
         "data": {
           "api_key": "API-Schlüssel",
           "lang": "Sprache",
@@ -33,14 +33,14 @@
       }
     },
     "error": {
-      "already_configured": "Eine Weather.com-Integration mit diesem Namen existiert bereits. ",
+      "already_configured": "Eine Weather.com-Integration mit diesem Namen ist bereits vorhanden. Bitte wählen Sie einen anderen Namen.",
       "invalid_api_key": "Der API-Schlüssel ist ungültig.",
       "invalid_coordinates": "Der Breitengrad muss zwischen -90 und 90 und der Längengrad zwischen -180 und 180 liegen.",
-      "invalid_location_entity": "Die ausgewählte Entität verfügt nicht über gültige Breiten- und Längengradattribute.",
-      "unknown_error": "Es ist ein unerwarteter Fehler aufgetreten. "
+      "invalid_location_entity": "Die ausgewählte Entität verfügt über keine gültigen Breiten- und Längengradattribute.",
+      "unknown_error": "Ein unerwarteter Fehler ist aufgetreten. Überprüfen Sie die Home Assistant-Protokolle für weitere Details."
     },
     "abort": {
-      "already_configured": "Eine Weather.com-Integration mit diesem Namen existiert bereits. ",
+      "already_configured": "Eine Weather.com-Integration mit diesem Namen ist bereits vorhanden. Bitte wählen Sie einen anderen Namen.",
       "reconfigure_successful": "Die Weather.com-Integration wurde erfolgreich neu konfiguriert."
     }
   },
@@ -48,7 +48,20 @@
     "location_source_options": {
       "options": {
         "latlong": "Breitengrad/Längengrad",
-        "entity": "Entität (Zone, Device_Tracker oder Person)"
+        "entity": "Entität (Zone, Geräte-Tracker oder Person)"
+      }
+    }
+  },
+  "options": {
+    "step": {
+      "extra_attributes": {
+        "title": "Zusätzliche Wetterattribute",
+        "description": "Wählen Sie Attribute aus, die dem Vorhersagedetails-Sensor hinzugefügt werden sollen. Siehe **Erweiterte Konfiguration** in der GitHub-README über **Hilfe** (?) oben.",
+        "data": {
+          "daily_attributes": "Tägliche Attribute",
+          "day_attributes": "Tagesattribute",
+          "daypart_attributes": "Tageszeit-Attribute"
+        }
       }
     }
   }

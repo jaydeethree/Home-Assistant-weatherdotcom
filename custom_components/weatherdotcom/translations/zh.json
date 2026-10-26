@@ -2,10 +2,10 @@
   "config": {
     "step": {
       "user": {
-        "description": "设置 Weather.com 集成。",
+        "description": "配置 Weather.com 集成。请按照 GitHub README 中的说明获取 API 密钥。",
         "data": {
-          "api_key": "API密钥",
-          "name": "地点名称",
+          "api_key": "API 密钥",
+          "name": "位置名称",
           "lang": "语言",
           "location_source": "位置来源"
         }
@@ -18,29 +18,29 @@
         }
       },
       "entity": {
-        "description": "选择要从中提取坐标的 Home Assistant 跟踪实体或区域。",
+        "description": "选择用于获取坐标的 Home Assistant 跟踪实体或区域。",
         "data": {
           "entity_id": "位置实体"
         }
       },
       "reconfigure": {
-        "description": "重新配置 Weather.com 集成。",
+        "description": "重新配置 Weather.com 集成。您可以更改 API 密钥、语言或位置来源。",
         "data": {
-          "api_key": "API密钥",
+          "api_key": "API 密钥",
           "lang": "语言",
           "location_source": "位置来源"
         }
       }
     },
     "error": {
-      "already_configured": "已存在使用此名称的 Weather.com 集成。",
+      "already_configured": "已存在同名的 Weather.com 集成。请选择其他名称。",
       "invalid_api_key": "API 密钥无效。",
-      "invalid_coordinates": "纬度必须在 -90 到 90 之间，经度必须在 -180 到 180 之间。",
+      "invalid_coordinates": "纬度必须介于 -90 到 90 之间，经度必须介于 -180 到 180 之间。",
       "invalid_location_entity": "所选实体没有有效的纬度和经度属性。",
-      "unknown_error": "发生意外错误。"
+      "unknown_error": "发生未知错误。请查看 Home Assistant 日志获取更多详情。"
     },
     "abort": {
-      "already_configured": "已存在使用此名称的 Weather.com 集成。",
+      "already_configured": "已存在同名的 Weather.com 集成。请选择其他名称。",
       "reconfigure_successful": "Weather.com 集成已成功重新配置。"
     }
   },
@@ -48,7 +48,20 @@
     "location_source_options": {
       "options": {
         "latlong": "纬度/经度",
-        "entity": "实体（区域、device_tracker 或人员）"
+        "entity": "实体（区域、设备追踪器或人员）"
+      }
+    }
+  },
+  "options": {
+    "step": {
+      "extra_attributes": {
+        "title": "额外天气属性",
+        "description": "选择要添加到“预报详情”传感器的属性。请通过上方的 **帮助** (?) 查看 GitHub README 中的 **高级配置**。",
+        "data": {
+          "daily_attributes": "每日属性",
+          "day_attributes": "日间属性",
+          "daypart_attributes": "分时段属性"
+        }
       }
     }
   }
