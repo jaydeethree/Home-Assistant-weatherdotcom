@@ -20,6 +20,7 @@ from homeassistant.const import (
 )
 from homeassistant.core import callback
 from homeassistant.helpers.aiohttp_client import async_get_clientsession
+from homeassistant.util import slugify
 
 from .const import (
     DOMAIN,
@@ -101,9 +102,12 @@ class WeatherFlowHandler(config_entries.ConfigFlow, domain=DOMAIN):
             location_name = user_input[CONF_NAME]
             unique_id = f"{DOMAIN}-{location_name.lower()}"
             for entry in self._async_current_entries():
+                existing_name = entry.data.get(CONF_NAME, "")
                 if (
-                    entry.unique_id and entry.unique_id.lower() == unique_id
-                ) or entry.data.get(CONF_NAME, "").lower() == location_name.lower():
+                    (entry.unique_id and entry.unique_id.lower() == unique_id)
+                    or existing_name.lower() == location_name.lower()
+                    or slugify(existing_name) == slugify(location_name)
+                ):
                     errors[CONF_NAME] = "already_configured"
                     break
 
