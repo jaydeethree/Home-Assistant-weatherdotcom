@@ -104,17 +104,20 @@ class WeatherFlowHandler(config_entries.ConfigFlow, domain=DOMAIN):
                 if (
                     entry.unique_id and entry.unique_id.lower() == unique_id
                 ) or entry.data.get(CONF_NAME, "").lower() == location_name.lower():
-                    return self.async_abort(reason="already_configured")
-            await self.async_set_unique_id(unique_id)
-            self._abort_if_unique_id_configured()
+                    errors[CONF_NAME] = "already_configured"
+                    break
 
-            self._data = user_input
-            if error := await self._async_validate_api_key(user_input.get(CONF_API_KEY)):
-                errors["base"] = error
-            else:
-                if user_input.get(CONF_LOCATION_SOURCE) == LOCATION_TYPE_LATLONG:
-                    return await self.async_step_latlong()
-                return await self.async_step_entity()
+            if not errors:
+                await self.async_set_unique_id(unique_id)
+                self._abort_if_unique_id_configured()
+
+                self._data = user_input
+                if error := await self._async_validate_api_key(user_input.get(CONF_API_KEY)):
+                    errors["base"] = error
+                else:
+                    if user_input.get(CONF_LOCATION_SOURCE) == LOCATION_TYPE_LATLONG:
+                        return await self.async_step_latlong()
+                    return await self.async_step_entity()
 
         return self.async_show_form(
             step_id="user",

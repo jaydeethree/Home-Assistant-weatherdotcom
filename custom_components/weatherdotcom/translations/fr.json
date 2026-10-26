@@ -33,6 +33,7 @@
       }
     },
     "error": {
+      "already_configured": "Une intégration Weather.com portant ce nom existe déjà. ",
       "invalid_api_key": "La clé API n'est pas valide.",
       "invalid_coordinates": "La latitude doit être comprise entre -90 et 90 et la longitude entre -180 et 180.",
       "invalid_location_entity": "L'entité sélectionnée ne possède pas d'attributs de latitude et de longitude valides.",

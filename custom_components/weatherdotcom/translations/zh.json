@@ -33,6 +33,7 @@
       }
     },
     "error": {
+      "already_configured": "已存在使用此名称的 Weather.com 集成。",
       "invalid_api_key": "API 密钥无效。",
       "invalid_coordinates": "纬度必须在 -90 到 90 之间，经度必须在 -180 到 180 之间。",
       "invalid_location_entity": "所选实体没有有效的纬度和经度属性。",
