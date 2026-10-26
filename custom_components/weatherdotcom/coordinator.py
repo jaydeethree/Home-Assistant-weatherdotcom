@@ -140,7 +140,7 @@ class WeatherUpdateCoordinator(DataUpdateCoordinator[dict[str, Any]]):
         )
 
     @property
-    def location_name(self):
+    def location_name(self) -> str:
         """Return the location used for data."""
         return self._location_name
 
@@ -172,7 +172,7 @@ class WeatherUpdateCoordinator(DataUpdateCoordinator[dict[str, Any]]):
     async def _async_update_data(self) -> dict[str, Any]:
         return await self.get_weather()
 
-    async def get_weather(self):
+    async def get_weather(self) -> dict[str, Any]:
         """Get weather data."""
         latitude, longitude = self._get_coordinates()
         if latitude is None or longitude is None:
@@ -270,7 +270,7 @@ class WeatherUpdateCoordinator(DataUpdateCoordinator[dict[str, Any]]):
                 await asyncio.sleep(5)
         return None, True
 
-    def _check_errors(self, response: dict):
+    def _check_errors(self, response: dict[str, Any]) -> None:
         if 'errors' not in response:
             return
         if errors := response['errors']:
@@ -280,12 +280,12 @@ class WeatherUpdateCoordinator(DataUpdateCoordinator[dict[str, Any]]):
             ])
             raise ValueError(f'Weather.com API error: {messages}')
 
-    def get_current(self, field):
+    def get_current(self, field: str) -> Any:
         if not self.data or self.data.get(RESULTS_CURRENT) is None:
             return None
         return self.data[RESULTS_CURRENT].get(field)
 
-    def get_forecast_daily(self, field, period=0):
+    def get_forecast_daily(self, field: str, period: int = 0) -> Any:
         try:
             if field in [
                 FIELD_TEMPERATUREMAX,
@@ -298,7 +298,7 @@ class WeatherUpdateCoordinator(DataUpdateCoordinator[dict[str, Any]]):
         except (IndexError, KeyError, TypeError):
             return None
 
-    def get_forecast_hourly(self, field, hour):
+    def get_forecast_hourly(self, field: str, hour: int) -> Any:
         try:
             return self.data[RESULTS_FORECAST_HOURLY][field][hour]
         except (IndexError, KeyError, TypeError):
@@ -314,7 +314,7 @@ class WeatherUpdateCoordinator(DataUpdateCoordinator[dict[str, Any]]):
         return None
 
     @staticmethod
-    def format_timestamp(timestamp_secs):
+    def format_timestamp(timestamp_secs: int | float | None) -> str | None:
         if timestamp_secs is None:
             return None
         return datetime.fromtimestamp(timestamp_secs, tz=UTC).strftime('%Y-%m-%dT%H:%M:%SZ')
