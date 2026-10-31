@@ -41,6 +41,21 @@ from .helpers import get_sensor_unique_id
 _LOGGER = logging.getLogger(__name__)
 
 
+def _get_default_lang(hass_lang: str | None) -> str:
+    """Return the best matching language code from LANG_CODES."""
+    if not hass_lang:
+        return DEFAULT_LANG
+    hass_lang_lower = hass_lang.lower()
+    for code in LANG_CODES:
+        if code.lower() == hass_lang_lower:
+            return code
+    lang_prefix = f"{hass_lang_lower.split('-')[0]}-"
+    for code in LANG_CODES:
+        if code.lower().startswith(lang_prefix):
+            return code
+    return DEFAULT_LANG
+
+
 class WeatherFlowHandler(config_entries.ConfigFlow, domain=DOMAIN):
     """Handle a Weather.com config flow."""
 
@@ -130,8 +145,13 @@ class WeatherFlowHandler(config_entries.ConfigFlow, domain=DOMAIN):
                     ): str,
                     vol.Required(
                         CONF_LANG,
-                        default=DEFAULT_LANG,
-                    ): vol.In(LANG_CODES),
+                        default=_get_default_lang(self.hass.config.language),
+                    ): selector.SelectSelector(
+                        selector.SelectSelectorConfig(
+                            options=LANG_CODES,
+                            mode=selector.SelectSelectorMode.DROPDOWN,
+                        )
+                    ),
                     vol.Required(CONF_LOCATION_SOURCE, default=LOCATION_TYPE_LATLONG): selector.SelectSelector(
                         selector.SelectSelectorConfig(
                             options=[LOCATION_TYPE_LATLONG, LOCATION_TYPE_ENTITY],
@@ -324,7 +344,12 @@ class WeatherFlowHandler(config_entries.ConfigFlow, domain=DOMAIN):
                             CONF_LANG,
                             DEFAULT_LANG,
                         ),
-                    ): vol.In(LANG_CODES),
+                    ): selector.SelectSelector(
+                        selector.SelectSelectorConfig(
+                            options=LANG_CODES,
+                            mode=selector.SelectSelectorMode.DROPDOWN,
+                        )
+                    ),
                     vol.Required(
                         CONF_LOCATION_SOURCE,
                         default=default_source,
