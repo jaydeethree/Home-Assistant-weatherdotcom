@@ -152,7 +152,7 @@
   },
   "exceptions": {
     "cannot_retrieve_coordinates": {
-      "message": "Не удалось получить координаты местоположения {location_entity_id}"
+      "message": "Не удалось получить координаты местоположения от {location_entity_id}"
     },
     "update_failed": {
       "message": "Не удалось получить данные о погоде"
