@@ -34,6 +34,9 @@ from .const import (
     FIELD_TEMPERATUREMAX,
     FIELD_TEMPERATUREMIN,
     FIELD_VALIDTIMEUTC,
+    RESOURCE_CURRENT,
+    RESOURCE_FORECAST_DAILY,
+    RESOURCE_FORECAST_HOURLY,
     RESULTS_CURRENT,
     RESULTS_FORECAST_DAILY,
     RESULTS_FORECAST_HOURLY
@@ -41,10 +44,6 @@ from .const import (
 from .store import WeatherDotComStorage
 
 _LOGGER = logging.getLogger(__name__)
-
-_RESOURCECURRENT = 'https://api.weather.com/v3/wx/observations/current'
-_RESOURCEFORECASTDAILY = 'https://api.weather.com/v3/wx/forecast/daily/15day'
-_RESOURCEFORECASTHOURLY = 'https://api.weather.com/v3/wx/forecast/hourly/15day'
 
 MIN_TIME_BETWEEN_UPDATES = timedelta(minutes=20)
 MAX_CONSECUTIVE_FAILURES = 3
@@ -184,13 +183,13 @@ class WeatherUpdateCoordinator(DataUpdateCoordinator[dict[str, Any]]):
             (result_forecast_hourly, hourly_error),
         ) = await asyncio.gather(
             self._async_fetch_data(
-                _RESOURCECURRENT, latitude, longitude, "current"
+                RESOURCE_CURRENT, latitude, longitude, "current"
             ),
             self._async_fetch_data(
-                _RESOURCEFORECASTDAILY, latitude, longitude, "daily"
+                RESOURCE_FORECAST_DAILY, latitude, longitude, "daily"
             ),
             self._async_fetch_data(
-                _RESOURCEFORECASTHOURLY, latitude, longitude, "hourly"
+                RESOURCE_FORECAST_HOURLY, latitude, longitude, "hourly"
             ),
         )
         if result_forecast_daily is not None:

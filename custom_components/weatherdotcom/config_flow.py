@@ -34,7 +34,8 @@ from .const import (
     EXTRA_ATTRIBUTE_KEYS_DAY,
     EXTRA_ATTRIBUTE_KEYS_DAYPART,
     FIELD_VALIDTIMEUTC,
-    CONF_EXTRA_ATTRIBUTES
+    CONF_EXTRA_ATTRIBUTES,
+    RESOURCE_CURRENT,
 )
 from .helpers import get_sensor_unique_id
 
@@ -79,7 +80,6 @@ class WeatherFlowHandler(config_entries.ConfigFlow, domain=DOMAIN):
         try:
             async with asyncio.timeout(10):
                 # Use hardcoded values for the initial test API call. User-supplied values will be used for the created entities.
-                url = "https://api.weather.com/v3/wx/observations/current"
                 params = {
                     "geocode": "37.3355,-121.8930",
                     "format": "json",
@@ -87,7 +87,7 @@ class WeatherFlowHandler(config_entries.ConfigFlow, domain=DOMAIN):
                     "apiKey": api_key or "",
                     "language": "en-US",
                 }
-                async with session.get(url, params=params, headers=HEADERS) as response:
+                async with session.get(RESOURCE_CURRENT, params=params, headers=HEADERS) as response:
                     status = response.status
                     reason = response.reason
         except (TimeoutError, aiohttp.ClientError) as err:
