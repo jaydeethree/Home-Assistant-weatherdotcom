@@ -249,6 +249,9 @@ class WeatherDotComForecast(SingleCoordinatorWeatherEntity):
         for period in range(start_period, len(daily_times) * 2):
             is_daytime = period % 2 == 0
             timestamp = self.coordinator.get_forecast_daily(FIELD_VALIDTIMEUTC, period)
+            # FIELD_VALIDTIMEUTC is only once-daily while the other fields are
+            # twice-daily, so adjust the night-time timestamp to fake it being
+            # twice-daily.
             if timestamp is not None and not is_daytime:
                 timestamp += 12 * 3600
 
