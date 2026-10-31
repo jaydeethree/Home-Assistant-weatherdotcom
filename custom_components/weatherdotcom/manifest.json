@@ -8,6 +8,7 @@
   "integration_type": "service",
   "iot_class": "cloud_polling",
   "issue_tracker": "https://github.com/jaydeethree/Home-Assistant-weatherdotcom/issues/",
+  "loggers": ["custom_components.weatherdotcom"],
   "requirements": [],
   "version": "1.4.1"
 }
