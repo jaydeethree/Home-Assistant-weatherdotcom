@@ -6,7 +6,6 @@ import asyncio
 from dataclasses import dataclass
 from datetime import UTC, datetime, timedelta
 import logging
-import time
 from typing import Any
 
 import aiohttp
@@ -203,9 +202,15 @@ class WeatherUpdateCoordinator(DataUpdateCoordinator[dict[str, Any]]):
             # If the result includes max temperature data for today,
             # update that data in storage.
             temp_max_list = result_forecast_daily.get(FIELD_TEMPERATUREMAX)
-            if temp_max_list and temp_max_list[0] is not None:
+            valid_time_list = result_forecast_daily.get(FIELD_VALIDTIMEUTC)
+            if (
+                temp_max_list
+                and temp_max_list[0] is not None
+                and valid_time_list
+                and valid_time_list[0] is not None
+            ):
                 try:
-                    await self.store.async_save(temp_max_list[0], round(time.time()))
+                    await self.store.async_save(temp_max_list[0], valid_time_list[0])
                 except OSError as err:
                     _LOGGER.warning(
                         "Failed to save high temperature to storage: %s", err

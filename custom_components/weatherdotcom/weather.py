@@ -5,7 +5,6 @@ https://github.com/jaydeethree/Home-Assistant-weatherdotcom
 """
 
 import logging
-import time
 
 from homeassistant.components.weather import (
     ATTR_FORECAST_CLOUD_COVERAGE,
@@ -64,7 +63,6 @@ from .helpers import get_first_daypart_index
 
 _LOGGER = logging.getLogger(__name__)
 
-MAX_HIGH_TEMP_AGE_SECONDS = 14 * 60 * 60
 PARALLEL_UPDATES = 0
 
 
@@ -197,7 +195,7 @@ class WeatherDotComForecast(SingleCoordinatorWeatherEntity):
                     and
                     HIGH_TEMP_TODAY_STORAGE in stored_data
                     and
-                    round(time.time()) - stored_data[HIGH_TEMP_TODAY_TIMESTAMP_STORAGE] < MAX_HIGH_TEMP_AGE_SECONDS
+                    stored_data[HIGH_TEMP_TODAY_TIMESTAMP_STORAGE] == daily_times[0]
                 ):
                     temperature_max = stored_data[HIGH_TEMP_TODAY_STORAGE]
                 else:
