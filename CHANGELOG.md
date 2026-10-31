@@ -1,4 +1,4 @@
-Unreleased
+v2.0.0 (available as a beta, final release date is TBD)
 * Significant code clean-up and modernization, including:
   * Vastly improved error handling
   * Deduplicated and simplified several parts of the codebase
