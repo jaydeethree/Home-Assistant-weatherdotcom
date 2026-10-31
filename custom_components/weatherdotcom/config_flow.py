@@ -243,6 +243,10 @@ class WeatherFlowHandler(config_entries.ConfigFlow, domain=DOMAIN):
             lat = entity.attributes[CONF_LATITUDE]
             long = entity.attributes[CONF_LONGITUDE]
         if lat is not None and long is not None:
+            try:
+                lat, long = float(lat), float(long)
+            except (TypeError, ValueError):
+                return False
             if -90 <= lat <= 90 and -180 <= long <= 180:
                 return True
         return False
