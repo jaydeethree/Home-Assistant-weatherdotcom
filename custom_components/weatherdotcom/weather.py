@@ -60,6 +60,7 @@ from .const import (
     RESULTS_FORECAST_DAILY,
     RESULTS_FORECAST_HOURLY,
 )
+from .helpers import get_first_daypart_index
 
 _LOGGER = logging.getLogger(__name__)
 
@@ -175,10 +176,11 @@ class WeatherDotComForecast(SingleCoordinatorWeatherEntity):
 
         stored_data = await self._store.async_load()
 
-        daily_times = self.coordinator.data[RESULTS_FORECAST_DAILY].get(FIELD_VALIDTIMEUTC) or []
+        daily_data = self.coordinator.data[RESULTS_FORECAST_DAILY]
+        daily_times = daily_data.get(FIELD_VALIDTIMEUTC) or []
         days = list(range(0, len(daily_times) * 2, 2))
-        if days and self.coordinator.get_forecast_daily(FIELD_TEMP, 0) is None:
-            days[0] += 1
+        if days:
+            days[0] = get_first_daypart_index(daily_data)
 
         forecast = []
         for period in days:
@@ -258,8 +260,9 @@ class WeatherDotComForecast(SingleCoordinatorWeatherEntity):
         if not self.coordinator.data or self.coordinator.data.get(RESULTS_FORECAST_DAILY) is None:
             return []
 
-        daily_times = self.coordinator.data[RESULTS_FORECAST_DAILY].get(FIELD_VALIDTIMEUTC) or []
-        start_period = 1 if (daily_times and self.coordinator.get_forecast_daily(FIELD_TEMP, 0) is None) else 0
+        daily_data = self.coordinator.data[RESULTS_FORECAST_DAILY]
+        daily_times = daily_data.get(FIELD_VALIDTIMEUTC) or []
+        start_period = get_first_daypart_index(daily_data) if daily_times else 0
 
         forecast = []
         for period in range(start_period, len(daily_times) * 2):
