@@ -94,6 +94,8 @@ class WeatherDotComForecast(SingleCoordinatorWeatherEntity):
     ) -> None:
         """Initialize the sensor."""
         super().__init__(coordinator)
+        # Explicitly generate entity_id from location_name for consistency
+        # with the sensor entities.
         self.entity_id = generate_entity_id(
             ENTITY_ID_FORMAT, f"{coordinator.location_name}", hass=coordinator.hass
         )
