@@ -76,6 +76,8 @@ class WeatherSensor(CoordinatorEntity[WeatherUpdateCoordinator], SensorEntity):
         self._attr_unique_id = get_sensor_unique_id(
             self.coordinator.location_name, description.key
         )
+        # Explicitly generate entity_id from translation_key to keep stable
+        # English entity IDs regardless of the Home Assistant UI language.
         self.entity_id = generate_entity_id(
             ENTITY_ID_FORMAT, f"{self.coordinator.location_name}_{description.translation_key}", hass=coordinator.hass
         )
