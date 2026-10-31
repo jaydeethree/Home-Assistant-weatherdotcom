@@ -149,5 +149,13 @@
         "name": "预报详情"
       }
     }
+  },
+  "exceptions": {
+    "cannot_retrieve_coordinates": {
+      "message": "无法获取位置坐标 {location_entity_id}"
+    },
+    "update_failed": {
+      "message": "获取天气数据失败"
+    }
   }
 }

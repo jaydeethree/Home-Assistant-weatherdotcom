@@ -149,5 +149,13 @@
         "name": "Podrobnosti predpovede"
       }
     }
+  },
+  "exceptions": {
+    "cannot_retrieve_coordinates": {
+      "message": "Nepodarilo sa získať súradnice polohy {location_entity_id}"
+    },
+    "update_failed": {
+      "message": "Nepodarilo sa získať údaje o počasí"
+    }
   }
 }

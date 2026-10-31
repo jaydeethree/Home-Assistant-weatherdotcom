@@ -172,7 +172,13 @@ class WeatherUpdateCoordinator(DataUpdateCoordinator[dict[str, Any]]):
         """Get weather data."""
         latitude, longitude = self._get_coordinates()
         if latitude is None or longitude is None:
-            raise UpdateFailed(f"Could not retrieve location coordinates {self._location_entity_id}")
+            raise UpdateFailed(
+                translation_domain=DOMAIN,
+                translation_key="cannot_retrieve_coordinates",
+                translation_placeholders={
+                    "location_entity_id": str(self._location_entity_id)
+                },
+            )
 
         self.current_latitude = latitude
         self.current_longitude = longitude
@@ -225,7 +231,10 @@ class WeatherUpdateCoordinator(DataUpdateCoordinator[dict[str, Any]]):
         if current_error and daily_error and hourly_error:
             min_failures = min(self._consecutive_failures.values())
             if min_failures >= MAX_CONSECUTIVE_FAILURES or self.data is None:
-                raise UpdateFailed('Failed to get weather data')
+                raise UpdateFailed(
+                    translation_domain=DOMAIN,
+                    translation_key="update_failed",
+                )
             _LOGGER.warning(
                 'Failed to get weather data (failure %s of %s); retaining previous data',
                 min_failures,
