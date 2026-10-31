@@ -202,6 +202,18 @@ class WeatherDotComForecast(SingleCoordinatorWeatherEntity):
                         ' temperature data in the daily forecast will be'
                         ' missing for today for: %s', self.entity_id)
 
+            precip_chance = self.coordinator.get_forecast_daily(
+                FIELD_PRECIPCHANCE, period
+            )
+            if period % 2 == 0:
+                night_precip_chance = self.coordinator.get_forecast_daily(
+                    FIELD_PRECIPCHANCE, period + 1
+                )
+                if precip_chance is not None and night_precip_chance is not None:
+                    precip_chance = max(precip_chance, night_precip_chance)
+                elif precip_chance is None:
+                    precip_chance = night_precip_chance
+
             forecast.append(Forecast({
                 ATTR_FORECAST_CLOUD_COVERAGE:
                     self.coordinator.get_forecast_daily(FIELD_CLOUD_COVER, period),
@@ -213,9 +225,11 @@ class WeatherDotComForecast(SingleCoordinatorWeatherEntity):
                 ATTR_FORECAST_HUMIDITY:
                     self.coordinator.get_forecast_daily(FIELD_HUMIDITY, period),
                 ATTR_FORECAST_NATIVE_PRECIPITATION:
-                    self.coordinator.get_forecast_daily(FIELD_QPF, period),
+                    self.coordinator.get_forecast_daily(
+                        FIELD_QPF, period, is_daypart=False
+                    ),
                 ATTR_FORECAST_PRECIPITATION_PROBABILITY:
-                    self.coordinator.get_forecast_daily(FIELD_PRECIPCHANCE, period),
+                    precip_chance,
 
                 ATTR_FORECAST_NATIVE_TEMP:
                     temperature_max,
