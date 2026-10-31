@@ -64,5 +64,90 @@
         }
       }
     }
+  },
+  "entity": {
+    "sensor": {
+      "local_observation_time": {
+        "name": "Horário de observação local"
+      },
+      "weather_description": {
+        "name": "Descrição do tempo"
+      },
+      "relative_humidity": {
+        "name": "Humidade relativa"
+      },
+      "uv_index": {
+        "name": "Índice UV"
+      },
+      "wind_direction_degrees": {
+        "name": "Direção do Vento - Graus"
+      },
+      "wind_direction_cardinal": {
+        "name": "Direção do Vento - Cardeal"
+      },
+      "dewpoint": {
+        "name": "Ponto de condensação da água"
+      },
+      "temperature_feels_like": {
+        "name": "Temperatura - Parece"
+      },
+      "temperature": {
+        "name": "Temperatura"
+      },
+      "heat_index": {
+        "name": "Índice de calor"
+      },
+      "wind_chill": {
+        "name": "Resfriamento do Vento"
+      },
+      "precipitation_last_hour": {
+        "name": "Precipitação - última hora"
+      },
+      "precipitation_last_6_hours": {
+        "name": "Precipitação - últimas 6 horas"
+      },
+      "precipitation_last_24_hours": {
+        "name": "Precipitação - Últimas 24 horas"
+      },
+      "pressure": {
+        "name": "Pressão"
+      },
+      "wind_gust": {
+        "name": "Rajada de vento"
+      },
+      "wind_speed": {
+        "name": "Velocidade do vento"
+      },
+      "cloud_ceiling": {
+        "name": "Teto de nuvens"
+      },
+      "pressure_tendency_trend": {
+        "name": "Tendência da pressão"
+      },
+      "cloud_cover_phrase": {
+        "name": "Descrição da nebulosidade"
+      },
+      "latitude": {
+        "name": "Latitude"
+      },
+      "longitude": {
+        "name": "Longitude"
+      },
+      "icon_code": {
+        "name": "Código do ícone"
+      },
+      "snowfall_last_hour": {
+        "name": "Queda de neve - Última hora"
+      },
+      "snowfall_last_6_hours": {
+        "name": "Queda de neve - Últimas 6 horas"
+      },
+      "snowfall_last_24_hours": {
+        "name": "Queda de neve - Últimas 24 horas"
+      },
+      "forecast_details": {
+        "name": "Detalhes da previsão"
+      }
+    }
   }
 }

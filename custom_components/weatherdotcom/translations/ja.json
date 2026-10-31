@@ -64,5 +64,90 @@
         }
       }
     }
+  },
+  "entity": {
+    "sensor": {
+      "local_observation_time": {
+        "name": "現地観察時間"
+      },
+      "weather_description": {
+        "name": "天気の説明"
+      },
+      "relative_humidity": {
+        "name": "相対湿度"
+      },
+      "uv_index": {
+        "name": "UV指数"
+      },
+      "wind_direction_degrees": {
+        "name": "風向 - 度"
+      },
+      "wind_direction_cardinal": {
+        "name": "風向 - カーディナル"
+      },
+      "dewpoint": {
+        "name": "露点"
+      },
+      "temperature_feels_like": {
+        "name": "温度 - 感じます"
+      },
+      "temperature": {
+        "name": "温度"
+      },
+      "heat_index": {
+        "name": "暑さ指数"
+      },
+      "wind_chill": {
+        "name": "風の寒さ"
+      },
+      "precipitation_last_hour": {
+        "name": "降水量 - 過去 1 時間"
+      },
+      "precipitation_last_6_hours": {
+        "name": "降水量 - 過去 6 時間"
+      },
+      "precipitation_last_24_hours": {
+        "name": "降水量 - 過去 24 時間"
+      },
+      "pressure": {
+        "name": "プレッシャー"
+      },
+      "wind_gust": {
+        "name": "突風"
+      },
+      "wind_speed": {
+        "name": "風速"
+      },
+      "cloud_ceiling": {
+        "name": "雲底高度"
+      },
+      "pressure_tendency_trend": {
+        "name": "気圧傾向"
+      },
+      "cloud_cover_phrase": {
+        "name": "雲量の説明"
+      },
+      "latitude": {
+        "name": "緯度"
+      },
+      "longitude": {
+        "name": "経度"
+      },
+      "icon_code": {
+        "name": "アイコンコード"
+      },
+      "snowfall_last_hour": {
+        "name": "降雪量 - 過去 1 時間"
+      },
+      "snowfall_last_6_hours": {
+        "name": "降雪量 - 過去 6 時間"
+      },
+      "snowfall_last_24_hours": {
+        "name": "降雪量 - 過去 24 時間"
+      },
+      "forecast_details": {
+        "name": "予報の詳細"
+      }
+    }
   }
 }

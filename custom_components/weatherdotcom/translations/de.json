@@ -64,5 +64,90 @@
         }
       }
     }
+  },
+  "entity": {
+    "sensor": {
+      "local_observation_time": {
+        "name": "Lokale Beobachtungszeit"
+      },
+      "weather_description": {
+        "name": "Wetterbeschreibung"
+      },
+      "relative_humidity": {
+        "name": "Relative Luftfeuchtigkeit"
+      },
+      "uv_index": {
+        "name": "UV-Index"
+      },
+      "wind_direction_degrees": {
+        "name": "Windrichtung – Grad"
+      },
+      "wind_direction_cardinal": {
+        "name": "Windrichtung – Kardinal"
+      },
+      "dewpoint": {
+        "name": "Taupunkt"
+      },
+      "temperature_feels_like": {
+        "name": "Temperatur – Gefühlt"
+      },
+      "temperature": {
+        "name": "Temperatur"
+      },
+      "heat_index": {
+        "name": "Hitzeindex"
+      },
+      "wind_chill": {
+        "name": "Windkälte"
+      },
+      "precipitation_last_hour": {
+        "name": "Niederschlag - Letzte Stunde"
+      },
+      "precipitation_last_6_hours": {
+        "name": "Niederschlag - Letzte 6 Stunden"
+      },
+      "precipitation_last_24_hours": {
+        "name": "Niederschlag – Letzte 24 Stunden"
+      },
+      "pressure": {
+        "name": "Druck"
+      },
+      "wind_gust": {
+        "name": "Windböe"
+      },
+      "wind_speed": {
+        "name": "Windgeschwindigkeit"
+      },
+      "cloud_ceiling": {
+        "name": "Wolkenuntergrenze"
+      },
+      "pressure_tendency_trend": {
+        "name": "Luftdrucktendenz"
+      },
+      "cloud_cover_phrase": {
+        "name": "Bewölkungsbeschreibung"
+      },
+      "latitude": {
+        "name": "Breitengrad"
+      },
+      "longitude": {
+        "name": "Längengrad"
+      },
+      "icon_code": {
+        "name": "Symbolcode"
+      },
+      "snowfall_last_hour": {
+        "name": "Schneefall - Letzte Stunde"
+      },
+      "snowfall_last_6_hours": {
+        "name": "Schneefall - Letzte 6 Stunden"
+      },
+      "snowfall_last_24_hours": {
+        "name": "Schneefall - Letzte 24 Stunden"
+      },
+      "forecast_details": {
+        "name": "Vorhersagedetails"
+      }
+    }
   }
 }

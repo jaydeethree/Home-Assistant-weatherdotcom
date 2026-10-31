@@ -90,7 +90,6 @@ class WeatherUpdateCoordinatorConfig:
     location_name: str
     unit_system_api: str
     lang: str
-    tranfile: dict[str, Any]
 
     update_interval: timedelta = MIN_TIME_BETWEEN_UPDATES
     location_entity_id: str | None = None
@@ -118,7 +117,6 @@ class WeatherUpdateCoordinator(DataUpdateCoordinator[dict[str, Any]]):
             RESULTS_FORECAST_HOURLY: 0,
         }
         self._session = async_get_clientsession(hass)
-        self.tranfile = config.tranfile
         self.store = WeatherDotComStorage(hass, self._location_name)
 
         self._location_entity_id = config.location_entity_id

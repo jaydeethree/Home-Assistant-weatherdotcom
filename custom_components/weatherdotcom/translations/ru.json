@@ -64,5 +64,90 @@
         }
       }
     }
+  },
+  "entity": {
+    "sensor": {
+      "local_observation_time": {
+        "name": "Местное время наблюдения"
+      },
+      "weather_description": {
+        "name": "Описание погоды"
+      },
+      "relative_humidity": {
+        "name": "Относительная влажность"
+      },
+      "uv_index": {
+        "name": "УФ-индекс"
+      },
+      "wind_direction_degrees": {
+        "name": "Направление ветра - градусы"
+      },
+      "wind_direction_cardinal": {
+        "name": "Направление ветра - кардинальное"
+      },
+      "dewpoint": {
+        "name": "Точка росы"
+      },
+      "temperature_feels_like": {
+        "name": "Температура - По ощущениям"
+      },
+      "temperature": {
+        "name": "Температура"
+      },
+      "heat_index": {
+        "name": "Индекс тепла"
+      },
+      "wind_chill": {
+        "name": "Холодный ветер"
+      },
+      "precipitation_last_hour": {
+        "name": "Осадки - Последний час"
+      },
+      "precipitation_last_6_hours": {
+        "name": "Осадки - последние 6 часов"
+      },
+      "precipitation_last_24_hours": {
+        "name": "Осадки - последние 24 часа"
+      },
+      "pressure": {
+        "name": "Давление"
+      },
+      "wind_gust": {
+        "name": "Порыв ветра"
+      },
+      "wind_speed": {
+        "name": "Скорость ветра"
+      },
+      "cloud_ceiling": {
+        "name": "Нижняя граница облаков"
+      },
+      "pressure_tendency_trend": {
+        "name": "Тенденция давления"
+      },
+      "cloud_cover_phrase": {
+        "name": "Описание облачности"
+      },
+      "latitude": {
+        "name": "Широта"
+      },
+      "longitude": {
+        "name": "Долгота"
+      },
+      "icon_code": {
+        "name": "Код значка"
+      },
+      "snowfall_last_hour": {
+        "name": "Снегопад - Последний час"
+      },
+      "snowfall_last_6_hours": {
+        "name": "Снегопад - последние 6 часов"
+      },
+      "snowfall_last_24_hours": {
+        "name": "Снегопад - последние 24 часа"
+      },
+      "forecast_details": {
+        "name": "Подробности прогноза"
+      }
+    }
   }
 }

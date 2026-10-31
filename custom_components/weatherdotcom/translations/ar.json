@@ -64,5 +64,90 @@
         }
       }
     }
+  },
+  "entity": {
+    "sensor": {
+      "local_observation_time": {
+        "name": "وقت المراقبة المحلية"
+      },
+      "weather_description": {
+        "name": "وصف الطقس"
+      },
+      "relative_humidity": {
+        "name": "الرطوبة النسبية"
+      },
+      "uv_index": {
+        "name": "مؤشر الأشعة فوق البنفسجية"
+      },
+      "wind_direction_degrees": {
+        "name": "اتجاه الرياح - درجات"
+      },
+      "wind_direction_cardinal": {
+        "name": "اتجاه الرياح - الكاردينال"
+      },
+      "dewpoint": {
+        "name": "قطرة ندى"
+      },
+      "temperature_feels_like": {
+        "name": "درجة الحرارة - تبدو وكأنها"
+      },
+      "temperature": {
+        "name": "درجة حرارة"
+      },
+      "heat_index": {
+        "name": "مؤشر الحرارة"
+      },
+      "wind_chill": {
+        "name": "هواء بارد"
+      },
+      "precipitation_last_hour": {
+        "name": "هطول - آخر ساعة"
+      },
+      "precipitation_last_6_hours": {
+        "name": "هطول الأمطار - آخر 6 ساعات"
+      },
+      "precipitation_last_24_hours": {
+        "name": "هطول الأمطار - آخر 24 ساعة"
+      },
+      "pressure": {
+        "name": "ضغط"
+      },
+      "wind_gust": {
+        "name": "عاصفة الرياح"
+      },
+      "wind_speed": {
+        "name": "سرعة الرياح"
+      },
+      "cloud_ceiling": {
+        "name": "سقف السحب"
+      },
+      "pressure_tendency_trend": {
+        "name": "اتجاه ميل الضغط"
+      },
+      "cloud_cover_phrase": {
+        "name": "وصف الغطاء السحابي"
+      },
+      "latitude": {
+        "name": "خط العرض"
+      },
+      "longitude": {
+        "name": "خط الطول"
+      },
+      "icon_code": {
+        "name": "رمز الأيقونة"
+      },
+      "snowfall_last_hour": {
+        "name": "تساقط الثلوج - آخر ساعة"
+      },
+      "snowfall_last_6_hours": {
+        "name": "تساقط الثلوج - آخر 6 ساعات"
+      },
+      "snowfall_last_24_hours": {
+        "name": "تساقط الثلوج - آخر 24 ساعة"
+      },
+      "forecast_details": {
+        "name": "تفاصيل التوقعات"
+      }
+    }
   }
 }
