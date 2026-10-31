@@ -36,10 +36,6 @@ from .const import (
     FIELD_WINDGUST,
     FIELD_WINDSPEED,
     FIELD_WIND_CHILL,
-    ICON_SNOWFLAKE,
-    ICON_THERMOMETER,
-    ICON_UMBRELLA,
-    ICON_WIND,
     RESULTS_FORECAST_DAILY,
 )
 from .coordinator import WeatherUnits
@@ -184,17 +180,14 @@ current_condition_sensor_descriptions: tuple[WeatherSensorEntityDescription, ...
     WeatherSensorEntityDescription(
         key=FIELD_VALIDTIMELOCAL,
         translation_key="local_observation_time",
-        icon="mdi:clock",
     ),
     WeatherSensorEntityDescription(
         key=FIELD_DESCRIPTION,
         translation_key="weather_description",
-        icon="mdi:note-text",
     ),
     WeatherSensorEntityDescription(
         key=FIELD_HUMIDITY,
         translation_key="relative_humidity",
-        icon="mdi:water-percent",
         device_class=SensorDeviceClass.HUMIDITY,
         state_class=SensorStateClass.MEASUREMENT,
         unit_fn=lambda _: PERCENTAGE,
@@ -202,14 +195,12 @@ current_condition_sensor_descriptions: tuple[WeatherSensorEntityDescription, ...
     WeatherSensorEntityDescription(
         key=FIELD_UV_INDEX,
         translation_key="uv_index",
-        icon="mdi:sunglasses",
         state_class=SensorStateClass.MEASUREMENT,
         unit_fn=lambda _: UV_INDEX,
     ),
     WeatherSensorEntityDescription(
         key=FIELD_WINDDIR,
         translation_key="wind_direction_degrees",
-        icon=ICON_WIND,
         device_class=SensorDeviceClass.WIND_DIRECTION,
         state_class=SensorStateClass.MEASUREMENT_ANGLE,
         unit_fn=lambda _: DEGREE,
@@ -217,12 +208,10 @@ current_condition_sensor_descriptions: tuple[WeatherSensorEntityDescription, ...
     WeatherSensorEntityDescription(
         key=FIELD_WINDDIRECTIONCARDINAL,
         translation_key="wind_direction_cardinal",
-        icon=ICON_WIND,
     ),
     WeatherSensorEntityDescription(
         key=FIELD_DEW_POINT,
         translation_key="dewpoint",
-        icon="mdi:water",
         state_class=SensorStateClass.MEASUREMENT,
         device_class=SensorDeviceClass.TEMPERATURE,
         unit_fn=lambda units: units.temperature,
@@ -230,7 +219,6 @@ current_condition_sensor_descriptions: tuple[WeatherSensorEntityDescription, ...
     WeatherSensorEntityDescription(
         key=FIELD_FEELS_LIKE,
         translation_key="temperature_feels_like",
-        icon=ICON_THERMOMETER,
         state_class=SensorStateClass.MEASUREMENT,
         device_class=SensorDeviceClass.TEMPERATURE,
         unit_fn=lambda units: units.temperature,
@@ -238,7 +226,6 @@ current_condition_sensor_descriptions: tuple[WeatherSensorEntityDescription, ...
     WeatherSensorEntityDescription(
         key=FIELD_TEMP,
         translation_key="temperature",
-        icon=ICON_THERMOMETER,
         state_class=SensorStateClass.MEASUREMENT,
         device_class=SensorDeviceClass.TEMPERATURE,
         unit_fn=lambda units: units.temperature,
@@ -246,7 +233,6 @@ current_condition_sensor_descriptions: tuple[WeatherSensorEntityDescription, ...
     WeatherSensorEntityDescription(
         key=FIELD_HEAT_INDEX,
         translation_key="heat_index",
-        icon=ICON_THERMOMETER,
         state_class=SensorStateClass.MEASUREMENT,
         device_class=SensorDeviceClass.TEMPERATURE,
         unit_fn=lambda units: units.temperature,
@@ -254,7 +240,6 @@ current_condition_sensor_descriptions: tuple[WeatherSensorEntityDescription, ...
     WeatherSensorEntityDescription(
         key=FIELD_WIND_CHILL,
         translation_key="wind_chill",
-        icon=ICON_THERMOMETER,
         state_class=SensorStateClass.MEASUREMENT,
         device_class=SensorDeviceClass.TEMPERATURE,
         unit_fn=lambda units: units.temperature,
@@ -262,7 +247,6 @@ current_condition_sensor_descriptions: tuple[WeatherSensorEntityDescription, ...
     WeatherSensorEntityDescription(
         key=FIELD_PRECIP_1HOUR,
         translation_key="precipitation_last_hour",
-        icon=ICON_UMBRELLA,
         state_class=SensorStateClass.MEASUREMENT,
         device_class=SensorDeviceClass.PRECIPITATION,
         unit_fn=lambda units: units.precipitation,
@@ -271,7 +255,6 @@ current_condition_sensor_descriptions: tuple[WeatherSensorEntityDescription, ...
     WeatherSensorEntityDescription(
         key=FIELD_PRECIP_6HOUR,
         translation_key="precipitation_last_6_hours",
-        icon=ICON_UMBRELLA,
         state_class=SensorStateClass.MEASUREMENT,
         device_class=SensorDeviceClass.PRECIPITATION,
         unit_fn=lambda units: units.precipitation,
@@ -280,7 +263,6 @@ current_condition_sensor_descriptions: tuple[WeatherSensorEntityDescription, ...
     WeatherSensorEntityDescription(
         key=FIELD_PRECIP_24HOUR,
         translation_key="precipitation_last_24_hours",
-        icon=ICON_UMBRELLA,
         state_class=SensorStateClass.MEASUREMENT,
         device_class=SensorDeviceClass.PRECIPITATION,
         unit_fn=lambda units: units.precipitation,
@@ -289,7 +271,6 @@ current_condition_sensor_descriptions: tuple[WeatherSensorEntityDescription, ...
     WeatherSensorEntityDescription(
         key=FIELD_PRESSURE,
         translation_key="pressure",
-        icon="mdi:gauge",
         state_class=SensorStateClass.MEASUREMENT,
         device_class=SensorDeviceClass.PRESSURE,
         unit_fn=lambda units: units.pressure,
@@ -297,7 +278,6 @@ current_condition_sensor_descriptions: tuple[WeatherSensorEntityDescription, ...
     WeatherSensorEntityDescription(
         key=FIELD_WINDGUST,
         translation_key="wind_gust",
-        icon=ICON_WIND,
         state_class=SensorStateClass.MEASUREMENT,
         device_class=SensorDeviceClass.WIND_SPEED,
         unit_fn=lambda units: units.speed,
@@ -305,7 +285,6 @@ current_condition_sensor_descriptions: tuple[WeatherSensorEntityDescription, ...
     WeatherSensorEntityDescription(
         key=FIELD_WINDSPEED,
         translation_key="wind_speed",
-        icon=ICON_WIND,
         state_class=SensorStateClass.MEASUREMENT,
         device_class=SensorDeviceClass.WIND_SPEED,
         unit_fn=lambda units: units.speed,
@@ -313,7 +292,6 @@ current_condition_sensor_descriptions: tuple[WeatherSensorEntityDescription, ...
     WeatherSensorEntityDescription(
         key=FIELD_CLOUD_CEILING,
         translation_key="cloud_ceiling",
-        icon="mdi:clouds",
         state_class=SensorStateClass.MEASUREMENT,
         device_class=SensorDeviceClass.DISTANCE,
         unit_fn=lambda units: units.distance,
@@ -321,34 +299,28 @@ current_condition_sensor_descriptions: tuple[WeatherSensorEntityDescription, ...
     WeatherSensorEntityDescription(
         key=FIELD_PRESSURE_TENDENCY_TREND,
         translation_key="pressure_tendency_trend",
-        icon="mdi:gauge",
     ),
     WeatherSensorEntityDescription(
         key=FIELD_CLOUD_COVER_PHRASE,
         translation_key="cloud_cover_phrase",
-        icon="mdi:clouds",
     ),
     WeatherSensorEntityDescription(
         key=CONF_LATITUDE,
         translation_key="latitude",
-        icon="mdi:latitude",
     ),
     WeatherSensorEntityDescription(
         key=CONF_LONGITUDE,
         translation_key="longitude",
-        icon="mdi:longitude",
     ),
     WeatherSensorEntityDescription(
         key=FIELD_ICONCODE,
         translation_key="icon_code",
-        icon="mdi:image",
         entity_registry_enabled_default=False,
         value_fn=lambda data: data if data is not None else 44,
     ),
     WeatherSensorEntityDescription(
         key=FIELD_SNOW_1HOUR,
         translation_key="snowfall_last_hour",
-        icon=ICON_SNOWFLAKE,
         state_class=SensorStateClass.MEASUREMENT,
         device_class=SensorDeviceClass.PRECIPITATION,
         unit_fn=lambda units: units.snow,
@@ -357,7 +329,6 @@ current_condition_sensor_descriptions: tuple[WeatherSensorEntityDescription, ...
     WeatherSensorEntityDescription(
         key=FIELD_SNOW_6HOUR,
         translation_key="snowfall_last_6_hours",
-        icon=ICON_SNOWFLAKE,
         state_class=SensorStateClass.MEASUREMENT,
         device_class=SensorDeviceClass.PRECIPITATION,
         unit_fn=lambda units: units.snow,
@@ -366,7 +337,6 @@ current_condition_sensor_descriptions: tuple[WeatherSensorEntityDescription, ...
     WeatherSensorEntityDescription(
         key=FIELD_SNOW_24HOUR,
         translation_key="snowfall_last_24_hours",
-        icon=ICON_SNOWFLAKE,
         state_class=SensorStateClass.MEASUREMENT,
         device_class=SensorDeviceClass.PRECIPITATION,
         unit_fn=lambda units: units.snow,
@@ -375,7 +345,6 @@ current_condition_sensor_descriptions: tuple[WeatherSensorEntityDescription, ...
     WeatherSensorEntityDescription(
         key=FIELD_VALIDTIMEUTC,
         translation_key="forecast_details",
-        icon="mdi:cloud-clock",
         entity_registry_enabled_default=False,
         device_class=SensorDeviceClass.TIMESTAMP,
         value_fn=lambda data: datetime.fromtimestamp(data, UTC) if isinstance(data, (int, float)) and data > 0 else None,

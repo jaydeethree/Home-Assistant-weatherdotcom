@@ -1,0 +1,87 @@
+{
+  "entity": {
+    "sensor": {
+      "local_observation_time": {
+        "default": "mdi:clock"
+      },
+      "weather_description": {
+        "default": "mdi:note-text"
+      },
+      "relative_humidity": {
+        "default": "mdi:water-percent"
+      },
+      "uv_index": {
+        "default": "mdi:sunglasses"
+      },
+      "wind_direction_degrees": {
+        "default": "mdi:weather-windy"
+      },
+      "wind_direction_cardinal": {
+        "default": "mdi:weather-windy"
+      },
+      "dewpoint": {
+        "default": "mdi:water"
+      },
+      "temperature_feels_like": {
+        "default": "mdi:thermometer"
+      },
+      "temperature": {
+        "default": "mdi:thermometer"
+      },
+      "heat_index": {
+        "default": "mdi:thermometer"
+      },
+      "wind_chill": {
+        "default": "mdi:thermometer"
+      },
+      "precipitation_last_hour": {
+        "default": "mdi:umbrella"
+      },
+      "precipitation_last_6_hours": {
+        "default": "mdi:umbrella"
+      },
+      "precipitation_last_24_hours": {
+        "default": "mdi:umbrella"
+      },
+      "pressure": {
+        "default": "mdi:gauge"
+      },
+      "wind_gust": {
+        "default": "mdi:weather-windy"
+      },
+      "wind_speed": {
+        "default": "mdi:weather-windy"
+      },
+      "cloud_ceiling": {
+        "default": "mdi:clouds"
+      },
+      "pressure_tendency_trend": {
+        "default": "mdi:gauge"
+      },
+      "cloud_cover_phrase": {
+        "default": "mdi:clouds"
+      },
+      "latitude": {
+        "default": "mdi:latitude"
+      },
+      "longitude": {
+        "default": "mdi:longitude"
+      },
+      "icon_code": {
+        "default": "mdi:image"
+      },
+      "snowfall_last_hour": {
+        "default": "mdi:snowflake"
+      },
+      "snowfall_last_6_hours": {
+        "default": "mdi:snowflake"
+      },
+      "snowfall_last_24_hours": {
+        "default": "mdi:snowflake"
+      },
+      "forecast_details": {
+        "default": "mdi:cloud-clock"
+      }
+    }
+  }
+}
