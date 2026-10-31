@@ -159,7 +159,9 @@ class WeatherDotComForecast(SingleCoordinatorWeatherEntity):
     @property
     def native_wind_gust_speed(self) -> float | None:
         """Return the wind gust speed."""
-        return self.coordinator.get_current(FIELD_WINDGUST)
+        if (wind_gust := self.coordinator.get_current(FIELD_WINDGUST)) is not None:
+            return wind_gust
+        return self.coordinator.get_current(FIELD_WINDSPEED)
 
     @property
     def uv_index(self) -> float | None:
