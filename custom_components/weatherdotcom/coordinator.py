@@ -96,6 +96,9 @@ class WeatherUpdateCoordinatorConfig:
     latitude: float | None = None
     longitude: float | None = None
 
+type WeatherDotComConfigEntry = ConfigEntry[WeatherUpdateCoordinator]
+
+
 class WeatherUpdateCoordinator(DataUpdateCoordinator[dict[str, Any]]):
     """The Weather.com update coordinator."""
 
@@ -103,7 +106,7 @@ class WeatherUpdateCoordinator(DataUpdateCoordinator[dict[str, Any]]):
             self,
             hass: HomeAssistant,
             config: WeatherUpdateCoordinatorConfig,
-            entry: ConfigEntry,
+            entry: WeatherDotComConfigEntry,
     ) -> None:
         """Initialize."""
         self._api_key = config.api_key

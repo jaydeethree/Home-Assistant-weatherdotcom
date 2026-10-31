@@ -1,6 +1,5 @@
 """The weather.com component."""
 from typing import Final
-from homeassistant.config_entries import ConfigEntry
 from homeassistant.const import (
     CONF_API_KEY,
     CONF_ENTITY_ID,
@@ -11,7 +10,11 @@ from homeassistant.const import (
 )
 from homeassistant.core import HomeAssistant
 from homeassistant.util.unit_system import METRIC_SYSTEM
-from .coordinator import WeatherUpdateCoordinator, WeatherUpdateCoordinatorConfig
+from .coordinator import (
+    WeatherDotComConfigEntry,
+    WeatherUpdateCoordinator,
+    WeatherUpdateCoordinatorConfig,
+)
 from .store import WeatherDotComStorage
 from .const import (
     CONF_LANG,
@@ -23,9 +26,6 @@ from .const import (
 )
 
 PLATFORMS: Final = [Platform.WEATHER, Platform.SENSOR]
-
-
-type WeatherDotComConfigEntry = ConfigEntry[WeatherUpdateCoordinator]
 
 
 async def async_setup_entry(hass: HomeAssistant, entry: WeatherDotComConfigEntry) -> bool:

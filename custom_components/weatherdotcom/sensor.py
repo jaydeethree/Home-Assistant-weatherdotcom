@@ -15,8 +15,7 @@ from homeassistant.helpers.entity_platform import AddConfigEntryEntitiesCallback
 from homeassistant.helpers.typing import StateType
 from homeassistant.helpers.update_coordinator import CoordinatorEntity
 
-from . import WeatherDotComConfigEntry
-from .coordinator import WeatherUpdateCoordinator
+from .coordinator import WeatherDotComConfigEntry, WeatherUpdateCoordinator
 
 from .const import (
     ATTRIBUTION,
