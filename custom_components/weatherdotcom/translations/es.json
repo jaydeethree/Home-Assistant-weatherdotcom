@@ -152,7 +152,7 @@
   },
   "exceptions": {
     "cannot_retrieve_coordinates": {
-      "message": "No se pudieron obtener las coordenadas de ubicación {location_entity_id}"
+      "message": "No se pudieron obtener las coordenadas de ubicación de {location_entity_id}"
     },
     "update_failed": {
       "message": "Error al obtener los datos meteorológicos"

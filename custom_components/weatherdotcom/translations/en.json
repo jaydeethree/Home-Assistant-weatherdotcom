@@ -152,7 +152,7 @@
   },
   "exceptions": {
     "cannot_retrieve_coordinates": {
-      "message": "Could not retrieve location coordinates {location_entity_id}"
+      "message": "Could not retrieve location coordinates from {location_entity_id}"
     },
     "update_failed": {
       "message": "Failed to get weather data"
