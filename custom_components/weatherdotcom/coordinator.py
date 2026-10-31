@@ -52,13 +52,13 @@ MAX_CONSECUTIVE_FAILURES = 3
 class WeatherUnits:
     """Units of measurement for a unit system."""
 
-    temperature: str
-    precipitation: str
-    snow: str
-    distance: str
-    speed: str
-    pressure: str
-    visibility: str
+    temperature: UnitOfTemperature
+    precipitation: UnitOfLength
+    snow: UnitOfLength
+    distance: UnitOfLength
+    speed: UnitOfSpeed
+    pressure: UnitOfPressure
+    visibility: UnitOfLength
 
 
 METRIC_UNITS = WeatherUnits(
