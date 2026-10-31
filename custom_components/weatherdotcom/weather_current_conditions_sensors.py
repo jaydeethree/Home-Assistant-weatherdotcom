@@ -43,6 +43,7 @@ from .const import (
     RESULTS_FORECAST_DAILY,
 )
 from .coordinator import WeatherUnits
+from .helpers import get_first_daypart_index
 from homeassistant.components.sensor import SensorEntityDescription, SensorDeviceClass, SensorStateClass
 from homeassistant.const import CONF_LATITUDE, CONF_LONGITUDE, PERCENTAGE, UV_INDEX, DEGREE
 from homeassistant.helpers.typing import StateType
@@ -143,7 +144,7 @@ def _get_extra_attributes(
 
         # Weather.com sets index 0 to None after 15:00 local time
         # When None, shift day 0 to index 1 (tonight's forecast)
-        first_index = 1 if (daypart_icon_code and daypart_icon_code[0] is None) else 0
+        first_index = get_first_daypart_index(daily_data)
         indices = [first_index, *range(2, 29, 2)]
 
         def _safe_get(arr: list, idx: int, default: Any = None) -> Any:
