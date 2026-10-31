@@ -93,7 +93,7 @@ class WeatherFlowHandler(config_entries.ConfigFlow, domain=DOMAIN):
 
     def __init__(self) -> None:
         """Initialize the config flow."""
-        self._data: dict = {}
+        self._data: dict[str, Any] = {}
 
     @staticmethod
     @callback
