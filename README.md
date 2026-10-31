@@ -60,7 +60,7 @@ Current conditions:
 - Temperature
 - Barometric pressure
 - Wind speed
-- Wind bearing (cardinal direction)
+- Wind bearing (degrees)
 - Visibility
 
 Forecast (daily and hourly):
@@ -71,13 +71,13 @@ Forecast (daily and hourly):
 - Precipitation quantity
 - Precipitation probability
 - Wind speed
-- Wind bearing (cardinal direction)
+- Wind bearing (degrees)
 
 To access these values in automations, scripts, etc. you will need to create triggered template sensors for them. [This post](https://community.home-assistant.io/t/customising-the-bom-weather-and-lovelace-now-in-hacs/123549/1465) on the Home Assistant forums provides details about how to do that.
 
 In addition to the Weather entity, these additional sensors will be created by this integration:
 
-* `sensor.<LOCATION_NAME>_cloud_ceiling` - distance to the lowest cloud layer, or 0 if there are no clouds
+* `sensor.<LOCATION_NAME>_cloud_ceiling` - distance to the lowest cloud layer, or `unknown` if there are no clouds
 * `sensor.<LOCATION_NAME>_cloud_cover_phrase` - a description of the current cloud cover, e.g. "Clear" or "Mostly Cloudy"
 * `sensor.<LOCATION_NAME>_dewpoint` - the current dew point
 * `sensor.<LOCATION_NAME>_heat_index` - the current heat index, which is what the current temperature "feels like" when combined with the current humidity
@@ -96,7 +96,7 @@ In addition to the Weather entity, these additional sensors will be created by t
 * `sensor.<LOCATION_NAME>_weather_description` - the current weather description, e.g. "Freezing Rain" or "Scattered Showers"
 * `sensor.<LOCATION_NAME>_wind_chill` - the current wind chill, which is what the current temperature "feels like" when combined with the current wind
 * `sensor.<LOCATION_NAME>_wind_direction_cardinal` - the current cardinal wind direction - for example: North
-* `sensor.<LOCATION_NAME>_wind_direction_degrees` - the current cardinal wind direction in degrees
+* `sensor.<LOCATION_NAME>_wind_direction_degrees` - the current wind direction in degrees
 * `sensor.<LOCATION_NAME>_wind_gust` - the current wind gust speed
 * `sensor.<LOCATION_NAME>_wind_speed` - the current wind speed
 
@@ -136,15 +136,7 @@ The integration exposes forecast data as attributes of a disabled-by-default sen
 1. Provides access to non-conforming data available from the weather.com API that is not available through the `<weather.get_forecasts>` method.
 2. Reduces the need to manually configure sensors or template sensors to access this data.
 
-> [!TIP]
-> Home Assistant’s guidance recommends limiting attribute data in frequently updated entities. It is recommended to configure entity exclusion in your Recorder configuration to limit database writes.
->
-> ```yaml
-> recorder:
->   exclude:
->     entities:
->       - sensor.<LOCATION_NAME>_forecast_details
-> ```
+The extra forecast attributes on `sensor.<LOCATION_NAME>_forecast_details` are automatically excluded from the Home Assistant recorder to prevent database bloat.
 
 ## Attribute Options
 
@@ -168,9 +160,7 @@ Daypart options are native API forecast values that return a 30-item array, with
 
 ## Usage
 
-To use the forecast data, first enable `sensor.<LOCATION_NAME>_forecast_details`, which is located under **Disabled Entities** on the Devices page for the integration entry.
-
-Once enabled, navigate to the Weather.com integration page and select the gear icon (**Configure**) for the integration entry. Select the desired forecast attributes and click **Submit**. The selected attributes will automatically be added to `sensor.<LOCATION_NAME>_forecast_details`.
+Navigate to the Weather.com integration page and select the gear icon (**Configure**) for the integration entry. Select the desired forecast attributes and click **Submit**. Selecting any attributes will automatically enable `sensor.<LOCATION_NAME>_forecast_details` and add the selected attributes to it.
 
 ### Accessing Forecast Attributes
 
