@@ -24,7 +24,6 @@ from .const import (
     EXTRA_ATTRIBUTE_KEYS_DAILY,
     EXTRA_ATTRIBUTE_KEYS_DAY,
     EXTRA_ATTRIBUTE_KEYS_DAYPART,
-    FIELD_DAYPART,
     FIELD_VALIDTIMEUTC,
     FIELD_WINDGUST,
     FIELD_WINDSPEED,
@@ -77,7 +76,7 @@ class WeatherSensor(CoordinatorEntity[WeatherUpdateCoordinator], SensorEntity):
             self.coordinator.location_name, description.key
         )
         self.entity_id = generate_entity_id(
-            ENTITY_ID_FORMAT, f"{self.coordinator.location_name}_{description.name}", hass=coordinator.hass
+            ENTITY_ID_FORMAT, f"{self.coordinator.location_name}_{description.translation_key}", hass=coordinator.hass
         )
         self._attr_device_info = coordinator.device_info
         self._attr_native_unit_of_measurement = self.entity_description.unit_fn(
@@ -85,16 +84,6 @@ class WeatherSensor(CoordinatorEntity[WeatherUpdateCoordinator], SensorEntity):
         )
         if description.key == FIELD_VALIDTIMEUTC:
             self._attr_entity_registry_enabled_default = bool(extra_attributes)
-
-        if description.key in coordinator.tranfile:
-            self._attr_name = coordinator.tranfile[description.key]
-        elif (
-            FIELD_DAYPART in coordinator.tranfile
-            and description.key in coordinator.tranfile[FIELD_DAYPART]
-        ):
-            self._attr_name = coordinator.tranfile[FIELD_DAYPART][description.key]
-        else:
-            self._attr_name = description.name
 
     @property
     def available(self) -> bool:

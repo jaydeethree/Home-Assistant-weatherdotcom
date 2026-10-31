@@ -1,6 +1,4 @@
 """The weather.com component."""
-import logging
-from pathlib import Path
 from typing import Final
 from homeassistant.config_entries import ConfigEntry
 from homeassistant.const import (
@@ -13,7 +11,6 @@ from homeassistant.const import (
 )
 from homeassistant.core import HomeAssistant
 from homeassistant.util.unit_system import METRIC_SYSTEM
-from homeassistant.util import json
 from .coordinator import WeatherUpdateCoordinator, WeatherUpdateCoordinatorConfig
 from .store import WeatherDotComStorage
 from .const import (
@@ -27,8 +24,6 @@ from .const import (
 
 PLATFORMS: Final = [Platform.WEATHER, Platform.SENSOR]
 
-_LOGGER = logging.getLogger(__name__)
-
 
 type WeatherDotComConfigEntry = ConfigEntry[WeatherUpdateCoordinator]
 
@@ -41,20 +36,6 @@ async def async_setup_entry(hass: HomeAssistant, entry: WeatherDotComConfigEntry
         unit_system_api = API_URL_IMPERIAL
 
     lang = entry.data[CONF_LANG]
-
-    def _load_translation_file() -> dict:
-        tfiledir = Path(__file__).parent / "weather_translations"
-        tfilename = lang.split('-', 1)[0]
-        tfilepath = tfiledir / f"{tfilename}.json"
-        if tfilepath.is_file():
-            return json.load_json(tfilepath)
-        _LOGGER.warning(
-            'Sensor translation file %s.json does not exist. Defaulting to en-US.',
-            tfilename,
-        )
-        return json.load_json(tfiledir / "en.json")
-
-    tranfile = await hass.async_add_executor_job(_load_translation_file)
 
     # Only pass the location fields for the configured location source. Entries
     # reconfigured by older versions may contain stale keys from a previous
@@ -78,7 +59,6 @@ async def async_setup_entry(hass: HomeAssistant, entry: WeatherDotComConfigEntry
         location_entity_id=location_entity_id,
         latitude=latitude,
         longitude=longitude,
-        tranfile=tranfile,
     )
 
     weathercoordinator = WeatherUpdateCoordinator(hass, config, entry)

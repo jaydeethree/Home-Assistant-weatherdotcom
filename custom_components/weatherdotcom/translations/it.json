@@ -64,5 +64,90 @@
         }
       }
     }
+  },
+  "entity": {
+    "sensor": {
+      "local_observation_time": {
+        "name": "Tempo di osservazione locale"
+      },
+      "weather_description": {
+        "name": "Descrizione meteo"
+      },
+      "relative_humidity": {
+        "name": "Umidità relativa"
+      },
+      "uv_index": {
+        "name": "Indice UV"
+      },
+      "wind_direction_degrees": {
+        "name": "Direzione del vento - Gradi"
+      },
+      "wind_direction_cardinal": {
+        "name": "Direzione del vento - Cardinale"
+      },
+      "dewpoint": {
+        "name": "Punto di rugiada"
+      },
+      "temperature_feels_like": {
+        "name": "Temperatura - Sembra"
+      },
+      "temperature": {
+        "name": "Temperatura"
+      },
+      "heat_index": {
+        "name": "Indice di calore"
+      },
+      "wind_chill": {
+        "name": "Vento gelido"
+      },
+      "precipitation_last_hour": {
+        "name": "Precipitazioni - Ultima ora"
+      },
+      "precipitation_last_6_hours": {
+        "name": "Precipitazioni - Ultime 6 ore"
+      },
+      "precipitation_last_24_hours": {
+        "name": "Precipitazioni - Ultime 24 ore"
+      },
+      "pressure": {
+        "name": "Pressione"
+      },
+      "wind_gust": {
+        "name": "Raffica di vento"
+      },
+      "wind_speed": {
+        "name": "Velocità del vento"
+      },
+      "cloud_ceiling": {
+        "name": "Base delle nubi"
+      },
+      "pressure_tendency_trend": {
+        "name": "Tendenza della pressione"
+      },
+      "cloud_cover_phrase": {
+        "name": "Descrizione copertura nuvolosa"
+      },
+      "latitude": {
+        "name": "Latitudine"
+      },
+      "longitude": {
+        "name": "Longitudine"
+      },
+      "icon_code": {
+        "name": "Codice icona"
+      },
+      "snowfall_last_hour": {
+        "name": "Nevicate - Ultima ora"
+      },
+      "snowfall_last_6_hours": {
+        "name": "Nevicate - Ultime 6 ore"
+      },
+      "snowfall_last_24_hours": {
+        "name": "Nevicate - Ultime 24 ore"
+      },
+      "forecast_details": {
+        "name": "Dettagli previsioni"
+      }
+    }
   }
 }

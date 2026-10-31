@@ -64,5 +64,90 @@
         }
       }
     }
+  },
+  "entity": {
+    "sensor": {
+      "local_observation_time": {
+        "name": "当地观测时间"
+      },
+      "weather_description": {
+        "name": "天气描述"
+      },
+      "relative_humidity": {
+        "name": "相对湿度"
+      },
+      "uv_index": {
+        "name": "紫外线指数"
+      },
+      "wind_direction_degrees": {
+        "name": "风向 - 度"
+      },
+      "wind_direction_cardinal": {
+        "name": "风向 - 红衣主教"
+      },
+      "dewpoint": {
+        "name": "露点"
+      },
+      "temperature_feels_like": {
+        "name": "温度 - 感觉"
+      },
+      "temperature": {
+        "name": "温度"
+      },
+      "heat_index": {
+        "name": "热度指数"
+      },
+      "wind_chill": {
+        "name": "风寒"
+      },
+      "precipitation_last_hour": {
+        "name": "降水 - 最后一小时"
+      },
+      "precipitation_last_6_hours": {
+        "name": "降水 - 过去 6 小时"
+      },
+      "precipitation_last_24_hours": {
+        "name": "降水 - 过去 24 小时"
+      },
+      "pressure": {
+        "name": "压力"
+      },
+      "wind_gust": {
+        "name": "阵风"
+      },
+      "wind_speed": {
+        "name": "风速"
+      },
+      "cloud_ceiling": {
+        "name": "云底高度"
+      },
+      "pressure_tendency_trend": {
+        "name": "气压趋势"
+      },
+      "cloud_cover_phrase": {
+        "name": "云量描述"
+      },
+      "latitude": {
+        "name": "纬度"
+      },
+      "longitude": {
+        "name": "经度"
+      },
+      "icon_code": {
+        "name": "图标代码"
+      },
+      "snowfall_last_hour": {
+        "name": "降雪 - 最后一小时"
+      },
+      "snowfall_last_6_hours": {
+        "name": "降雪 - 过去 6 小时"
+      },
+      "snowfall_last_24_hours": {
+        "name": "降雪 - 过去 24 小时"
+      },
+      "forecast_details": {
+        "name": "预报详情"
+      }
+    }
   }
 }

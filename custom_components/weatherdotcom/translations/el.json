@@ -64,5 +64,90 @@
         }
       }
     }
+  },
+  "entity": {
+    "sensor": {
+      "local_observation_time": {
+        "name": "Τοπική ώρα παρατήρησης"
+      },
+      "weather_description": {
+        "name": "Περιγραφή καιρού"
+      },
+      "relative_humidity": {
+        "name": "Σχετική υγρασία"
+      },
+      "uv_index": {
+        "name": "Δείκτης UV"
+      },
+      "wind_direction_degrees": {
+        "name": "Διεύθυνση ανέμου - Μοίρες"
+      },
+      "wind_direction_cardinal": {
+        "name": "Κατεύθυνση Ανέμου - Καρδινάλιος"
+      },
+      "dewpoint": {
+        "name": "Σημείο δρόσου"
+      },
+      "temperature_feels_like": {
+        "name": "Θερμοκρασία - Αισθάνεται σαν"
+      },
+      "temperature": {
+        "name": "Θερμοκρασία"
+      },
+      "heat_index": {
+        "name": "Δείκτης θερμότητας"
+      },
+      "wind_chill": {
+        "name": "Δροσιά"
+      },
+      "precipitation_last_hour": {
+        "name": "Υετός - Τελευταία ώρα"
+      },
+      "precipitation_last_6_hours": {
+        "name": "Υετός - Τελευταίες 6 ώρες"
+      },
+      "precipitation_last_24_hours": {
+        "name": "Υετός - Τελευταίο 24ωρο"
+      },
+      "pressure": {
+        "name": "Πίεση"
+      },
+      "wind_gust": {
+        "name": "Ριπή ανέμου"
+      },
+      "wind_speed": {
+        "name": "ΤΑΧΥΤΗΤΑ ΑΝΕΜΟΥ"
+      },
+      "cloud_ceiling": {
+        "name": "Ύψος βάσης νεφών"
+      },
+      "pressure_tendency_trend": {
+        "name": "Τάση βαρομετρικής πίεσης"
+      },
+      "cloud_cover_phrase": {
+        "name": "Περιγραφή νεφοκάλυψης"
+      },
+      "latitude": {
+        "name": "Γεωγραφικό πλάτος"
+      },
+      "longitude": {
+        "name": "Γεωγραφικό μήκος"
+      },
+      "icon_code": {
+        "name": "Κωδικός εικονιδίου"
+      },
+      "snowfall_last_hour": {
+        "name": "Χιονόπτωση - Τελευταία ώρα"
+      },
+      "snowfall_last_6_hours": {
+        "name": "Χιονόπτωση - Τελευταίες 6 ώρες"
+      },
+      "snowfall_last_24_hours": {
+        "name": "Χιονόπτωση - Τελευταίο 24ωρο"
+      },
+      "forecast_details": {
+        "name": "Λεπτομέρειες πρόγνωσης"
+      }
+    }
   }
 }

@@ -58,10 +58,95 @@
         "title": "Extra Weather Attributes",
         "description": "Select attributes to add to the Forecast Details sensor. See **Advanced Configuration** in the GitHub README via **Help** (?) above.",
         "data": {
-            "daily_attributes": "Daily Attributes",
-            "day_attributes": "Day Attributes",
-            "daypart_attributes": "Daypart Attributes"
+          "daily_attributes": "Daily Attributes",
+          "day_attributes": "Day Attributes",
+          "daypart_attributes": "Daypart Attributes"
         }
+      }
+    }
+  },
+  "entity": {
+    "sensor": {
+      "local_observation_time": {
+        "name": "Local Observation Time"
+      },
+      "weather_description": {
+        "name": "Weather Description"
+      },
+      "relative_humidity": {
+        "name": "Relative Humidity"
+      },
+      "uv_index": {
+        "name": "UV Index"
+      },
+      "wind_direction_degrees": {
+        "name": "Wind Direction - Degrees"
+      },
+      "wind_direction_cardinal": {
+        "name": "Wind Direction - Cardinal"
+      },
+      "dewpoint": {
+        "name": "Dewpoint"
+      },
+      "temperature_feels_like": {
+        "name": "Temperature - Feels Like"
+      },
+      "temperature": {
+        "name": "Temperature"
+      },
+      "heat_index": {
+        "name": "Heat Index"
+      },
+      "wind_chill": {
+        "name": "Wind Chill"
+      },
+      "precipitation_last_hour": {
+        "name": "Precipitation - Last hour"
+      },
+      "precipitation_last_6_hours": {
+        "name": "Precipitation - Last 6 hours"
+      },
+      "precipitation_last_24_hours": {
+        "name": "Precipitation - Last 24 hours"
+      },
+      "pressure": {
+        "name": "Pressure"
+      },
+      "wind_gust": {
+        "name": "Wind Gust"
+      },
+      "wind_speed": {
+        "name": "Wind Speed"
+      },
+      "cloud_ceiling": {
+        "name": "Cloud Ceiling"
+      },
+      "pressure_tendency_trend": {
+        "name": "Pressure Tendency Trend"
+      },
+      "cloud_cover_phrase": {
+        "name": "Cloud Cover Phrase"
+      },
+      "latitude": {
+        "name": "Latitude"
+      },
+      "longitude": {
+        "name": "Longitude"
+      },
+      "icon_code": {
+        "name": "Icon Code"
+      },
+      "snowfall_last_hour": {
+        "name": "Snowfall - Last hour"
+      },
+      "snowfall_last_6_hours": {
+        "name": "Snowfall - Last 6 hours"
+      },
+      "snowfall_last_24_hours": {
+        "name": "Snowfall - Last 24 hours"
+      },
+      "forecast_details": {
+        "name": "Forecast Details"
       }
     }
   }

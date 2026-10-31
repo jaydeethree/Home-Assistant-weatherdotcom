@@ -64,5 +64,90 @@
         }
       }
     }
+  },
+  "entity": {
+    "sensor": {
+      "local_observation_time": {
+        "name": "Hora de observación local"
+      },
+      "weather_description": {
+        "name": "Descripción del tiempo"
+      },
+      "relative_humidity": {
+        "name": "Humedad relativa"
+      },
+      "uv_index": {
+        "name": "Índice UV"
+      },
+      "wind_direction_degrees": {
+        "name": "Dirección del viento - Grados"
+      },
+      "wind_direction_cardinal": {
+        "name": "Dirección del viento - Cardinal"
+      },
+      "dewpoint": {
+        "name": "Punto de rocío"
+      },
+      "temperature_feels_like": {
+        "name": "Temperatura - Se siente como"
+      },
+      "temperature": {
+        "name": "Temperatura"
+      },
+      "heat_index": {
+        "name": "Índice de calor"
+      },
+      "wind_chill": {
+        "name": "Escalofríos"
+      },
+      "precipitation_last_hour": {
+        "name": "Precipitación - Última hora"
+      },
+      "precipitation_last_6_hours": {
+        "name": "Precipitación - Últimas 6 horas"
+      },
+      "precipitation_last_24_hours": {
+        "name": "Precipitación - Últimas 24 horas"
+      },
+      "pressure": {
+        "name": "Presión"
+      },
+      "wind_gust": {
+        "name": "Ráfaga de viento"
+      },
+      "wind_speed": {
+        "name": "Velocidad del viento"
+      },
+      "cloud_ceiling": {
+        "name": "Techo de nubes"
+      },
+      "pressure_tendency_trend": {
+        "name": "Tendencia de la presión"
+      },
+      "cloud_cover_phrase": {
+        "name": "Descripción de nubosidad"
+      },
+      "latitude": {
+        "name": "Latitud"
+      },
+      "longitude": {
+        "name": "Longitud"
+      },
+      "icon_code": {
+        "name": "Código de icono"
+      },
+      "snowfall_last_hour": {
+        "name": "Nevada - Última hora"
+      },
+      "snowfall_last_6_hours": {
+        "name": "Nevada - Últimas 6 horas"
+      },
+      "snowfall_last_24_hours": {
+        "name": "Nevada - Últimas 24 horas"
+      },
+      "forecast_details": {
+        "name": "Detalles del pronóstico"
+      }
+    }
   }
 }

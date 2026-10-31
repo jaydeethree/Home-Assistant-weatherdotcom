@@ -64,5 +64,90 @@
         }
       }
     }
+  },
+  "entity": {
+    "sensor": {
+      "local_observation_time": {
+        "name": "Miestny čas pozorovania"
+      },
+      "weather_description": {
+        "name": "Popis počasia"
+      },
+      "relative_humidity": {
+        "name": "Relatívna vlhkosť"
+      },
+      "uv_index": {
+        "name": "UV index"
+      },
+      "wind_direction_degrees": {
+        "name": "Smer vetra - Stupne"
+      },
+      "wind_direction_cardinal": {
+        "name": "Smer vetra - kardinál"
+      },
+      "dewpoint": {
+        "name": "Rosný bod"
+      },
+      "temperature_feels_like": {
+        "name": "Teplota - pocit"
+      },
+      "temperature": {
+        "name": "Teplota"
+      },
+      "heat_index": {
+        "name": "Tepelný index"
+      },
+      "wind_chill": {
+        "name": "Wind Chill"
+      },
+      "precipitation_last_hour": {
+        "name": "Zrážky – posledná hodina"
+      },
+      "precipitation_last_6_hours": {
+        "name": "Zrážky - posledných 6 hodín"
+      },
+      "precipitation_last_24_hours": {
+        "name": "Zrážky - posledných 24 hodín"
+      },
+      "pressure": {
+        "name": "Tlak"
+      },
+      "wind_gust": {
+        "name": "Náraz vetra"
+      },
+      "wind_speed": {
+        "name": "Rýchlosť vetra"
+      },
+      "cloud_ceiling": {
+        "name": "Základňa oblakov"
+      },
+      "pressure_tendency_trend": {
+        "name": "Tendencia tlaku"
+      },
+      "cloud_cover_phrase": {
+        "name": "Popis oblačnosti"
+      },
+      "latitude": {
+        "name": "Zemepisná šírka"
+      },
+      "longitude": {
+        "name": "Zemepisná dĺžka"
+      },
+      "icon_code": {
+        "name": "Kód ikony"
+      },
+      "snowfall_last_hour": {
+        "name": "Sneženie – posledná hodina"
+      },
+      "snowfall_last_6_hours": {
+        "name": "Sneženie - posledných 6 hodín"
+      },
+      "snowfall_last_24_hours": {
+        "name": "Sneženie - posledných 24 hodín"
+      },
+      "forecast_details": {
+        "name": "Podrobnosti predpovede"
+      }
+    }
   }
 }
