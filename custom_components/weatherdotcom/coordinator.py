@@ -169,9 +169,6 @@ class WeatherUpdateCoordinator(DataUpdateCoordinator[dict[str, Any]]):
         return None, None
 
     async def _async_update_data(self) -> dict[str, Any]:
-        return await self.get_weather()
-
-    async def get_weather(self) -> dict[str, Any]:
         """Get weather data."""
         latitude, longitude = self._get_coordinates()
         if latitude is None or longitude is None:
