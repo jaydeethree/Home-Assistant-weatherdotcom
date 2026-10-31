@@ -149,5 +149,13 @@
         "name": "Detalhes da previsão"
       }
     }
+  },
+  "exceptions": {
+    "cannot_retrieve_coordinates": {
+      "message": "Não foi possível obter as coordenadas de localização {location_entity_id}"
+    },
+    "update_failed": {
+      "message": "Falha ao obter dados meteorológicos"
+    }
   }
 }

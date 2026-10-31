@@ -149,5 +149,13 @@
         "name": "Vorhersagedetails"
       }
     }
+  },
+  "exceptions": {
+    "cannot_retrieve_coordinates": {
+      "message": "Standortkoordinaten für {location_entity_id} konnten nicht abgerufen werden"
+    },
+    "update_failed": {
+      "message": "Wetterdaten konnten nicht abgerufen werden"
+    }
   }
 }

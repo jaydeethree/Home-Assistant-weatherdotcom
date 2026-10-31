@@ -58,9 +58,9 @@
         "title": "Extra Weather Attributes",
         "description": "Select attributes to add to the Forecast Details sensor. See **Advanced Configuration** in the GitHub README via **Help** (?) above.",
         "data": {
-            "daily_attributes": "Daily Attributes",
-            "day_attributes": "Day Attributes",
-            "daypart_attributes": "Daypart Attributes"
+          "daily_attributes": "Daily Attributes",
+          "day_attributes": "Day Attributes",
+          "daypart_attributes": "Daypart Attributes"
         }
       }
     }
@@ -148,6 +148,14 @@
       "forecast_details": {
         "name": "Forecast Details"
       }
+    }
+  },
+  "exceptions": {
+    "cannot_retrieve_coordinates": {
+      "message": "Could not retrieve location coordinates {location_entity_id}"
+    },
+    "update_failed": {
+      "message": "Failed to get weather data"
     }
   }
 }

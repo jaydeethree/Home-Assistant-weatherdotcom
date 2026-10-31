@@ -149,5 +149,13 @@
         "name": "予報の詳細"
       }
     }
+  },
+  "exceptions": {
+    "cannot_retrieve_coordinates": {
+      "message": "位置座標 {location_entity_id} を取得できませんでした"
+    },
+    "update_failed": {
+      "message": "気象データの取得に失敗しました"
+    }
   }
 }

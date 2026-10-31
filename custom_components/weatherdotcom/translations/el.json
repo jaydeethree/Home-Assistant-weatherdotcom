@@ -149,5 +149,13 @@
         "name": "Λεπτομέρειες πρόγνωσης"
       }
     }
+  },
+  "exceptions": {
+    "cannot_retrieve_coordinates": {
+      "message": "Δεν ήταν δυνατή η ανάκτηση των συντεταγμένων τοποθεσίας {location_entity_id}"
+    },
+    "update_failed": {
+      "message": "Αποτυχία λήψης δεδομένων καιρού"
+    }
   }
 }
