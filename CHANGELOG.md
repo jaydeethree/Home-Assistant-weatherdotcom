@@ -2,7 +2,7 @@ Unreleased
 * Significant code clean-up and modernization, including:
   * Vastly improved error handling
   * Deduplicated and simplified several parts of the codebase
-  * Migrated from the old ways of doing things to the modern ways of doing those things (e.g. switch from `hass.data[DOMAIN]` to `entry.runtime_data`)
+  * Migrated from the old ways of doing things to the modern ways of doing those things (e.g. switch from `hass.data[DOMAIN]` to `entry.runtime_data`, switch to Home Assistant's native translation handling, etc.)
   * Added several constants and adopted those constants throughout the codebase
 * Fixed a bug where it wasn't possible to use a latitude or longitude of 0
 * Fixed a bug where icon code 0 (Tornado) would be replaced by icon code 44 (Not Available)
@@ -16,6 +16,7 @@ Unreleased
 * Fixed a bug where location names containing special characters (such as `/`) would fail to save cached temperature data to storage
 * If a tracked location entity temporarily loses its coordinates, the integration will now fall back to the last known coordinates
 * Excluded the Forecast Details sensor's extra attributes from the Home Assistant recorder to prevent database bloat
+* Added twice-daily forecasts to the weather entity
 
 v1.4.1
 * Once again, thank you to @francis110 for all the work you did on this release!
