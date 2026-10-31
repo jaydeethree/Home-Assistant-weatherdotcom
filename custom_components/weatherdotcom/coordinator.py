@@ -30,6 +30,7 @@ from .const import (
     HEADERS,
     ICON_CODE_MAP,
     FIELD_DAYPART,
+    FIELD_QPF,
     FIELD_TEMPERATUREMAX,
     FIELD_TEMPERATUREMIN,
     FIELD_VALIDTIMEUTC,
@@ -287,13 +288,15 @@ class WeatherUpdateCoordinator(DataUpdateCoordinator[dict[str, Any]]):
             return None
         return self.data[RESULTS_CURRENT].get(field)
 
-    def get_forecast_daily(self, field: str, period: int = 0) -> Any:
+    def get_forecast_daily(
+        self, field: str, period: int = 0, is_daypart: bool = True
+    ) -> Any:
         try:
             if field in [
                 FIELD_TEMPERATUREMAX,
                 FIELD_TEMPERATUREMIN,
                 FIELD_VALIDTIMEUTC,
-            ]:
+            ] or (field == FIELD_QPF and not is_daypart):
                 # Those fields exist per-day, rather than per dayPart, so the period is halved
                 return self.data[RESULTS_FORECAST_DAILY][field][period // 2]
             return self.data[RESULTS_FORECAST_DAILY][FIELD_DAYPART][0][field][period]
