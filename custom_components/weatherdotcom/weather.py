@@ -65,6 +65,7 @@ from .helpers import get_first_daypart_index
 _LOGGER = logging.getLogger(__name__)
 
 MAX_HIGH_TEMP_AGE_SECONDS = 14 * 60 * 60
+PARALLEL_UPDATES = 0
 
 
 async def async_setup_entry(
