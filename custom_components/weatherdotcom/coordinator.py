@@ -285,6 +285,7 @@ class WeatherUpdateCoordinator(DataUpdateCoordinator[dict[str, Any]]):
         return None, True
 
     def _check_errors(self, response: dict[str, Any]) -> None:
+        """Raise ValueError if the API response contains errors."""
         if 'errors' not in response:
             return
         if errors := response['errors']:
@@ -295,6 +296,7 @@ class WeatherUpdateCoordinator(DataUpdateCoordinator[dict[str, Any]]):
             raise ValueError(f'Weather.com API error: {messages}')
 
     def get_current(self, field: str) -> Any:
+        """Return a field from the current observations data."""
         if not self.data or self.data.get(RESULTS_CURRENT) is None:
             return None
         return self.data[RESULTS_CURRENT].get(field)
@@ -302,6 +304,7 @@ class WeatherUpdateCoordinator(DataUpdateCoordinator[dict[str, Any]]):
     def get_forecast_daily(
         self, field: str, period: int = 0, is_daypart: bool = True
     ) -> Any:
+        """Return a field from the daily or daypart forecast data."""
         try:
             if field in [
                 FIELD_TEMPERATUREMAX,
@@ -315,6 +318,7 @@ class WeatherUpdateCoordinator(DataUpdateCoordinator[dict[str, Any]]):
             return None
 
     def get_forecast_hourly(self, field: str, hour: int) -> Any:
+        """Return a field from the hourly forecast data for a given hour."""
         try:
             return self.data[RESULTS_FORECAST_HOURLY][field][hour]
         except (IndexError, KeyError, TypeError):
@@ -322,6 +326,7 @@ class WeatherUpdateCoordinator(DataUpdateCoordinator[dict[str, Any]]):
 
     @staticmethod
     def iconcode_to_condition(icon_code: int | None) -> str | None:
+        """Map a Weather.com icon code to a Home Assistant weather condition."""
         if icon_code is None or icon_code == 44:
             return None
         if (condition := ICON_CODE_MAP.get(icon_code)) is not None:
@@ -331,6 +336,7 @@ class WeatherUpdateCoordinator(DataUpdateCoordinator[dict[str, Any]]):
 
     @staticmethod
     def format_timestamp(timestamp_secs: int | float | None) -> str | None:
+        """Format a UTC timestamp in seconds as an ISO 8601 string."""
         if timestamp_secs is None:
             return None
         return datetime.fromtimestamp(timestamp_secs, tz=UTC).strftime('%Y-%m-%dT%H:%M:%SZ')
