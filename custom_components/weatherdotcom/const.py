@@ -72,6 +72,10 @@ DEFAULT_LANG = 'en-US'
 API_URL_IMPERIAL: Final = "e"
 API_URL_METRIC: Final = "m"
 
+RESOURCE_CURRENT: Final = "https://api.weather.com/v3/wx/observations/current"
+RESOURCE_FORECAST_DAILY: Final = "https://api.weather.com/v3/wx/forecast/daily/15day"
+RESOURCE_FORECAST_HOURLY: Final = "https://api.weather.com/v3/wx/forecast/hourly/15day"
+
 RESULTS_CURRENT = 'current'
 RESULTS_FORECAST_DAILY = 'daily'
 RESULTS_FORECAST_HOURLY = 'hourly'
