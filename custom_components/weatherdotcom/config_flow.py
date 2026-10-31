@@ -180,11 +180,11 @@ class WeatherFlowHandler(config_entries.ConfigFlow, domain=DOMAIN):
                     vol.Required(
                         CONF_LATITUDE,
                         default=default_latitude,
-                    ): float,
+                    ): vol.Coerce(float),
                     vol.Required(
                         CONF_LONGITUDE,
                         default=default_longitude,
-                    ): float,
+                    ): vol.Coerce(float),
                 }
             ),
             errors=errors,
