@@ -176,7 +176,8 @@ class WeatherUpdateCoordinator(DataUpdateCoordinator[dict[str, Any]]):
                 translation_domain=DOMAIN,
                 translation_key="cannot_retrieve_coordinates",
                 translation_placeholders={
-                    "location_entity_id": str(self._location_entity_id)
+                    "location_entity_id": self._location_entity_id
+                    or self._location_name
                 },
             )
 
