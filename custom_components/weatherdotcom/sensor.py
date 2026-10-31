@@ -36,6 +36,8 @@ from .weather_current_conditions_sensors import (
     current_condition_sensor_descriptions,
 )
 
+PARALLEL_UPDATES = 0
+
 
 async def async_setup_entry(
         hass: HomeAssistant, entry: WeatherDotComConfigEntry, async_add_entities: AddConfigEntryEntitiesCallback
