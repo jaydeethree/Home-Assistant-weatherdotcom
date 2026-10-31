@@ -42,7 +42,26 @@ from .helpers import get_sensor_unique_id
 _LOGGER = logging.getLogger(__name__)
 
 
-def _get_default_lang(hass_lang: str | None) -> str:
+_PREFERRED_LANG_DEFAULTS: dict[str, str] = {
+    "en": "en-US",
+    "es": "es-ES",
+    "fr": "fr-FR",
+    "nb": "no-NO",
+    "nn": "no-NO",
+    "pa": "pa-IN",
+    "pt": "pt-PT",
+    "sr": "sr-RS",
+    "ta": "ta-IN",
+    "ti": "ti-ET",
+    "zh": "zh-CN",
+    "zh-hans": "zh-CN",
+    "zh-hant": "zh-TW",
+}
+
+
+def _get_default_lang(
+    hass_lang: str | None, hass_country: str | None = None
+) -> str:
     """Return the best matching language code from LANG_CODES."""
     if not hass_lang:
         return DEFAULT_LANG
@@ -50,7 +69,17 @@ def _get_default_lang(hass_lang: str | None) -> str:
     for code in LANG_CODES:
         if code.lower() == hass_lang_lower:
             return code
-    lang_prefix = f"{hass_lang_lower.split('-')[0]}-"
+    base_lang = hass_lang_lower.split("-")[0]
+    if hass_country:
+        country_match = f"{base_lang}-{hass_country.lower()}"
+        for code in LANG_CODES:
+            if code.lower() == country_match:
+                return code
+    if preferred := _PREFERRED_LANG_DEFAULTS.get(hass_lang_lower):
+        return preferred
+    if preferred := _PREFERRED_LANG_DEFAULTS.get(base_lang):
+        return preferred
+    lang_prefix = f"{base_lang}-"
     for code in LANG_CODES:
         if code.lower().startswith(lang_prefix):
             return code
@@ -145,7 +174,9 @@ class WeatherFlowHandler(config_entries.ConfigFlow, domain=DOMAIN):
                     ): str,
                     vol.Required(
                         CONF_LANG,
-                        default=_get_default_lang(self.hass.config.language),
+                        default=_get_default_lang(
+                            self.hass.config.language, self.hass.config.country
+                        ),
                     ): selector.SelectSelector(
                         selector.SelectSelectorConfig(
                             options=LANG_CODES,
