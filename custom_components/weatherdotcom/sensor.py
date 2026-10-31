@@ -31,7 +31,7 @@ from .const import (
     RESULTS_FORECAST_DAILY,
 )
 from .helpers import get_sensor_unique_id
-from .weather_current_conditions_sensors import (
+from .sensor_descriptions import (
     WeatherSensorEntityDescription,
     current_condition_sensor_descriptions,
 )
