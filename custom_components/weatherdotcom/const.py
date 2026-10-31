@@ -23,13 +23,13 @@ from homeassistant.components.weather import (
     ATTR_CONDITION_WINDY_VARIANT
 )
 
-DOMAIN = 'weatherdotcom'
+DOMAIN: Final = 'weatherdotcom'
 ATTRIBUTION: Final = 'Data provided by the Weather.com weather service'
-CONF_LANG = 'lang'
-CONF_LOCATION_SOURCE = 'location_source'
+CONF_LANG: Final = 'lang'
+CONF_LOCATION_SOURCE: Final = 'location_source'
 
-LOCATION_TYPE_ENTITY = 'entity'
-LOCATION_TYPE_LATLONG = 'latlong'
+LOCATION_TYPE_ENTITY: Final = 'entity'
+LOCATION_TYPE_LATLONG: Final = 'latlong'
 
 # Language Supported Codes
 LANG_CODES: Final[list[str]] = [
@@ -68,7 +68,7 @@ ICON_CODE_MAP: Final[dict[int, str]] = {
     for code in codes
 }
 
-DEFAULT_LANG = 'en-US'
+DEFAULT_LANG: Final = 'en-US'
 API_URL_IMPERIAL: Final = "e"
 API_URL_METRIC: Final = "m"
 
@@ -76,45 +76,45 @@ RESOURCE_CURRENT: Final = "https://api.weather.com/v3/wx/observations/current"
 RESOURCE_FORECAST_DAILY: Final = "https://api.weather.com/v3/wx/forecast/daily/15day"
 RESOURCE_FORECAST_HOURLY: Final = "https://api.weather.com/v3/wx/forecast/hourly/15day"
 
-RESULTS_CURRENT = 'current'
-RESULTS_FORECAST_DAILY = 'daily'
-RESULTS_FORECAST_HOURLY = 'hourly'
+RESULTS_CURRENT: Final = 'current'
+RESULTS_FORECAST_DAILY: Final = 'daily'
+RESULTS_FORECAST_HOURLY: Final = 'hourly'
 
-FIELD_CLOUD_CEILING = 'cloudCeiling'
-FIELD_CLOUD_COVER = 'cloudCover'
-FIELD_CLOUD_COVER_PHRASE = 'cloudCoverPhrase'
-FIELD_DAYPART = 'daypart'
-FIELD_DESCRIPTION = 'wxPhraseLong'
-FIELD_DEW_POINT = 'temperatureDewPoint'
-FIELD_FEELS_LIKE = 'temperatureFeelsLike'
-FIELD_HEAT_INDEX = 'temperatureHeatIndex'
-FIELD_HUMIDITY = 'relativeHumidity'
-FIELD_ICONCODE = 'iconCode'
-FIELD_PRECIPCHANCE = 'precipChance'
-FIELD_PRECIP_1HOUR = 'precip1Hour'
-FIELD_PRECIP_6HOUR = 'precip6Hour'
-FIELD_PRECIP_24HOUR = 'precip24Hour'
-FIELD_PRESSURE = 'pressureAltimeter'
-FIELD_PRESSURE_TENDENCY_TREND = 'pressureTendencyTrend'
-FIELD_QPF = 'qpf'
-FIELD_SNOW_1HOUR = 'snow1Hour'
-FIELD_SNOW_6HOUR = 'snow6Hour'
-FIELD_SNOW_24HOUR = 'snow24Hour'
-FIELD_TEMPERATUREMAX = 'temperatureMax'
-FIELD_TEMPERATUREMIN = 'temperatureMin'
-FIELD_TEMP = 'temperature'
-FIELD_UV_INDEX = 'uvIndex'
-FIELD_VALIDTIMELOCAL = 'validTimeLocal'
-FIELD_VALIDTIMEUTC = 'validTimeUtc'
-FIELD_VISIBILITY = 'visibility'
-FIELD_WINDDIRECTIONCARDINAL = 'windDirectionCardinal'
-FIELD_WINDDIR = 'windDirection'
-FIELD_WINDGUST = 'windGust'
-FIELD_WINDSPEED = 'windSpeed'
-FIELD_WIND_CHILL = 'temperatureWindChill'
+FIELD_CLOUD_CEILING: Final = 'cloudCeiling'
+FIELD_CLOUD_COVER: Final = 'cloudCover'
+FIELD_CLOUD_COVER_PHRASE: Final = 'cloudCoverPhrase'
+FIELD_DAYPART: Final = 'daypart'
+FIELD_DESCRIPTION: Final = 'wxPhraseLong'
+FIELD_DEW_POINT: Final = 'temperatureDewPoint'
+FIELD_FEELS_LIKE: Final = 'temperatureFeelsLike'
+FIELD_HEAT_INDEX: Final = 'temperatureHeatIndex'
+FIELD_HUMIDITY: Final = 'relativeHumidity'
+FIELD_ICONCODE: Final = 'iconCode'
+FIELD_PRECIPCHANCE: Final = 'precipChance'
+FIELD_PRECIP_1HOUR: Final = 'precip1Hour'
+FIELD_PRECIP_6HOUR: Final = 'precip6Hour'
+FIELD_PRECIP_24HOUR: Final = 'precip24Hour'
+FIELD_PRESSURE: Final = 'pressureAltimeter'
+FIELD_PRESSURE_TENDENCY_TREND: Final = 'pressureTendencyTrend'
+FIELD_QPF: Final = 'qpf'
+FIELD_SNOW_1HOUR: Final = 'snow1Hour'
+FIELD_SNOW_6HOUR: Final = 'snow6Hour'
+FIELD_SNOW_24HOUR: Final = 'snow24Hour'
+FIELD_TEMPERATUREMAX: Final = 'temperatureMax'
+FIELD_TEMPERATUREMIN: Final = 'temperatureMin'
+FIELD_TEMP: Final = 'temperature'
+FIELD_UV_INDEX: Final = 'uvIndex'
+FIELD_VALIDTIMELOCAL: Final = 'validTimeLocal'
+FIELD_VALIDTIMEUTC: Final = 'validTimeUtc'
+FIELD_VISIBILITY: Final = 'visibility'
+FIELD_WINDDIRECTIONCARDINAL: Final = 'windDirectionCardinal'
+FIELD_WINDDIR: Final = 'windDirection'
+FIELD_WINDGUST: Final = 'windGust'
+FIELD_WINDSPEED: Final = 'windSpeed'
+FIELD_WIND_CHILL: Final = 'temperatureWindChill'
 
-HIGH_TEMP_TODAY_STORAGE = 'high_temp_today'
-HIGH_TEMP_TODAY_TIMESTAMP_STORAGE = 'high_temp_today_timestamp'
+HIGH_TEMP_TODAY_STORAGE: Final = 'high_temp_today'
+HIGH_TEMP_TODAY_TIMESTAMP_STORAGE: Final = 'high_temp_today_timestamp'
 
 CONF_EXTRA_ATTRIBUTES: Final = "extra_attributes"
 EXTRA_ATTRIBUTE_KEYS_DAILY: Final[list[str]] = [
