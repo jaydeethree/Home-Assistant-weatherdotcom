@@ -113,8 +113,7 @@ def _get_extra_attributes(
 
     for attr_name, api_name in DAILY_ATTRIBUTE_MAP.items():
         if attr_name in selected_attributes_set:
-            val = daily_data.get(api_name)
-            result[attr_name] = val if val is not None else [0] * 15
+            result[attr_name] = daily_data.get(api_name)
 
     # Check whether any other attributes are needed
     needed_daypart_attrs = selected_attributes_set.intersection(DAYPART_ATTRIBUTE_MAP)
@@ -130,8 +129,7 @@ def _get_extra_attributes(
     )
     for attr_name in needed_daypart_attrs:
         api_name = DAYPART_ATTRIBUTE_MAP[attr_name]
-        val = daypart_data.get(api_name)
-        result[attr_name] = val if val is not None else [0] * 30
+        result[attr_name] = daypart_data.get(api_name)
 
     if needed_day_attrs:
         daypart_icon_code = daypart_data.get(FIELD_ICONCODE) or []
@@ -143,22 +141,22 @@ def _get_extra_attributes(
         first_index = get_first_daypart_index(daily_data)
         indices = [first_index, *range(2, 29, 2)]
 
-        def _safe_get(arr: list, idx: int, default: Any = None) -> Any:
-            return arr[idx] if idx < len(arr) else default
+        def _safe_get(arr: list, idx: int) -> Any:
+            return arr[idx] if idx < len(arr) else None
 
         if "day_icon_code" in needed_day_attrs:
             result["day_icon_code"] = [
-                _safe_get(daypart_icon_code, i, 0) for i in indices
+                _safe_get(daypart_icon_code, i) for i in indices
             ]
 
         if "day_cloud_cover" in needed_day_attrs:
             result["day_cloud_cover"] = [
-                _safe_get(daypart_cloud_cover, i, 0) or 0 for i in indices
+                _safe_get(daypart_cloud_cover, i) for i in indices
             ]
 
         if "day_relative_humidity" in needed_day_attrs:
             result["day_relative_humidity"] = [
-                _safe_get(daypart_relative_humidity, i, 0) or 0 for i in indices
+                _safe_get(daypart_relative_humidity, i) for i in indices
             ]
 
     return result or None
@@ -250,7 +248,6 @@ current_condition_sensor_descriptions: tuple[WeatherSensorEntityDescription, ...
         state_class=SensorStateClass.MEASUREMENT,
         device_class=SensorDeviceClass.PRECIPITATION,
         unit_fn=lambda units: units.precipitation,
-        value_fn=lambda data: data or 0,
     ),
     WeatherSensorEntityDescription(
         key=FIELD_PRECIP_6HOUR,
@@ -258,7 +255,6 @@ current_condition_sensor_descriptions: tuple[WeatherSensorEntityDescription, ...
         state_class=SensorStateClass.MEASUREMENT,
         device_class=SensorDeviceClass.PRECIPITATION,
         unit_fn=lambda units: units.precipitation,
-        value_fn=lambda data: data or 0,
     ),
     WeatherSensorEntityDescription(
         key=FIELD_PRECIP_24HOUR,
@@ -266,7 +262,6 @@ current_condition_sensor_descriptions: tuple[WeatherSensorEntityDescription, ...
         state_class=SensorStateClass.MEASUREMENT,
         device_class=SensorDeviceClass.PRECIPITATION,
         unit_fn=lambda units: units.precipitation,
-        value_fn=lambda data: data or 0,
     ),
     WeatherSensorEntityDescription(
         key=FIELD_PRESSURE,
@@ -316,7 +311,6 @@ current_condition_sensor_descriptions: tuple[WeatherSensorEntityDescription, ...
         key=FIELD_ICONCODE,
         translation_key="icon_code",
         entity_registry_enabled_default=False,
-        value_fn=lambda data: data if data is not None else 44,
     ),
     WeatherSensorEntityDescription(
         key=FIELD_SNOW_1HOUR,
@@ -324,7 +318,6 @@ current_condition_sensor_descriptions: tuple[WeatherSensorEntityDescription, ...
         state_class=SensorStateClass.MEASUREMENT,
         device_class=SensorDeviceClass.PRECIPITATION,
         unit_fn=lambda units: units.snow,
-        value_fn=lambda data: data or 0,
     ),
     WeatherSensorEntityDescription(
         key=FIELD_SNOW_6HOUR,
@@ -332,7 +325,6 @@ current_condition_sensor_descriptions: tuple[WeatherSensorEntityDescription, ...
         state_class=SensorStateClass.MEASUREMENT,
         device_class=SensorDeviceClass.PRECIPITATION,
         unit_fn=lambda units: units.snow,
-        value_fn=lambda data: data or 0,
     ),
     WeatherSensorEntityDescription(
         key=FIELD_SNOW_24HOUR,
@@ -340,7 +332,6 @@ current_condition_sensor_descriptions: tuple[WeatherSensorEntityDescription, ...
         state_class=SensorStateClass.MEASUREMENT,
         device_class=SensorDeviceClass.PRECIPITATION,
         unit_fn=lambda units: units.snow,
-        value_fn=lambda data: data or 0,
     ),
     WeatherSensorEntityDescription(
         key=FIELD_VALIDTIMEUTC,
