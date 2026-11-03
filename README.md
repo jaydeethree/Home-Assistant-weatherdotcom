@@ -110,24 +110,21 @@ Additional details about the APIs used by this integration are available through
 
 # Localization
 
-Sensor "friendly names" are set via translation files.  
-Weather.com translation files are located in the 'weatherdotcom/weather_translations' directory.
-Files were translated, using 'en.json' as the base, via https://translate.i18next.com.  
-Translations only use the base language code and not the variant (i.e. zh-CN/zh-HK/zh-TW uses zh).  
-The default is en-US (translations/en.json) if the lang: option is not set in the Weather.com config.  
-If lang: is set (i.e.  lang: de-DE), then the translations/de.json file is loaded, and the Weather.com API is queried with de-DE.    
-The translation file applies to all sensor friendly names.    
-Available lang: options are:  
+Localization is handled in two ways:
+
+1. **Entity Names:** Sensor and weather entity names in the Home Assistant UI are automatically translated by Home Assistant based on the language selected in your user profile (`User Profile -> Language`).
+2. **Weather.com API Phrases:** The **Language** setting chosen during integration setup (or via **Configure / Reconfigure**) determines the language code sent to the Weather.com API. This localizes textual weather data returned by the API, such as weather descriptions, daily narratives, moon phases, and wind phrases. Home Assistant will automatically suggest the best matching language code based on your system language and country settings.
+
+Available Weather.com API language codes:
 ```
-'am-ET', 'ar-AE', 'az-AZ', 'bg-BG', 'bn-BD', 'bn-IN', 'bs-BA', 'ca-ES', 'cs-CZ', 'da-DK', 'de-DE', 'el-GR', 'en-GB',
-'en-IN', 'en-US', 'es-AR', 'es-ES', 'es-LA', 'es-MX', 'es-UN', 'es-US', 'et-EE', 'fa-IR', 'fi-FI', 'fr-CA', 'fr-FR',
-'gu-IN', 'he-IL', 'hi-IN', 'hr-HR', 'hu-HU', 'in-ID', 'is-IS', 'it-IT', 'iw-IL', 'ja-JP', 'jv-ID', 'ka-GE', 'kk-KZ',
-'km-KH', 'kn-IN', 'ko-KR', 'lo-LA', 'lt-LT', 'lv-LV', 'mk-MK', 'mn-MN', 'mr-IN', 'ms-MY', 'my-MM', 'ne-IN', 'ne-NP',
-'nl-NL', 'no-NO', 'om-ET', 'pa-IN', 'pa-PK', 'pl-PL', 'pt-BR', 'pt-PT', 'ro-RO', 'ru-RU', 'si-LK', 'sk-SK', 'sl-SI',
-'sq-AL', 'sr-BA', 'sr-ME', 'sr-RS', 'sv-SE', 'sw-KE', 'ta-IN', 'ta-LK', 'te-IN', 'ti-ER', 'ti-ET', 'tg-TJ', 'th-TH',
-'tk-TM', 'tl-PH', 'tr-TR', 'uk-UA', 'ur-PK', 'uz-UZ', 'vi-VN', 'zh-CN', 'zh-HK', 'zh-TW'
+'am-ET', 'ar-AE', 'az-AZ', 'bg-BG', 'bn-BD', 'bn-IN', 'bs-BA', 'ca-ES', 'cs-CZ', 'da-DK', 'de-DE', 'el-GR', 'en-AU',
+'en-CA', 'en-GB', 'en-IN', 'en-US', 'es-AR', 'es-ES', 'es-LA', 'es-MX', 'es-UN', 'es-US', 'et-EE', 'fa-IR', 'fi-FI',
+'fr-CA', 'fr-FR', 'gu-IN', 'he-IL', 'hi-IN', 'hr-HR', 'hu-HU', 'id-ID', 'is-IS', 'it-IT', 'iw-IL', 'ja-JP', 'jv-ID',
+'ka-GE', 'kk-KZ', 'km-KH', 'kn-IN', 'ko-KR', 'lo-LA', 'lt-LT', 'lv-LV', 'mk-MK', 'mn-MN', 'mr-IN', 'ms-MY', 'my-MM',
+'ne-IN', 'ne-NP', 'nl-NL', 'no-NO', 'om-ET', 'pa-IN', 'pa-PK', 'pl-PL', 'pt-BR', 'pt-PT', 'ro-RO', 'ru-RU', 'si-LK',
+'sk-SK', 'sl-SI', 'sq-AL', 'sr-BA', 'sr-ME', 'sr-RS', 'sv-SE', 'sw-KE', 'ta-IN', 'ta-LK', 'te-IN', 'tg-TJ', 'th-TH',
+'ti-ER', 'ti-ET', 'tk-TM', 'tl-PH', 'tr-TR', 'uk-UA', 'ur-PK', 'uz-UZ', 'vi-VN', 'zh-CN', 'zh-HK', 'zh-TW'
 ```
-Weather Entity translations are handled by Home Assistant and configured under the User -> Language setting.
 
 # Advanced Configuration (Forecast Details)
 
