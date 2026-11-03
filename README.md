@@ -97,7 +97,7 @@ In addition to the Weather entity, these additional sensors will be created by t
 * `sensor.<LOCATION_NAME>_wind_chill` - the current wind chill, which is what the current temperature "feels like" when combined with the current wind
 * `sensor.<LOCATION_NAME>_wind_direction_cardinal` - the current cardinal wind direction - for example: North
 * `sensor.<LOCATION_NAME>_wind_direction_degrees` - the current wind direction in degrees
-* `sensor.<LOCATION_NAME>_wind_gust` - the current wind gust speed
+* `sensor.<LOCATION_NAME>_wind_gust` - the current wind gust speed, or `unknown` if there are no gusts
 * `sensor.<LOCATION_NAME>_wind_speed` - the current wind speed
 
 All of the data listed above will be updated every 20 minutes.  

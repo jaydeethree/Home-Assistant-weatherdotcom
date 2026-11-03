@@ -18,6 +18,10 @@ v2.0.0 (available as a beta, final release date is TBD)
 * If a tracked location entity temporarily loses its coordinates, the integration will now fall back to the last known coordinates
 * Excluded the Forecast Details sensor's extra attributes from the Home Assistant recorder to prevent database bloat
 * Added twice-daily forecasts to the weather entity
+* Stopped presenting fake data when Weather.com does not provide a value - these values will now be `unknown`/`None` instead:
+  * IMPORTANT: Automations, scripts, and templates that expect these values to always be numeric may need to be updated
+  * The wind gust sensor and the weather entity's wind gust speed no longer fall back to the current wind speed when there are no gusts
+  * Various sensors (including precipitation, snowfall, and forecast details) no longer report `0` when Weather.com does not provide a value
 
 v1.4.1
 * Once again, thank you to @francis110 for all the work you did on this release!
