@@ -138,11 +138,11 @@ def _get_sensor_data(
         return valid_times[0]
     if sensors.get(RESULTS_CURRENT) is None:
         return None
+    current = sensors[RESULTS_CURRENT]
     if kind == FIELD_WINDDIR:
-        current = sensors[RESULTS_CURRENT]
         return clean_wind_bearing(
             current.get(FIELD_WINDDIR),
             cardinal=current.get(FIELD_WINDDIRECTIONCARDINAL),
             speed=current.get(FIELD_WINDSPEED),
         )
-    return sensors[RESULTS_CURRENT].get(kind)
+    return current.get(kind)
