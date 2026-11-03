@@ -21,10 +21,7 @@ v2.0.0 (available as a beta, final release date is TBD)
 * Stopped presenting fake data when Weather.com does not provide a value - these values will now be `unknown`/`None` instead:
   * IMPORTANT: Automations, scripts, and templates that expect these values to always be numeric may need to be updated
   * The wind gust sensor and the weather entity's wind gust speed no longer fall back to the current wind speed when there are no gusts
-  * The precipitation and snowfall sensors (last hour, last 6 hours, last 24 hours) no longer report `0` when Weather.com does not provide a value
-  * The icon code sensor no longer reports `44` (Not Available) when Weather.com does not provide a value
-  * Forecast Details attributes that are missing from the Weather.com response are now `None` instead of a list of zeros
-  * Missing values in the `day_icon_code`, `day_cloud_cover`, and `day_relative_humidity` Forecast Details attributes are now `None` instead of `0` (previously a missing icon code was reported as `0`, which is Tornado)
+  * Various sensors (including precipitation, snowfall, and forecast details) no longer report `0` when Weather.com does not provide a value
 
 v1.4.1
 * Once again, thank you to @francis110 for all the work you did on this release!
