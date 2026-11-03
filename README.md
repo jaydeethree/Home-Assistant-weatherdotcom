@@ -56,22 +56,22 @@ When choosing your location you have the option to use either a fixed latitude/l
 The following Weather.com data is available in the `weather.<LOCATION_NAME>` entity:
 
 Current conditions:
-- Condition (icon)
+- Condition (icon / state)
 - Temperature
+- Apparent temperature (feels like)
+- Dew point
 - Barometric pressure
+- Relative humidity
 - Wind speed
 - Wind bearing (degrees)
+- Wind gust speed
 - Visibility
+- UV index
 
-Forecast (daily and hourly):
-- Date/time of forecast
-- Temperature (high)
-- Temperature (low)
-- Condition (icon)
-- Precipitation quantity
-- Precipitation probability
-- Wind speed
-- Wind bearing (degrees)
+Forecasts (Daily, Twice-Daily, and Hourly):
+- **Daily:** Date/time, condition, temperature (high), temperature (low), precipitation quantity, precipitation probability, wind speed, wind bearing, relative humidity, cloud coverage, and UV index
+- **Twice-Daily:** Date/time, daytime indicator, condition, temperature, precipitation quantity, precipitation probability, wind speed, wind bearing, relative humidity, cloud coverage, and UV index
+- **Hourly:** Date/time, condition, temperature, apparent temperature, dew point, precipitation quantity, precipitation probability, wind speed, wind gust speed, wind bearing, relative humidity, cloud coverage, and UV index
 
 To access these values in automations, scripts, etc. you will need to create triggered template sensors for them. [This post](https://community.home-assistant.io/t/customising-the-bom-weather-and-lovelace-now-in-hacs/123549/1465) on the Home Assistant forums provides details about how to do that.
 
