@@ -24,10 +24,13 @@ from .const import (
     EXTRA_ATTRIBUTE_KEYS_DAY,
     EXTRA_ATTRIBUTE_KEYS_DAYPART,
     FIELD_VALIDTIMEUTC,
+    FIELD_WINDDIR,
+    FIELD_WINDDIRECTIONCARDINAL,
+    FIELD_WINDSPEED,
     RESULTS_CURRENT,
     RESULTS_FORECAST_DAILY,
 )
-from .helpers import get_sensor_unique_id
+from .helpers import clean_wind_bearing, get_sensor_unique_id
 from .sensor_descriptions import (
     WeatherSensorEntityDescription,
     current_condition_sensor_descriptions,
@@ -135,4 +138,11 @@ def _get_sensor_data(
         return valid_times[0]
     if sensors.get(RESULTS_CURRENT) is None:
         return None
+    if kind == FIELD_WINDDIR:
+        current = sensors[RESULTS_CURRENT]
+        return clean_wind_bearing(
+            current.get(FIELD_WINDDIR),
+            cardinal=current.get(FIELD_WINDDIRECTIONCARDINAL),
+            speed=current.get(FIELD_WINDSPEED),
+        )
     return sensors[RESULTS_CURRENT].get(kind)

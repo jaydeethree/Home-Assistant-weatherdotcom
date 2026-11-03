@@ -21,3 +21,13 @@ def get_first_daypart_index(daily_data: dict[str, Any] | None) -> int:
                 return 1
     return 0
 
+
+def clean_wind_bearing(
+    direction: Any, cardinal: str | None = None, speed: float | None = None
+) -> float | int | None:
+    """Return wind direction in degrees, or None if calm or non-numeric."""
+    if (isinstance(cardinal, str) and cardinal.upper() == "CALM") or speed == 0:
+        return None
+    return direction if isinstance(direction, (int, float)) else None
+
+
