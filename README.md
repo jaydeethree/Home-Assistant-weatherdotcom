@@ -95,8 +95,8 @@ In addition to the Weather entity, these additional sensors will be created by t
 * `sensor.<LOCATION_NAME>_uv_index` - the current UV index, ranging from 0 (very low) to 10 (very high)
 * `sensor.<LOCATION_NAME>_weather_description` - the current weather description, e.g. "Freezing Rain" or "Scattered Showers"
 * `sensor.<LOCATION_NAME>_wind_chill` - the current wind chill, which is what the current temperature "feels like" when combined with the current wind
-* `sensor.<LOCATION_NAME>_wind_direction_cardinal` - the current cardinal wind direction - for example: North (or "CALM" if there is no wind)
-* `sensor.<LOCATION_NAME>_wind_direction_degrees` - the current wind direction in degrees, or `unknown` if the wind is calm
+* `sensor.<LOCATION_NAME>_wind_direction_cardinal` - the current cardinal wind direction, e.g. "NW" (or "CALM" if there is no wind)
+* `sensor.<LOCATION_NAME>_wind_direction_degrees` - the current wind direction in degrees, or `unknown` if there is no wind
 * `sensor.<LOCATION_NAME>_wind_gust` - the current wind gust speed, or `unknown` if there are no gusts
 * `sensor.<LOCATION_NAME>_wind_speed` - the current wind speed
 
