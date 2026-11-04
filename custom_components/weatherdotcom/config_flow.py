@@ -122,7 +122,7 @@ class WeatherFlowHandler(config_entries.ConfigFlow, domain=DOMAIN):
         except (TimeoutError, aiohttp.ClientError) as err:
             err_msg = str(err).replace(api_key, "REDACTED") if api_key else str(err)
             _LOGGER.error("Error connecting to Weather.com during config: %s", err_msg)
-            return "unknown_error"
+            return "cannot_connect"
 
         if status != HTTPStatus.OK:
             _LOGGER.error("Weather.com config responded with HTTP error %s: %s",

@@ -34,6 +34,7 @@
     },
     "error": {
       "already_configured": "この名前の Weather.com 統合は既に存在します。別の名前を選択してください。",
+      "cannot_connect": "Weather.com に接続できませんでした。ネットワーク接続を確認して、もう一度お試しください。",
       "invalid_api_key": "API キーが無効です。",
       "invalid_coordinates": "緯度は -90 から 90 の間、経度は -180 から 180 の間である必要があります。",
       "invalid_location_entity": "選択したエンティティに有効な緯度および経度の属性がありません。",

@@ -34,6 +34,7 @@
     },
     "error": {
       "already_configured": "已存在同名的 Weather.com 集成。请选择其他名称。",
+      "cannot_connect": "无法连接到 Weather.com。请检查您的网络连接并重试。",
       "invalid_api_key": "API 密钥无效。",
       "invalid_coordinates": "纬度必须介于 -90 到 90 之间，经度必须介于 -180 到 180 之间。",
       "invalid_location_entity": "所选实体没有有效的纬度和经度属性。",
