@@ -34,6 +34,7 @@
     },
     "error": {
       "already_configured": "Eine Weather.com-Integration mit diesem Namen ist bereits vorhanden. Bitte wählen Sie einen anderen Namen.",
+      "cannot_connect": "Verbindung zu Weather.com fehlgeschlagen. Bitte überprüfen Sie Ihre Netzwerkverbindung und versuchen Sie es erneut.",
       "invalid_api_key": "Der API-Schlüssel ist ungültig.",
       "invalid_coordinates": "Der Breitengrad muss zwischen -90 und 90 und der Längengrad zwischen -180 und 180 liegen.",
       "invalid_location_entity": "Die ausgewählte Entität verfügt über keine gültigen Breiten- und Längengradattribute.",

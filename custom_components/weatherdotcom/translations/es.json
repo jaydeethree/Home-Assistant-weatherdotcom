@@ -34,6 +34,7 @@
     },
     "error": {
       "already_configured": "Ya existe una integración de Weather.com con este nombre. Por favor, elige un nombre diferente.",
+      "cannot_connect": "No se pudo conectar con Weather.com. Comprueba tu conexión de red e inténtalo de nuevo.",
       "invalid_api_key": "La clave de API no es válida.",
       "invalid_coordinates": "La latitud debe estar entre -90 y 90, y la longitud entre -180 y 180.",
       "invalid_location_entity": "La entidad seleccionada no tiene atributos válidos de latitud y longitud.",
