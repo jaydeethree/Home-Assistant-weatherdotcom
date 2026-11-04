@@ -16,18 +16,27 @@ from homeassistant.helpers.aiohttp_client import async_get_clientsession
 from homeassistant.helpers.device_registry import DeviceEntryType, DeviceInfo
 from homeassistant.helpers.update_coordinator import DataUpdateCoordinator, UpdateFailed
 from homeassistant.const import (
+    CONF_API_KEY,
+    CONF_ENTITY_ID,
     CONF_LATITUDE,
     CONF_LONGITUDE,
+    CONF_NAME,
     UnitOfPressure,
     UnitOfTemperature,
     UnitOfLength,
     UnitOfSpeed,
 )
+from homeassistant.util.unit_system import METRIC_SYSTEM
 from .const import (
+    API_URL_IMPERIAL,
     API_URL_METRIC,
+    CONF_LANG,
+    CONF_LOCATION_SOURCE,
     DOMAIN,
     HEADERS,
     ICON_CODE_MAP,
+    LOCATION_TYPE_ENTITY,
+    LOCATION_TYPE_LATLONG,
     FIELD_DAYPART,
     FIELD_QPF,
     FIELD_TEMPERATUREMAX,
@@ -81,21 +90,6 @@ IMPERIAL_UNITS = WeatherUnits(
 )
 
 
-@dataclass
-class WeatherUpdateCoordinatorConfig:
-    """Class representing coordinator configuration."""
-
-    api_key: str
-    location_name: str
-    unit_system_api: str
-    lang: str
-
-    update_interval: timedelta = MIN_TIME_BETWEEN_UPDATES
-    location_entity_id: str | None = None
-    # For legacy services that have not migrated
-    latitude: float | None = None
-    longitude: float | None = None
-
 type WeatherDotComConfigEntry = ConfigEntry[WeatherUpdateCoordinator]
 
 
@@ -105,14 +99,15 @@ class WeatherUpdateCoordinator(DataUpdateCoordinator[dict[str, Any]]):
     def __init__(
             self,
             hass: HomeAssistant,
-            config: WeatherUpdateCoordinatorConfig,
             entry: WeatherDotComConfigEntry,
     ) -> None:
         """Initialize."""
-        self._api_key = config.api_key
-        self._location_name = config.location_name
-        self._unit_system_api = config.unit_system_api
-        self._lang = config.lang
+        self._api_key = entry.data[CONF_API_KEY]
+        self._location_name = entry.data[CONF_NAME]
+        self._unit_system_api = (
+            API_URL_METRIC if hass.config.units is METRIC_SYSTEM else API_URL_IMPERIAL
+        )
+        self._lang = entry.data[CONF_LANG]
         self._consecutive_failures: dict[str, int] = {
             RESULTS_CURRENT: 0,
             RESULTS_FORECAST_DAILY: 0,
@@ -121,11 +116,25 @@ class WeatherUpdateCoordinator(DataUpdateCoordinator[dict[str, Any]]):
         self._session = async_get_clientsession(hass)
         self.store = WeatherDotComStorage(hass, self._location_name)
 
-        self._location_entity_id = config.location_entity_id
-        self._latitude = config.latitude
-        self._longitude = config.longitude
-        self.current_latitude: float | None = config.latitude
-        self.current_longitude: float | None = config.longitude
+        # Only use the location fields for the configured location source. Entries
+        # reconfigured by older versions may contain stale keys from a previous
+        # location source. Entries without a location source predate that option
+        # and keep the legacy behavior of using whatever is present.
+        location_source = entry.data.get(CONF_LOCATION_SOURCE)
+        location_entity_id: str | None = entry.data.get(CONF_ENTITY_ID)
+        # For legacy services that have not migrated
+        latitude: float | None = entry.data.get(CONF_LATITUDE)
+        longitude: float | None = entry.data.get(CONF_LONGITUDE)
+        if location_source == LOCATION_TYPE_LATLONG:
+            location_entity_id = None
+        elif location_source == LOCATION_TYPE_ENTITY:
+            latitude = longitude = None
+
+        self._location_entity_id = location_entity_id
+        self._latitude = latitude
+        self._longitude = longitude
+        self.current_latitude: float | None = latitude
+        self.current_longitude: float | None = longitude
 
         self.device_info = _get_device_info(self._location_name)
         self.units = (
@@ -137,7 +146,7 @@ class WeatherUpdateCoordinator(DataUpdateCoordinator[dict[str, Any]]):
             _LOGGER,
             config_entry=entry,
             name=f"{DOMAIN} ({self._location_name})",
-            update_interval=config.update_interval,
+            update_interval=MIN_TIME_BETWEEN_UPDATES,
         )
 
     @property
