@@ -1,0 +1,39 @@
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+norecursedirs = [".git", ".venv", "venv"]
+asyncio_mode = "auto"
+asyncio_default_fixture_loop_scope = "function"
+
+[tool.coverage.run]
+source = ["custom_components.weatherdotcom"]
+
+[tool.coverage.report]
+show_missing = true
+exclude_also = [
+    "if TYPE_CHECKING:",
+]
+
+[tool.ruff]
+target-version = "py313"
+line-length = 88
+
+[tool.ruff.lint]
+select = [
+    "ASYNC", # flake8-async
+    "B",     # flake8-bugbear
+    "E",     # pycodestyle errors
+    "F",     # pyflakes
+    "I",     # isort
+    "RUF",   # ruff-specific rules
+    "SIM",   # flake8-simplify
+    "UP",    # pyupgrade
+    "W",     # pycodestyle warnings
+]
+ignore = [
+    "E501",  # line too long (handled by ruff format)
+]
+
+[tool.mypy]
+python_version = "3.13"
+strict = true
+warn_unused_ignores = true
