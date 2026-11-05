@@ -20,7 +20,7 @@ from homeassistant.components.weather import (
     ATTR_CONDITION_SNOWY_RAINY,
     ATTR_CONDITION_SUNNY,
     ATTR_CONDITION_WINDY,
-    ATTR_CONDITION_WINDY_VARIANT
+    ATTR_CONDITION_WINDY_VARIANT,
 )
 
 DOMAIN: Final = 'weatherdotcom'

@@ -23,16 +23,19 @@ from homeassistant.components.weather import (
     ATTR_FORECAST_UV_INDEX,
     ATTR_FORECAST_WIND_BEARING,
     ENTITY_ID_FORMAT,
-    SingleCoordinatorWeatherEntity,
-    WeatherEntityFeature,
     Forecast,
-    DOMAIN as WEATHER_DOMAIN
+    SingleCoordinatorWeatherEntity,
 )
-from homeassistant.core import HomeAssistant
+from homeassistant.components.weather.const import (
+    DOMAIN as WEATHER_DOMAIN,
+)
+from homeassistant.components.weather.const import (
+    WeatherEntityFeature,
+)
+from homeassistant.core import HomeAssistant, callback
 from homeassistant.helpers.entity import generate_entity_id
 from homeassistant.helpers.entity_platform import AddConfigEntryEntitiesCallback
 
-from .coordinator import WeatherDotComConfigEntry, WeatherUpdateCoordinator
 from .const import (
     ATTRIBUTION,
     FIELD_CLOUD_COVER,
@@ -53,12 +56,12 @@ from .const import (
     FIELD_WINDDIRECTIONCARDINAL,
     FIELD_WINDGUST,
     FIELD_WINDSPEED,
-
     HIGH_TEMP_TODAY_STORAGE,
     HIGH_TEMP_TODAY_TIMESTAMP_STORAGE,
     RESULTS_FORECAST_DAILY,
     RESULTS_FORECAST_HOURLY,
 )
+from .coordinator import WeatherDotComConfigEntry, WeatherUpdateCoordinator
 from .helpers import clean_wind_bearing, get_first_daypart_index
 
 _LOGGER = logging.getLogger(__name__)
@@ -76,7 +79,7 @@ async def async_setup_entry(
     ])
 
 
-class WeatherDotComForecast(SingleCoordinatorWeatherEntity):
+class WeatherDotComForecast(SingleCoordinatorWeatherEntity[WeatherUpdateCoordinator]):
     """Implementation of a Weather.com weather entity."""
 
     _attr_attribution = ATTRIBUTION
@@ -172,12 +175,13 @@ class WeatherDotComForecast(SingleCoordinatorWeatherEntity):
         """Return the UV index."""
         return self.coordinator.get_current(FIELD_UV_INDEX)
 
-    async def async_forecast_daily(self) -> list[Forecast] | None:
+    @callback
+    def _async_forecast_daily(self) -> list[Forecast] | None:
         """Return the daily forecast in native units."""
         if not self.coordinator.data or self.coordinator.data.get(RESULTS_FORECAST_DAILY) is None:
             return []
 
-        stored_data = await self._store.async_load()
+        stored_data = self._store.data
 
         daily_data = self.coordinator.data[RESULTS_FORECAST_DAILY]
         daily_times = daily_data.get(FIELD_VALIDTIMEUTC) or []
@@ -260,7 +264,8 @@ class WeatherDotComForecast(SingleCoordinatorWeatherEntity):
             }))
         return forecast
 
-    async def async_forecast_twice_daily(self) -> list[Forecast] | None:
+    @callback
+    def _async_forecast_twice_daily(self) -> list[Forecast] | None:
         """Return the twice daily forecast in native units."""
         if not self.coordinator.data or self.coordinator.data.get(RESULTS_FORECAST_DAILY) is None:
             return []
@@ -311,7 +316,8 @@ class WeatherDotComForecast(SingleCoordinatorWeatherEntity):
             }))
         return forecast
 
-    async def async_forecast_hourly(self) -> list[Forecast] | None:
+    @callback
+    def _async_forecast_hourly(self) -> list[Forecast] | None:
         """Return the hourly forecast in native units."""
         if not self.coordinator.data or self.coordinator.data.get(RESULTS_FORECAST_HOURLY) is None:
             return []

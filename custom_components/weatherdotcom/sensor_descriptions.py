@@ -4,8 +4,22 @@ from __future__ import annotations
 
 from collections.abc import Callable
 from dataclasses import dataclass
-from typing import Any, Final
 from datetime import UTC, datetime
+from typing import Any, Final
+
+from homeassistant.components.sensor import (
+    SensorDeviceClass,
+    SensorEntityDescription,
+    SensorStateClass,
+)
+from homeassistant.const import (
+    CONF_LATITUDE,
+    CONF_LONGITUDE,
+    DEGREE,
+    PERCENTAGE,
+    UV_INDEX,
+)
+from homeassistant.helpers.typing import StateType
 
 from .const import (
     EXTRA_ATTRIBUTE_KEYS_DAY,
@@ -31,19 +45,15 @@ from .const import (
     FIELD_UV_INDEX,
     FIELD_VALIDTIMELOCAL,
     FIELD_VALIDTIMEUTC,
+    FIELD_WIND_CHILL,
     FIELD_WINDDIR,
     FIELD_WINDDIRECTIONCARDINAL,
     FIELD_WINDGUST,
     FIELD_WINDSPEED,
-    FIELD_WIND_CHILL,
     RESULTS_FORECAST_DAILY,
 )
 from .coordinator import WeatherUnits
 from .helpers import get_first_daypart_index
-from homeassistant.components.sensor import SensorEntityDescription, SensorDeviceClass, SensorStateClass
-from homeassistant.const import CONF_LATITUDE, CONF_LONGITUDE, PERCENTAGE, UV_INDEX, DEGREE
-from homeassistant.helpers.typing import StateType
-
 
 # Mapping of daily sensor attributes to Weather.com API names
 DAILY_ATTRIBUTE_MAP: Final[dict[str, str]] = {
@@ -141,7 +151,7 @@ def _get_extra_attributes(
         first_index = get_first_daypart_index(daily_data)
         indices = [first_index, *range(2, 29, 2)]
 
-        def _safe_get(arr: list, idx: int) -> Any:
+        def _safe_get(arr: list[Any], idx: int) -> Any:
             return arr[idx] if idx < len(arr) else None
 
         if "day_icon_code" in needed_day_attrs:
@@ -166,7 +176,7 @@ def _get_extra_attributes(
 class WeatherSensorEntityDescription(SensorEntityDescription):
     """Describes Weather.com Sensor entity."""
 
-    value_fn: Callable[[Any], StateType] = lambda data: data
+    value_fn: Callable[[Any], StateType | datetime] = lambda data: data
     attr_fn: Callable[
         [dict[str, Any] | None, list[str] | None],
         dict[str, Any] | None,
