@@ -155,9 +155,7 @@ def _get_extra_attributes(
             return arr[idx] if idx < len(arr) else None
 
         if "day_icon_code" in needed_day_attrs:
-            result["day_icon_code"] = [
-                _safe_get(daypart_icon_code, i) for i in indices
-            ]
+            result["day_icon_code"] = [_safe_get(daypart_icon_code, i) for i in indices]
 
         if "day_cloud_cover" in needed_day_attrs:
             result["day_cloud_cover"] = [
@@ -177,10 +175,13 @@ class WeatherSensorEntityDescription(SensorEntityDescription):
     """Describes Weather.com Sensor entity."""
 
     value_fn: Callable[[Any], StateType | datetime] = lambda data: data
-    attr_fn: Callable[
-        [dict[str, Any] | None, list[str] | None],
-        dict[str, Any] | None,
-    ] | None = None
+    attr_fn: (
+        Callable[
+            [dict[str, Any] | None, list[str] | None],
+            dict[str, Any] | None,
+        ]
+        | None
+    ) = None
     unit_fn: Callable[[WeatherUnits], str | None] = lambda _: None
 
 
@@ -348,12 +349,14 @@ current_condition_sensor_descriptions: tuple[WeatherSensorEntityDescription, ...
         translation_key="forecast_details",
         entity_registry_enabled_default=False,
         device_class=SensorDeviceClass.TIMESTAMP,
-        value_fn=lambda data: datetime.fromtimestamp(data, UTC) if isinstance(data, (int, float)) and data > 0 else None,
-        attr_fn=lambda coordinator_data, selected_attributes: (
-            _get_extra_attributes(
-                coordinator_data,
-                selected_attributes,
-            )
+        value_fn=lambda data: (
+            datetime.fromtimestamp(data, UTC)
+            if isinstance(data, (int, float)) and data > 0
+            else None
         ),
-    )
+        attr_fn=lambda coordinator_data, selected_attributes: _get_extra_attributes(
+            coordinator_data,
+            selected_attributes,
+        ),
+    ),
 )

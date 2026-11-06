@@ -1,4 +1,5 @@
 """Helper functions for the Weather.com integration."""
+
 from __future__ import annotations
 
 from typing import Any
@@ -29,5 +30,3 @@ def clean_wind_bearing(
     if (isinstance(cardinal, str) and cardinal.upper() == "CALM") or speed == 0:
         return None
     return direction if isinstance(direction, (int, float)) else None
-
-
