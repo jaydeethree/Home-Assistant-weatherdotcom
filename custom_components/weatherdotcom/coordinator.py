@@ -3,51 +3,51 @@
 from __future__ import annotations
 
 import asyncio
+import logging
 from dataclasses import dataclass
 from datetime import UTC, datetime, timedelta
-import logging
 from typing import Any
 
 import aiohttp
-
 from homeassistant.config_entries import ConfigEntry
-from homeassistant.core import HomeAssistant
-from homeassistant.helpers.aiohttp_client import async_get_clientsession
-from homeassistant.helpers.device_registry import DeviceEntryType, DeviceInfo
-from homeassistant.helpers.update_coordinator import DataUpdateCoordinator, UpdateFailed
 from homeassistant.const import (
     CONF_API_KEY,
     CONF_ENTITY_ID,
     CONF_LATITUDE,
     CONF_LONGITUDE,
     CONF_NAME,
-    UnitOfPressure,
-    UnitOfTemperature,
     UnitOfLength,
+    UnitOfPressure,
     UnitOfSpeed,
+    UnitOfTemperature,
 )
+from homeassistant.core import HomeAssistant
+from homeassistant.helpers.aiohttp_client import async_get_clientsession
+from homeassistant.helpers.device_registry import DeviceEntryType, DeviceInfo
+from homeassistant.helpers.update_coordinator import DataUpdateCoordinator, UpdateFailed
 from homeassistant.util.unit_system import METRIC_SYSTEM
+
 from .const import (
     API_URL_IMPERIAL,
     API_URL_METRIC,
     CONF_LANG,
     CONF_LOCATION_SOURCE,
     DOMAIN,
-    HEADERS,
-    ICON_CODE_MAP,
-    LOCATION_TYPE_ENTITY,
-    LOCATION_TYPE_LATLONG,
     FIELD_DAYPART,
     FIELD_QPF,
     FIELD_TEMPERATUREMAX,
     FIELD_TEMPERATUREMIN,
     FIELD_VALIDTIMEUTC,
+    HEADERS,
+    ICON_CODE_MAP,
+    LOCATION_TYPE_ENTITY,
+    LOCATION_TYPE_LATLONG,
     RESOURCE_CURRENT,
     RESOURCE_FORECAST_DAILY,
     RESOURCE_FORECAST_HOURLY,
     RESULTS_CURRENT,
     RESULTS_FORECAST_DAILY,
-    RESULTS_FORECAST_HOURLY
+    RESULTS_FORECAST_HOURLY,
 )
 from .store import WeatherDotComStorage
 
@@ -212,21 +212,23 @@ class WeatherUpdateCoordinator(DataUpdateCoordinator[dict[str, Any]]):
         )
         if result_forecast_daily is not None:
             # If the result includes max temperature data for today,
-            # update that data in storage.
+            # update that data in storage; otherwise ensure stored data is loaded.
             temp_max_list = result_forecast_daily.get(FIELD_TEMPERATUREMAX)
             valid_time_list = result_forecast_daily.get(FIELD_VALIDTIMEUTC)
-            if (
-                temp_max_list
-                and temp_max_list[0] is not None
-                and valid_time_list
-                and valid_time_list[0] is not None
-            ):
-                try:
+            try:
+                if (
+                    temp_max_list
+                    and temp_max_list[0] is not None
+                    and valid_time_list
+                    and valid_time_list[0] is not None
+                ):
                     await self.store.async_save(temp_max_list[0], valid_time_list[0])
-                except OSError as err:
-                    _LOGGER.warning(
-                        "Failed to save high temperature to storage: %s", err
-                    )
+                else:
+                    await self.store.async_load()
+            except OSError as err:
+                _LOGGER.warning(
+                    "Failed to save high temperature to storage: %s", err
+                )
 
         prev_data = self.data or {}
         results: dict[str, Any] = {}
@@ -347,10 +349,8 @@ class WeatherUpdateCoordinator(DataUpdateCoordinator[dict[str, Any]]):
         return None
 
     @staticmethod
-    def format_timestamp(timestamp_secs: int | float | None) -> str | None:
+    def format_timestamp(timestamp_secs: int | float) -> str:
         """Format a UTC timestamp in seconds as an ISO 8601 string."""
-        if timestamp_secs is None:
-            return None
         return datetime.fromtimestamp(timestamp_secs, tz=UTC).strftime('%Y-%m-%dT%H:%M:%SZ')
 
 

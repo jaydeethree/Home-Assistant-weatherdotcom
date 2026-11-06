@@ -36,4 +36,6 @@ ignore = [
 [tool.mypy]
 python_version = "3.13"
 strict = true
+warn_return_any = false
 warn_unused_ignores = true
+explicit_package_bases = true

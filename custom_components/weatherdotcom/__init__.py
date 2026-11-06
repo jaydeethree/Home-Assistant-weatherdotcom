@@ -1,10 +1,9 @@
 """The weather.com component."""
 from typing import Final
-from homeassistant.const import (
-    CONF_NAME,
-    Platform
-)
+
+from homeassistant.const import CONF_NAME, Platform
 from homeassistant.core import HomeAssistant
+
 from .coordinator import (
     WeatherDotComConfigEntry,
     WeatherUpdateCoordinator,

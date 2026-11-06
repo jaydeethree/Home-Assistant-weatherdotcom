@@ -5,6 +5,7 @@ https://github.com/jaydeethree/Home-Assistant-weatherdotcom
 """
 from __future__ import annotations
 
+from datetime import datetime
 from typing import Any
 
 from homeassistant.components.sensor import ENTITY_ID_FORMAT, SensorEntity
@@ -14,8 +15,6 @@ from homeassistant.helpers.entity import generate_entity_id
 from homeassistant.helpers.entity_platform import AddConfigEntryEntitiesCallback
 from homeassistant.helpers.typing import StateType
 from homeassistant.helpers.update_coordinator import CoordinatorEntity
-
-from .coordinator import WeatherDotComConfigEntry, WeatherUpdateCoordinator
 
 from .const import (
     ATTRIBUTION,
@@ -30,6 +29,7 @@ from .const import (
     RESULTS_CURRENT,
     RESULTS_FORECAST_DAILY,
 )
+from .coordinator import WeatherDotComConfigEntry, WeatherUpdateCoordinator
 from .helpers import clean_wind_bearing, get_sensor_unique_id
 from .sensor_descriptions import (
     WeatherSensorEntityDescription,
@@ -101,7 +101,7 @@ class WeatherSensor(CoordinatorEntity[WeatherUpdateCoordinator], SensorEntity):
         return self.coordinator.data.get(RESULTS_CURRENT) is not None
 
     @property
-    def native_value(self) -> StateType:
+    def native_value(self) -> StateType | datetime:
         """Return the state."""
         if self.entity_description.key == CONF_LATITUDE:
             data = self.coordinator.current_latitude
