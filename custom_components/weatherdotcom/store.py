@@ -10,7 +10,7 @@ from homeassistant.util import slugify
 
 from .const import DOMAIN, HIGH_TEMP_TODAY_STORAGE, HIGH_TEMP_TODAY_TIMESTAMP_STORAGE
 
-STORAGE_KEY = '{domain}.{location_name}'
+STORAGE_KEY = "{domain}.{location_name}"
 STORAGE_VERSION = 1
 
 
@@ -41,7 +41,8 @@ class WeatherDotComStorage:
         current = await self.async_load()
         if (
             current.get(HIGH_TEMP_TODAY_STORAGE) == high_temp_today
-            and current.get(HIGH_TEMP_TODAY_TIMESTAMP_STORAGE) == high_temp_today_timestamp
+            and current.get(HIGH_TEMP_TODAY_TIMESTAMP_STORAGE)
+            == high_temp_today_timestamp
         ):
             return
         data_to_save = {
