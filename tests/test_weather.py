@@ -22,6 +22,7 @@ from syrupy.assertion import SnapshotAssertion
 from custom_components.weatherdotcom.const import (
     FIELD_DAYPART,
     FIELD_PRECIPCHANCE,
+    FIELD_VALIDTIMEUTC,
     FIELD_WINDDIRECTIONCARDINAL,
     FIELD_WINDSPEED,
     RESULTS_FORECAST_DAILY,
@@ -191,8 +192,23 @@ async def test_weather_calm_wind_and_empty_forecasts(
     hourly_0 = (await _async_get_forecasts(hass, "hourly"))[0]
     assert hourly_0.get(ATTR_FORECAST_WIND_BEARING) is None
 
-    # When daily and hourly forecast data are None, forecast services return an empty list
+    # If a validTimeUtc entry is None, that entry is skipped rather than failing the forecast
     coordinator = mock_config_entry.runtime_data
+    daily_15day_json[FIELD_VALIDTIMEUTC][1] = None
+    hourly_15day_json[FIELD_VALIDTIMEUTC][2] = None
+    coordinator.async_set_updated_data(
+        {
+            **coordinator.data,
+            RESULTS_FORECAST_DAILY: daily_15day_json,
+            RESULTS_FORECAST_HOURLY: hourly_15day_json,
+        }
+    )
+    await hass.async_block_till_done()
+    assert len(await _async_get_forecasts(hass, "daily")) == 14
+    assert len(await _async_get_forecasts(hass, "twice_daily")) == 28
+    assert len(await _async_get_forecasts(hass, "hourly")) == 359
+
+    # When daily and hourly forecast data are None, forecast services return an empty list
     coordinator.async_set_updated_data(
         {
             **coordinator.data,
