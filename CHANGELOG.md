@@ -22,6 +22,7 @@ v2.0.0 (available as a beta, final release date is TBD)
   * IMPORTANT: Automations, scripts, and templates that expect these values to always be numeric may need to be updated
   * The wind gust sensor and the weather entity's wind gust speed no longer fall back to the current wind speed when there are no gusts
   * Various sensors (including precipitation, snowfall, and forecast details) no longer report `0` when Weather.com does not provide a value
+* Significant CI improvements, including a full test suite and type checking
 
 v1.4.1
 * Once again, thank you to @francis110 for all the work you did on this release!
