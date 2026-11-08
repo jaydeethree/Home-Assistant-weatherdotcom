@@ -195,6 +195,10 @@ class WeatherDotComForecast(SingleCoordinatorWeatherEntity[WeatherUpdateCoordina
 
         forecast = []
         for period in days:
+            timestamp = self.coordinator.get_forecast_daily(FIELD_VALIDTIMEUTC, period)
+            if timestamp is None:
+                continue
+
             # After 15:00 local time the Weather.com API returns None for the
             # high temperature. When this happens, return the last known high
             # temperature instead of None.
@@ -252,9 +256,7 @@ class WeatherDotComForecast(SingleCoordinatorWeatherEntity[WeatherUpdateCoordina
                             FIELD_TEMPERATUREMIN, period
                         ),
                         ATTR_FORECAST_TIME: self.coordinator.format_timestamp(
-                            self.coordinator.get_forecast_daily(
-                                FIELD_VALIDTIMEUTC, period
-                            )
+                            timestamp
                         ),
                         ATTR_FORECAST_UV_INDEX: self.coordinator.get_forecast_daily(
                             FIELD_UV_INDEX, period
@@ -288,12 +290,14 @@ class WeatherDotComForecast(SingleCoordinatorWeatherEntity[WeatherUpdateCoordina
 
         forecast = []
         for period in range(start_period, len(daily_times) * 2):
-            is_daytime = period % 2 == 0
             timestamp = self.coordinator.get_forecast_daily(FIELD_VALIDTIMEUTC, period)
+            if timestamp is None:
+                continue
+            is_daytime = period % 2 == 0
             # FIELD_VALIDTIMEUTC is only once-daily while the other fields are
             # twice-daily, so adjust the night-time timestamp to fake it being
             # twice-daily.
-            if timestamp is not None and not is_daytime:
+            if not is_daytime:
                 timestamp += 12 * 3600
 
             forecast.append(
@@ -352,6 +356,9 @@ class WeatherDotComForecast(SingleCoordinatorWeatherEntity[WeatherUpdateCoordina
         )
         forecast = []
         for hour in range(len(hourly_times)):
+            timestamp = self.coordinator.get_forecast_hourly(FIELD_VALIDTIMEUTC, hour)
+            if timestamp is None:
+                continue
             forecast.append(
                 Forecast(
                     {
@@ -383,9 +390,7 @@ class WeatherDotComForecast(SingleCoordinatorWeatherEntity[WeatherUpdateCoordina
                             FIELD_TEMP, hour
                         ),
                         ATTR_FORECAST_TIME: self.coordinator.format_timestamp(
-                            self.coordinator.get_forecast_hourly(
-                                FIELD_VALIDTIMEUTC, hour
-                            )
+                            timestamp
                         ),
                         ATTR_FORECAST_UV_INDEX: self.coordinator.get_forecast_hourly(
                             FIELD_UV_INDEX, hour
