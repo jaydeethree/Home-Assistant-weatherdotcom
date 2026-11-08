@@ -9,9 +9,13 @@ from homeassistant.components.weather import (
     ATTR_FORECAST_PRECIPITATION_PROBABILITY,
     ATTR_FORECAST_TEMP,
     ATTR_FORECAST_WIND_BEARING,
+)
+from homeassistant.components.weather.const import (
+    DOMAIN as WEATHER_DOMAIN,
+)
+from homeassistant.components.weather.const import (
     SERVICE_GET_FORECASTS,
 )
-from homeassistant.components.weather.const import DOMAIN as WEATHER_DOMAIN
 from homeassistant.const import ATTR_ENTITY_ID
 from homeassistant.core import HomeAssistant
 from homeassistant.util.unit_system import US_CUSTOMARY_SYSTEM
