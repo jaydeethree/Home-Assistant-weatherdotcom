@@ -23,35 +23,35 @@ This checklist covers end-to-end manual verification in a live Home Assistant in
 ## 1. New Installation Setup Flows (`config_flow.py`)
 
 ### 1.1 Step 1 (`user`) — Defaults & Validation
-- [ ] **Default Values:** Start adding the **Weather.com** integration (**Settings → Devices & Services → Add Integration**). Verify:
+- [x] **Default Values:** Start adding the **Weather.com** integration (**Settings → Devices & Services → Add Integration**). Verify:
   - **Location Name** defaults to your Home Assistant instance's configured name (`hass.config.location_name`).
   - **Language** defaults to the best match for your Home Assistant language/country via `_get_default_lang`
   - **Location Source** defaults to **Latitude/Longitude**.
-- [ ] **Invalid API Key (`401`) & Input Retention:** Enter a custom **Location Name** (e.g., `Vacation`), a non-default **Language**, and a bogus API key, then submit.
+- [x] **Invalid API Key (`401`) & Input Retention:** Enter a custom **Location Name** (e.g., `Vacation`), a non-default **Language**, and a bogus API key, then submit.
   - Confirm the form stays on Step 1, displays `"The API key is invalid."` (`invalid_api_key`), and **preserves your entered values** (`Vacation`, selected language, and API key) via `add_suggested_values_to_schema`.
-- [ ] **Network Error & API Key Redaction:** Temporarily block outbound access to `api.weather.com` (or disconnect network) and submit a key.
+- [x] **Network Error & API Key Redaction:** Temporarily block outbound access to `api.weather.com` (or disconnect network) and submit a key.
   - Confirm the form displays `"Failed to connect to Weather.com..."` (`cannot_connect`).
   - Check **Settings → System → Logs** and verify the raw API key is replaced with `REDACTED` if an exception message included the request URL.
-- [ ] **Duplicate Name Prevention:** After creating an entry named `Home`, start a new config flow and test:
+- [x] **Duplicate Name Prevention:** After creating an entry named `Home`, start a new config flow and test:
   - Exact match: `Home` → rejected with `"A Weather.com integration with this name already exists..."` (`already_configured`).
   - Case-insensitive match: `home` or `HOME` → rejected with `already_configured`.
   - Slug collision: if an entry is named `My Home`, try `my_home` → rejected with `already_configured`.
 
 ### 1.2 Step 2A — Fixed Coordinates (`latlong`)
-- [ ] **Default Coordinates:** Choose **Latitude/Longitude** on Step 1. Confirm Step 2 pre-fills Home Assistant's configured latitude and longitude.
-- [ ] **Coordinate Range Validation:** Try submitting `latitude: 95` or `longitude: -195` (note: the UI numeric input accepts floats).
+- [x] **Default Coordinates:** Choose **Latitude/Longitude** on Step 1. Confirm Step 2 pre-fills Home Assistant's configured latitude and longitude.
+- [x] **Coordinate Range Validation:** Try submitting `latitude: 95` or `longitude: -195` (note: the UI numeric input accepts floats).
   - Confirm it rejects out-of-range coordinates with `"Latitude must be between -90 and 90, and longitude must be between -180 and 180."` (`invalid_coordinates`).
-- [ ] **Successful Entry & Entity Creation:** Submit valid coordinates and verify:
+- [x] **Successful Entry & Entity Creation:** Submit valid coordinates and verify:
   - One service device (`Weather.com`) is created under the integration.
   - **1 weather entity** (`weather.<location_slug>`) and **27 sensor entities** (`sensor.<location_slug>_*`) are registered.
   - **25 sensors** are enabled by default; **2 sensors** (`sensor.<location_slug>_icon_code` and `sensor.<location_slug>_forecast_details`) are disabled by default (`disabled_by: integration`).
 
 ### 1.3 Step 2B — Tracked Entity (`entity`)
-- [ ] **Entity Selector Filtering:** Choose **Entity (zone, device_tracker, or person)** on Step 1.
+- [x] **Entity Selector Filtering:** Choose **Entity (zone, device_tracker, or person)** on Step 1.
   - Confirm the entity picker only lists `zone.*`, `device_tracker.*`, and `person.*` entities.
-- [ ] **Missing Coordinates Validation:** Select a `device_tracker` or `person` entity whose state currently lacks `latitude`/`longitude` attributes (or create a helper/template state via **Developer Tools → States** without coordinates).
+- [x] **Missing Coordinates Validation:** Select a `device_tracker` or `person` entity whose state currently lacks `latitude`/`longitude` attributes (or create a helper/template state via **Developer Tools → States** without coordinates).
   - Confirm the form displays `"The selected entity does not have valid latitude and longitude attributes."` (`invalid_location_entity`).
-- [ ] **Coordinate Rounding (Privacy/Obfuscation):** Select `zone.home` (or a `person` entity with high-precision GPS coordinates like `33.748995, -84.387982`).
+- [x] **Coordinate Rounding (Privacy/Obfuscation):** Select `zone.home` (or a `person` entity with high-precision GPS coordinates like `33.748995, -84.387982`).
   - After setup completes, inspect `sensor.<location_slug>_latitude` and `sensor.<location_slug>_longitude` and confirm the values are rounded to **2 decimal places** (`33.75`, `-84.39`).
 
 
@@ -88,15 +88,15 @@ This checklist covers end-to-end manual verification in a live Home Assistant in
   4. Reconfigure the same entry back to **Latitude/Longitude** and confirm `entity_id` is removed and replaced by `latitude` and `longitude`.
 
 ### 2.5 Options Flow (`Extra Weather Attributes` & `Forecast Details` Sensor)
-- [ ] **Auto-Enable `Forecast Details` When Selecting Attributes:**
+- [x] **Auto-Enable `Forecast Details` When Selecting Attributes:**
   1. On a newly created entry (where `sensor.<location_slug>_forecast_details` is disabled by the integration), click **Configure**.
   2. Select at least one attribute from **Daily Attributes** (e.g., `daily_narrative`, `sunrise`), **Day Attributes** (e.g., `day_icon_code`), and **Daypart Attributes** (e.g., `daypart_narrative`) and submit.
   3. Verify the config entry reloads automatically (`OptionsFlowWithReload`).
   4. Verify `sensor.<location_slug>_forecast_details` is **automatically enabled** in the Entity Registry (`disabled_by: null`) and transitions to a valid ISO UTC timestamp state with the selected lists in its `extra_state_attributes`.
-- [ ] **Auto-Disable When Clearing All Attributes:**
+- [x] **Auto-Disable When Clearing All Attributes:**
   1. Open **Configure** again, deselect all attributes across all three lists, and submit.
   2. Verify `sensor.<location_slug>_forecast_details` is automatically disabled again (`disabled_by: integration`).
-- [ ] **Respect User-Disabled State:**
+- [x] **Respect User-Disabled State:**
   1. Manually disable `sensor.<location_slug>_forecast_details` via the Home Assistant UI (so `disabled_by` is `user`).
   2. Open **Configure** and select extra attributes.
   3. Verify the options flow does **not** override the user's explicit disable (`disabled_by` remains `user`).
