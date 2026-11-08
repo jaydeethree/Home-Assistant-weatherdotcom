@@ -22,6 +22,7 @@ from homeassistant.const import (
     UnitOfTemperature,
 )
 from homeassistant.core import HomeAssistant
+from homeassistant.exceptions import HomeAssistantError
 from homeassistant.helpers.aiohttp_client import async_get_clientsession
 from homeassistant.helpers.device_registry import DeviceEntryType, DeviceInfo
 from homeassistant.helpers.update_coordinator import DataUpdateCoordinator, UpdateFailed
@@ -55,6 +56,7 @@ _LOGGER = logging.getLogger(__name__)
 
 MIN_TIME_BETWEEN_UPDATES = timedelta(minutes=20)
 MAX_CONSECUTIVE_FAILURES = 3
+_WARNED_ICON_CODES: set[int] = set()
 
 
 @dataclass(frozen=True, kw_only=True)
@@ -227,8 +229,8 @@ class WeatherUpdateCoordinator(DataUpdateCoordinator[dict[str, Any]]):
                     await self.store.async_save(temp_max_list[0], valid_time_list[0])
                 else:
                     await self.store.async_load()
-            except OSError as err:
-                _LOGGER.warning("Failed to save high temperature to storage: %s", err)
+            except (OSError, HomeAssistantError) as err:
+                _LOGGER.warning("Failed to access high temperature storage: %s", err)
 
         prev_data = self.data or {}
         results: dict[str, Any] = {}
@@ -359,7 +361,9 @@ class WeatherUpdateCoordinator(DataUpdateCoordinator[dict[str, Any]]):
             return None
         if (condition := ICON_CODE_MAP.get(icon_code)) is not None:
             return condition
-        _LOGGER.warning("Unmapped icon code from Weather.com API: %s", icon_code)
+        if icon_code not in _WARNED_ICON_CODES:
+            _WARNED_ICON_CODES.add(icon_code)
+            _LOGGER.warning("Unmapped icon code from Weather.com API: %s", icon_code)
         return None
 
     @staticmethod
