@@ -167,7 +167,7 @@ class WeatherUpdateCoordinator(DataUpdateCoordinator[dict[str, Any]]):
             if raw_lat is not None and raw_long is not None:
                 try:
                     return round(float(raw_lat), 2), round(float(raw_long), 2)
-                except (TypeError, ValueError):
+                except TypeError, ValueError:
                     pass
 
         # Fallback to legacy config or last known coordinates if entity is missing
@@ -344,14 +344,14 @@ class WeatherUpdateCoordinator(DataUpdateCoordinator[dict[str, Any]]):
                 # Those fields exist per-day, rather than per dayPart, so the period is halved
                 return self.data[RESULTS_FORECAST_DAILY][field][period // 2]
             return self.data[RESULTS_FORECAST_DAILY][FIELD_DAYPART][0][field][period]
-        except (IndexError, KeyError, TypeError):
+        except IndexError, KeyError, TypeError:
             return None
 
     def get_forecast_hourly(self, field: str, hour: int) -> Any:
         """Return a field from the hourly forecast data for a given hour."""
         try:
             return self.data[RESULTS_FORECAST_HOURLY][field][hour]
-        except (IndexError, KeyError, TypeError):
+        except IndexError, KeyError, TypeError:
             return None
 
     @staticmethod

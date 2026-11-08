@@ -5,11 +5,19 @@ from __future__ import annotations
 import asyncio
 import logging
 from http import HTTPStatus
-from typing import Any
+from typing import TYPE_CHECKING, Any
 
 import aiohttp
-import voluptuous as vol
 from homeassistant import config_entries
+
+# Home Assistant 2026.10+ replaced voluptuous with probatio (aliasing voluptuous
+# to probatio at runtime, while typing FlowHandler with probatio.Schema). Once the
+# minimum Home Assistant version in hacs.json is bumped to 2026.10.0, this bridge
+# can be replaced with `import probatio as vol`.
+if TYPE_CHECKING:
+    import probatio as vol
+else:
+    import voluptuous as vol
 from homeassistant.config_entries import ConfigFlowResult
 from homeassistant.const import (
     CONF_API_KEY,
@@ -312,7 +320,7 @@ class WeatherFlowHandler(config_entries.ConfigFlow, domain=DOMAIN):
         if lat is not None and long is not None:
             try:
                 lat, long = float(lat), float(long)
-            except (TypeError, ValueError):
+            except TypeError, ValueError:
                 return False
             if -90 <= lat <= 90 and -180 <= long <= 180:
                 return True
