@@ -58,30 +58,30 @@ This checklist covers end-to-end manual verification in a live Home Assistant in
 ## 2. Upgrade Flows for an Existing Installation
 
 ### 2.1 Seamless In-Place Upgrade (Entity & History Continuity)
-- [ ] **Upgrade with Existing Entries Configured:** Install the updated integration over an existing setup and restart Home Assistant.
-- [ ] **Verify Registry Continuity:**
+- [x] **Upgrade with Existing Entries Configured:** Install the updated integration over an existing setup and restart Home Assistant.
+- [x] **Verify Registry Continuity:**
   - Confirm no `_2` duplicate entities are created.
   - Confirm all existing entity customizations (custom entity names, areas, labels, dashboards, and long-term statistics/history) remain attached to the original entities.
   - Confirm `weather.<location_slug>` has `has_entity_name: true` and uses the device name as its friendly name.
   - Confirm `.storage/weatherdotcom_data_<location>` loads cleanly on startup without warnings in the log.
 
 ### 2.2 Legacy Config Entries (Pre-`location_source`)
-- [ ] **Legacy Entry Without `location_source` Key:** If upgrading from an older version (or testing by removing `"location_source"` from an entry in `.storage/core.config_entries`), restart Home Assistant.
+- [x] **Legacy Entry Without `location_source` Key:** If upgrading from an older version (or testing by removing `"location_source"` from an entry in `.storage/core.config_entries`), restart Home Assistant.
   - Confirm `WeatherUpdateCoordinator` falls back to the existing `latitude`/`longitude` (or `entity_id`) seamlessly and updates normally.
 
 ### 2.3 Entries with Stale Location Keys from Older Reconfigures
-- [ ] **Stale Key Isolation:** Older versions of the integration merged `user_input` during reconfigure, which could leave both `entity_id` and `latitude`/`longitude` in `entry.data`.
+- [x] **Stale Key Isolation:** Older versions of the integration merged `user_input` during reconfigure, which could leave both `entity_id` and `latitude`/`longitude` in `entry.data`.
   - Confirm that when `location_source` is `"latlong"`, any lingering `entity_id` in `entry.data` is ignored by the coordinator, and when `location_source` is `"entity"`, any lingering `latitude`/`longitude` in `entry.data` is ignored.
 
 ### 2.4 Reconfigure Flow (`async_step_reconfigure`)
-- [ ] **Preserve Custom Entry Title & Internal `CONF_NAME`:**
+- [x] **Preserve Custom Entry Title & Internal `CONF_NAME`:**
   1. Rename a config entry's title in the UI (**three-dots menu → Rename**) from `Home` to `Atlanta Weather`.
   2. Open **three-dots menu → Reconfigure** on that entry.
   3. Confirm current `api_key`, `lang`, and `location_source` are pre-populated as defaults.
   4. Complete the reconfigure flow and verify:
      - The entry's custom title (`Atlanta Weather`) is preserved.
      - `entry.data["name"]` remains `Home` so device identifiers, entity unique IDs, and storage keys do not break.
-- [ ] **Switch Location Source (`latlong` ↔ `entity`) & Clean Stale Keys:**
+- [x] **Switch Location Source (`latlong` ↔ `entity`) & Clean Stale Keys:**
   1. Reconfigure an entry from **Latitude/Longitude** to **Entity** (`zone.home`).
   2. Confirm the entry automatically reloads and shows `"The Weather.com integration was reconfigured successfully."`
   3. Inspect `.storage/core.config_entries` for this entry and confirm `latitude` and `longitude` were removed and replaced by `entity_id: "zone.home"`.
