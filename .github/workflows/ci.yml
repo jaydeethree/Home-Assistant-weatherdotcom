@@ -1,0 +1,98 @@
+name: CI
+
+on:
+  push:
+    branches:
+      - master
+  pull_request:
+  schedule:
+    - cron: "0 6 * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+
+jobs:
+  lint:
+    name: Ruff lint & format
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: "actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1" # v7.0.1
+      - name: Set up uv
+        uses: astral-sh/setup-uv@v7
+        with:
+          python-version: "3.13"
+          enable-cache: true
+          cache-dependency-glob: "requirements_test.txt"
+      - name: Install dependencies
+        run: |
+          uv venv
+          uv pip install -r requirements_test.txt
+      - name: Run ruff check
+        run: uv run ruff check .
+      - name: Run ruff format check
+        run: uv run ruff format --check .
+
+  typecheck:
+    name: Mypy typecheck
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: "actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1" # v7.0.1
+      - name: Set up uv
+        uses: astral-sh/setup-uv@v7
+        with:
+          python-version: "3.13"
+          enable-cache: true
+          cache-dependency-glob: "requirements_test.txt"
+      - name: Install dependencies
+        run: |
+          uv venv
+          uv pip install -r requirements_test.txt
+      - name: Run mypy
+        run: uv run mypy custom_components/weatherdotcom tests
+
+  test:
+    name: Pytest & coverage
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: "actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1" # v7.0.1
+      - name: Set up uv
+        uses: astral-sh/setup-uv@v7
+        with:
+          python-version: "3.13"
+          enable-cache: true
+          cache-dependency-glob: "requirements_test.txt"
+      - name: Install dependencies
+        run: |
+          uv venv
+          uv pip install -r requirements_test.txt
+      - name: Run pytest
+        run: uv run pytest --cov=custom_components.weatherdotcom --cov-report=term-missing --cov-fail-under=95
+
+  test-nightly:
+    name: Pytest (latest PHCC)
+    if: github.event_name == 'schedule' || github.event_name == 'workflow_dispatch'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: "actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1" # v7.0.1
+      - name: Set up uv
+        uses: astral-sh/setup-uv@v7
+        with:
+          python-version: "3.13"
+          enable-cache: true
+          cache-dependency-glob: "requirements_test.txt"
+      - name: Install latest dependencies
+        run: |
+          uv venv
+          uv pip install -r requirements_test.txt
+          uv pip install --upgrade pytest-homeassistant-custom-component
+      - name: Run pytest
+        run: uv run pytest --cov=custom_components.weatherdotcom --cov-report=term-missing --cov-fail-under=95
