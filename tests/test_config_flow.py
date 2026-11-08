@@ -232,6 +232,14 @@ async def test_user_flow_api_key_validation_errors(
     assert result2["type"] is FlowResultType.FORM
     assert result2["step_id"] == "user"
     assert result2["errors"] == {"base": expected_error}
+    assert result2["data_schema"] is not None
+    suggested = {
+        key.schema: key.description.get("suggested_value")
+        for key in result2["data_schema"].schema
+        if key.description
+    }
+    assert suggested[CONF_API_KEY] == TEST_API_KEY
+    assert suggested[CONF_NAME] == TEST_NAME
     assert TEST_API_KEY not in caplog.text
 
 

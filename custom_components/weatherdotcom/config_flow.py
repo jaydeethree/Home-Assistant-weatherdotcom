@@ -171,37 +171,38 @@ class WeatherFlowHandler(config_entries.ConfigFlow, domain=DOMAIN):
                         return await self.async_step_latlong()
                     return await self.async_step_entity()
 
+        data_schema = vol.Schema(
+            {
+                vol.Required(CONF_API_KEY): str,
+                vol.Required(
+                    CONF_NAME,
+                    default=self.hass.config.location_name,
+                ): str,
+                vol.Required(
+                    CONF_LANG,
+                    default=_get_default_lang(
+                        self.hass.config.language, self.hass.config.country
+                    ),
+                ): selector.SelectSelector(
+                    selector.SelectSelectorConfig(
+                        options=LANG_CODES,
+                        mode=selector.SelectSelectorMode.DROPDOWN,
+                    )
+                ),
+                vol.Required(
+                    CONF_LOCATION_SOURCE, default=LOCATION_TYPE_LATLONG
+                ): selector.SelectSelector(
+                    selector.SelectSelectorConfig(
+                        options=[LOCATION_TYPE_LATLONG, LOCATION_TYPE_ENTITY],
+                        mode=selector.SelectSelectorMode.LIST,
+                        translation_key="location_source_options",
+                    )
+                ),
+            }
+        )
         return self.async_show_form(
             step_id="user",
-            data_schema=vol.Schema(
-                {
-                    vol.Required(CONF_API_KEY): str,
-                    vol.Required(
-                        CONF_NAME,
-                        default=self.hass.config.location_name,
-                    ): str,
-                    vol.Required(
-                        CONF_LANG,
-                        default=_get_default_lang(
-                            self.hass.config.language, self.hass.config.country
-                        ),
-                    ): selector.SelectSelector(
-                        selector.SelectSelectorConfig(
-                            options=LANG_CODES,
-                            mode=selector.SelectSelectorMode.DROPDOWN,
-                        )
-                    ),
-                    vol.Required(
-                        CONF_LOCATION_SOURCE, default=LOCATION_TYPE_LATLONG
-                    ): selector.SelectSelector(
-                        selector.SelectSelectorConfig(
-                            options=[LOCATION_TYPE_LATLONG, LOCATION_TYPE_ENTITY],
-                            mode=selector.SelectSelectorMode.LIST,
-                            translation_key="location_source_options",
-                        )
-                    ),
-                }
-            ),
+            data_schema=self.add_suggested_values_to_schema(data_schema, user_input),
             errors=errors,
         )
 
@@ -239,20 +240,21 @@ class WeatherFlowHandler(config_entries.ConfigFlow, domain=DOMAIN):
                 default_longitude,
             )
 
+        data_schema = vol.Schema(
+            {
+                vol.Required(
+                    CONF_LATITUDE,
+                    default=default_latitude,
+                ): vol.Coerce(float),
+                vol.Required(
+                    CONF_LONGITUDE,
+                    default=default_longitude,
+                ): vol.Coerce(float),
+            }
+        )
         return self.async_show_form(
             step_id=LOCATION_TYPE_LATLONG,
-            data_schema=vol.Schema(
-                {
-                    vol.Required(
-                        CONF_LATITUDE,
-                        default=default_latitude,
-                    ): vol.Coerce(float),
-                    vol.Required(
-                        CONF_LONGITUDE,
-                        default=default_longitude,
-                    ): vol.Coerce(float),
-                }
-            ),
+            data_schema=self.add_suggested_values_to_schema(data_schema, user_input),
             errors=errors,
         )
 
@@ -286,20 +288,21 @@ class WeatherFlowHandler(config_entries.ConfigFlow, domain=DOMAIN):
             conf_entry = self._get_reconfigure_entry()
             default_entity = conf_entry.data.get(CONF_ENTITY_ID)
 
+        data_schema = vol.Schema(
+            {
+                vol.Required(
+                    CONF_ENTITY_ID,
+                    default=default_entity,
+                ): selector.EntitySelector(
+                    selector.EntitySelectorConfig(
+                        domain=["zone", "device_tracker", "person"]
+                    )
+                ),
+            }
+        )
         return self.async_show_form(
             step_id=LOCATION_TYPE_ENTITY,
-            data_schema=vol.Schema(
-                {
-                    vol.Required(
-                        CONF_ENTITY_ID,
-                        default=default_entity,
-                    ): selector.EntitySelector(
-                        selector.EntitySelectorConfig(
-                            domain=["zone", "device_tracker", "person"]
-                        )
-                    ),
-                }
-            ),
+            data_schema=self.add_suggested_values_to_schema(data_schema, user_input),
             errors=errors,
         )
 
@@ -379,38 +382,39 @@ class WeatherFlowHandler(config_entries.ConfigFlow, domain=DOMAIN):
             CONF_LOCATION_SOURCE, LOCATION_TYPE_LATLONG
         )
 
+        data_schema = vol.Schema(
+            {
+                vol.Required(
+                    CONF_API_KEY,
+                    default=conf_entry.data.get(CONF_API_KEY, ""),
+                ): str,
+                vol.Required(
+                    CONF_LANG,
+                    default=conf_entry.data.get(
+                        CONF_LANG,
+                        DEFAULT_LANG,
+                    ),
+                ): selector.SelectSelector(
+                    selector.SelectSelectorConfig(
+                        options=LANG_CODES,
+                        mode=selector.SelectSelectorMode.DROPDOWN,
+                    )
+                ),
+                vol.Required(
+                    CONF_LOCATION_SOURCE,
+                    default=default_source,
+                ): selector.SelectSelector(
+                    selector.SelectSelectorConfig(
+                        options=[LOCATION_TYPE_LATLONG, LOCATION_TYPE_ENTITY],
+                        mode=selector.SelectSelectorMode.LIST,
+                        translation_key="location_source_options",
+                    )
+                ),
+            }
+        )
         return self.async_show_form(
             step_id="reconfigure",
-            data_schema=vol.Schema(
-                {
-                    vol.Required(
-                        CONF_API_KEY,
-                        default=conf_entry.data.get(CONF_API_KEY, ""),
-                    ): str,
-                    vol.Required(
-                        CONF_LANG,
-                        default=conf_entry.data.get(
-                            CONF_LANG,
-                            DEFAULT_LANG,
-                        ),
-                    ): selector.SelectSelector(
-                        selector.SelectSelectorConfig(
-                            options=LANG_CODES,
-                            mode=selector.SelectSelectorMode.DROPDOWN,
-                        )
-                    ),
-                    vol.Required(
-                        CONF_LOCATION_SOURCE,
-                        default=default_source,
-                    ): selector.SelectSelector(
-                        selector.SelectSelectorConfig(
-                            options=[LOCATION_TYPE_LATLONG, LOCATION_TYPE_ENTITY],
-                            mode=selector.SelectSelectorMode.LIST,
-                            translation_key="location_source_options",
-                        )
-                    ),
-                }
-            ),
+            data_schema=self.add_suggested_values_to_schema(data_schema, user_input),
             errors=errors,
         )
 
