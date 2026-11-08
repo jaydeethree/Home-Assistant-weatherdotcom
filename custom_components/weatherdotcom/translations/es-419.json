@@ -1,0 +1,162 @@
+{
+  "config": {
+    "step": {
+      "user": {
+        "description": "Configura la integración de Weather.com. Sigue las instrucciones del README de GitHub para obtener una clave de API.",
+        "data": {
+          "api_key": "Clave de API",
+          "name": "Nombre de la ubicación",
+          "lang": "Idioma",
+          "location_source": "Fuente de ubicación"
+        }
+      },
+      "latlong": {
+        "description": "Ingresa las coordenadas geográficas que se utilizarán para el pronóstico meteorológico.",
+        "data": {
+          "latitude": "Latitud",
+          "longitude": "Longitud"
+        }
+      },
+      "entity": {
+        "description": "Selecciona una entidad de seguimiento o zona de Home Assistant de la que obtener las coordenadas.",
+        "data": {
+          "entity_id": "Entidad de ubicación"
+        }
+      },
+      "reconfigure": {
+        "description": "Reconfigura la integración de Weather.com. Puedes cambiar la clave de API, el idioma o la fuente de ubicación.",
+        "data": {
+          "api_key": "Clave de API",
+          "lang": "Idioma",
+          "location_source": "Fuente de ubicación"
+        }
+      }
+    },
+    "error": {
+      "already_configured": "Ya existe una integración de Weather.com con este nombre. Por favor, elige un nombre diferente.",
+      "cannot_connect": "No se pudo conectar con Weather.com. Comprueba tu conexión de red e inténtalo de nuevo.",
+      "invalid_api_key": "La clave de API no es válida.",
+      "invalid_coordinates": "La latitud debe estar entre -90 y 90, y la longitud entre -180 y 180.",
+      "invalid_location_entity": "La entidad seleccionada no tiene atributos válidos de latitud y longitud.",
+      "unknown_error": "Se ha producido un error inesperado. Consulta los registros de Home Assistant para obtener más detalles."
+    },
+    "abort": {
+      "already_configured": "Ya existe una integración de Weather.com con este nombre. Por favor, elige un nombre diferente.",
+      "reconfigure_successful": "La integración de Weather.com se reconfiguró con éxito."
+    }
+  },
+  "selector": {
+    "location_source_options": {
+      "options": {
+        "latlong": "Latitud/Longitud",
+        "entity": "Entidad (zona, rastreador de dispositivos o persona)"
+      }
+    }
+  },
+  "options": {
+    "step": {
+      "extra_attributes": {
+        "title": "Atributos meteorológicos adicionales",
+        "description": "Selecciona los atributos que deseas añadir al sensor de Detalles del pronóstico. Consulta **Configuración avanzada** en el README de GitHub mediante **Ayuda** (?) arriba.",
+        "data": {
+          "daily_attributes": "Atributos diarios",
+          "day_attributes": "Atributos del día",
+          "daypart_attributes": "Atributos de periodos del día"
+        }
+      }
+    }
+  },
+  "entity": {
+    "sensor": {
+      "local_observation_time": {
+        "name": "Hora de observación local"
+      },
+      "weather_description": {
+        "name": "Descripción del tiempo"
+      },
+      "relative_humidity": {
+        "name": "Humedad relativa"
+      },
+      "uv_index": {
+        "name": "Índice UV"
+      },
+      "wind_direction_degrees": {
+        "name": "Dirección del viento - Grados"
+      },
+      "wind_direction_cardinal": {
+        "name": "Dirección del viento - Cardinal"
+      },
+      "dewpoint": {
+        "name": "Punto de rocío"
+      },
+      "temperature_feels_like": {
+        "name": "Sensación térmica"
+      },
+      "temperature": {
+        "name": "Temperatura"
+      },
+      "heat_index": {
+        "name": "Índice de calor"
+      },
+      "wind_chill": {
+        "name": "Sensación térmica por viento"
+      },
+      "precipitation_last_hour": {
+        "name": "Precipitación - Última hora"
+      },
+      "precipitation_last_6_hours": {
+        "name": "Precipitación - Últimas 6 horas"
+      },
+      "precipitation_last_24_hours": {
+        "name": "Precipitación - Últimas 24 horas"
+      },
+      "pressure": {
+        "name": "Presión"
+      },
+      "wind_gust": {
+        "name": "Ráfaga de viento"
+      },
+      "wind_speed": {
+        "name": "Velocidad del viento"
+      },
+      "cloud_ceiling": {
+        "name": "Techo de nubes"
+      },
+      "pressure_tendency_trend": {
+        "name": "Tendencia de la presión"
+      },
+      "cloud_cover_phrase": {
+        "name": "Descripción de nubosidad"
+      },
+      "latitude": {
+        "name": "Latitud"
+      },
+      "longitude": {
+        "name": "Longitud"
+      },
+      "icon_code": {
+        "name": "Código de icono"
+      },
+      "snowfall_last_hour": {
+        "name": "Nevada - Última hora"
+      },
+      "snowfall_last_6_hours": {
+        "name": "Nevada - Últimas 6 horas"
+      },
+      "snowfall_last_24_hours": {
+        "name": "Nevada - Últimas 24 horas"
+      },
+      "forecast_details": {
+        "name": "Detalles del pronóstico"
+      }
+    }
+  },
+  "exceptions": {
+    "cannot_retrieve_coordinates": {
+      "message": "No se pudieron obtener las coordenadas de ubicación de {location_entity_id}"
+    },
+    "update_failed": {
+      "message": "Error al obtener los datos meteorológicos"
+    }
+  }
+}

@@ -6,6 +6,14 @@ import json
 from pathlib import Path
 from typing import Any
 
+import pytest
+from homeassistant.core import HomeAssistant
+from homeassistant.generated.languages import LANGUAGES
+from homeassistant.helpers.translation import async_get_translations
+from pytest_homeassistant_custom_component.common import MockConfigEntry
+from pytest_homeassistant_custom_component.test_util.aiohttp import AiohttpClientMocker
+
+from custom_components.weatherdotcom.const import DOMAIN
 from custom_components.weatherdotcom.sensor_descriptions import (
     current_condition_sensor_descriptions,
 )
@@ -52,15 +60,19 @@ def test_strings_matches_en_translation() -> None:
     assert strings == en_translations
 
 
-def test_all_translations_match_strings_keys() -> None:
-    """Test that every translation file has the exact same key set as strings.json."""
+def test_all_translations_match_strings_keys_and_valid_ha_locales() -> None:
+    """Test that every translation file is a valid HA locale and matches strings.json keys."""
     strings = _load_json(COMPONENT_DIR / "strings.json")
     expected_keys = _collect_key_paths(strings)
 
     translation_files = sorted(TRANSLATIONS_DIR.glob("*.json"))
-    assert len(translation_files) >= 12
+    assert len(translation_files) >= 15
 
     for translation_file in translation_files:
+        assert translation_file.stem in LANGUAGES, (
+            f"{translation_file.name} is not a recognized Home Assistant language code "
+            f"(stem={translation_file.stem!r})"
+        )
         data = _load_json(translation_file)
         actual_keys = _collect_key_paths(data)
         assert actual_keys == expected_keys, (
@@ -100,3 +112,40 @@ def test_exception_translation_keys() -> None:
         "cannot_retrieve_coordinates",
         "update_failed",
     }
+
+
+@pytest.mark.parametrize(
+    ("lang", "expected_api_key_label", "expected_temp_name"),
+    [
+        ("zh-Hans", "API 密钥", "Home 温度"),
+        ("zh-Hant", "API 金鑰", "Home 溫度"),
+        ("es-419", "Clave de API", "Home Temperatura"),
+        ("pt-BR", "Chave de API", "Home Temperatura"),
+        ("de", "API-Schlüssel", "Home Temperatur"),
+    ],
+)
+async def test_ha_loads_form_and_sensor_translations(
+    hass: HomeAssistant,
+    mock_weather_api: AiohttpClientMocker,
+    mock_config_entry: MockConfigEntry,
+    lang: str,
+    expected_api_key_label: str,
+    expected_temp_name: str,
+) -> None:
+    """Test that Home Assistant loads form and entity translations for regional locales."""
+    hass.config.language = lang
+    config_translations = await async_get_translations(
+        hass, lang, "config", {DOMAIN}, config_flow=True
+    )
+    assert (
+        config_translations[f"component.{DOMAIN}.config.step.user.data.api_key"]
+        == expected_api_key_label
+    )
+
+    mock_config_entry.add_to_hass(hass)
+    await hass.config_entries.async_setup(mock_config_entry.entry_id)
+    await hass.async_block_till_done()
+
+    temp_state = hass.states.get("sensor.home_temperature")
+    assert temp_state is not None
+    assert temp_state.attributes["friendly_name"] == expected_temp_name
