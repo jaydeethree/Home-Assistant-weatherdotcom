@@ -123,10 +123,13 @@ def test_all_mapped_icon_codes_resolve() -> None:
         assert WeatherUpdateCoordinator.iconcode_to_condition(code) == condition
 
 
-def test_unmapped_icon_code_logs_warning(caplog: pytest.LogCaptureFixture) -> None:
-    """Test that an unknown icon code returns None and logs a warning."""
+def test_unmapped_icon_code_logs_warning_once(
+    caplog: pytest.LogCaptureFixture,
+) -> None:
+    """Test that an unknown icon code returns None and logs a warning only once per code."""
     assert WeatherUpdateCoordinator.iconcode_to_condition(999) is None
-    assert "Unmapped icon code from Weather.com API: 999" in caplog.text
+    assert WeatherUpdateCoordinator.iconcode_to_condition(999) is None
+    assert caplog.text.count("Unmapped icon code from Weather.com API: 999") == 1
 
 
 @pytest.mark.parametrize(

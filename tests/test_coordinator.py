@@ -385,7 +385,7 @@ async def test_coordinator_high_temperature_storage_and_oserror(
         coordinator.store, "async_save", side_effect=OSError("disk full")
     ):
         await coordinator._async_update_data()
-    assert "Failed to save high temperature to storage: disk full" in caplog.text
+    assert "Failed to access high temperature storage: disk full" in caplog.text
 
 
 async def test_coordinator_data_accessors(
