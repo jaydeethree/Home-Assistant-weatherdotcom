@@ -2,7 +2,7 @@
   "config": {
     "step": {
       "user": {
-        "description": "Nastavenie integrácie Weather.com. Ak chcete získať kľúč API, postupujte podľa pokynov v súbore README na GitHube.",
+        "description": "Nastavte integráciu Weather.com. Ak chcete kľúč API získať automaticky, nechajte pole prázdne, alebo ho zadajte ručne podľa pokynov v súbore README na GitHub.",
         "data": {
           "api_key": "Kľúč API",
           "name": "Názov polohy",
@@ -24,7 +24,7 @@
         }
       },
       "reconfigure": {
-        "description": "Prekonfigurujte integráciu Weather.com. Môžete zmeniť kľúč API, jazyk alebo zdroj polohy.",
+        "description": "Prekonfigurujte integráciu Weather.com. Môžete zmeniť kľúč API, jazyk alebo zdroj polohy. Ak chcete automaticky získať nový kľúč API, nechajte pole prázdne.",
         "data": {
           "api_key": "Kľúč API",
           "lang": "Jazyk",
@@ -35,6 +35,7 @@
     "error": {
       "already_configured": "Integrácia Weather.com s týmto názvom už existuje. Vyberte iný názov.",
       "cannot_connect": "Nepodarilo sa pripojiť k Weather.com. Skontrolujte sieťové pripojenie a skúste to znova.",
+      "cannot_extract_api_key": "Nepodarilo sa automaticky získať kľúč API. Zadajte kľúč API ručne podľa pokynov v súbore README na GitHub.",
       "invalid_api_key": "Kľúč API je neplatný.",
       "invalid_coordinates": "Zemepisná šírka musí byť medzi -90 a 90 a zemepisná dĺžka medzi -180 a 180.",
       "invalid_location_entity": "Vybratá entita nemá platné atribúty zemepisnej šírky a dĺžky.",

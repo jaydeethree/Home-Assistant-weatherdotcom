@@ -37,6 +37,7 @@ from custom_components.weatherdotcom.const import (
     FIELD_VALIDTIMEUTC,
     LOCATION_TYPE_ENTITY,
     LOCATION_TYPE_LATLONG,
+    RESOURCE_WUNDERGROUND,
 )
 from custom_components.weatherdotcom.helpers import get_sensor_unique_id
 
@@ -547,3 +548,237 @@ async def test_options_flow_auto_enables_and_disables_forecast_details(
     entry_disabled = ent_reg.async_get(entity_id)
     assert entry_disabled is not None
     assert entry_disabled.disabled_by == er.RegistryEntryDisabler.INTEGRATION
+
+
+@pytest.mark.parametrize(
+    "html_template",
+    [
+        '<script>const data = {{"API_KEY":"{key}"}};</script>',
+        "<script>&q;API_KEY&q;:&q;{key}&q;</script>",
+        "https://api.weather.com/v3/wx/observations/current?apiKey={key}",
+        "https://api.weather.com/v3/wx/observations/current?geocode=33,-84&a;apiKey={key}",
+        "https://api.weather.com/v3/wx/observations/current?geocode=33,-84&amp;apiKey={key}",
+        r"https://api.weather.com/v3/wx/observations/current?geocode=33,-84\u0026apiKey={key}",
+    ],
+)
+async def test_user_flow_auto_extract_api_key(
+    hass: HomeAssistant,
+    mock_weather_api: AiohttpClientMocker,
+    html_template: str,
+) -> None:
+    """Test user flow automatically extracts API key from Wunderground when left blank."""
+    extracted_key = "0123456789abcdef0123456789abcdef"
+    mock_weather_api.get(
+        RESOURCE_WUNDERGROUND,
+        text=html_template.format(key=extracted_key),
+    )
+
+    result = await hass.config_entries.flow.async_init(
+        DOMAIN, context={"source": config_entries.SOURCE_USER}
+    )
+    assert result["type"] is FlowResultType.FORM
+
+    result2 = await hass.config_entries.flow.async_configure(
+        result["flow_id"],
+        {
+            CONF_API_KEY: "   ",
+            CONF_NAME: TEST_NAME,
+            CONF_LANG: DEFAULT_LANG,
+            CONF_LOCATION_SOURCE: LOCATION_TYPE_LATLONG,
+        },
+    )
+    assert result2["type"] is FlowResultType.FORM
+    assert result2["step_id"] == LOCATION_TYPE_LATLONG
+
+    result3 = await hass.config_entries.flow.async_configure(
+        result2["flow_id"],
+        {
+            CONF_LATITUDE: TEST_LATITUDE,
+            CONF_LONGITUDE: TEST_LONGITUDE,
+        },
+    )
+    await hass.async_block_till_done()
+
+    assert result3["type"] is FlowResultType.CREATE_ENTRY
+    assert result3["data"][CONF_API_KEY] == extracted_key
+
+
+@pytest.mark.parametrize(
+    ("validation_status", "validation_exc", "expected_error"),
+    [
+        (HTTPStatus.UNAUTHORIZED, None, "cannot_extract_api_key"),
+        (HTTPStatus.OK, TimeoutError("timed out"), "cannot_connect"),
+    ],
+)
+async def test_user_flow_auto_extract_api_key_validation_failure(
+    hass: HomeAssistant,
+    aioclient_mock: AiohttpClientMocker,
+    validation_status: HTTPStatus,
+    validation_exc: Exception | None,
+    expected_error: str,
+) -> None:
+    """Test auto-extracted API key failing validation maps 401 to cannot_extract_api_key."""
+    extracted_key = "0123456789abcdef0123456789abcdef"
+    aioclient_mock.get(
+        RESOURCE_WUNDERGROUND,
+        text=f'<script>const data = {{"API_KEY":"{extracted_key}"}};</script>',
+    )
+    aioclient_mock.get(
+        URL_CURRENT_PATTERN, status=validation_status, exc=validation_exc
+    )
+
+    result = await hass.config_entries.flow.async_init(
+        DOMAIN, context={"source": config_entries.SOURCE_USER}
+    )
+    result2 = await hass.config_entries.flow.async_configure(
+        result["flow_id"],
+        {
+            CONF_API_KEY: "",
+            CONF_NAME: TEST_NAME,
+            CONF_LANG: DEFAULT_LANG,
+            CONF_LOCATION_SOURCE: LOCATION_TYPE_LATLONG,
+        },
+    )
+    assert result2["type"] is FlowResultType.FORM
+    assert result2["step_id"] == "user"
+    assert result2["errors"] == {"base": expected_error}
+
+
+@pytest.mark.parametrize(
+    "mock_kwargs",
+    [
+        {"status": HTTPStatus.SERVICE_UNAVAILABLE},
+        {"exc": TimeoutError("timed out")},
+        {"exc": aiohttp.ClientError("network error")},
+        {"text": "<html><body>No API key here</body></html>"},
+    ],
+)
+async def test_user_flow_auto_extract_api_key_failures_and_manual_fallback(
+    hass: HomeAssistant,
+    mock_weather_api: AiohttpClientMocker,
+    mock_kwargs: dict[str, Any],
+) -> None:
+    """Test user flow handles auto-extraction failures and falls back to manual API key."""
+    mock_weather_api.get(RESOURCE_WUNDERGROUND, **mock_kwargs)
+
+    result = await hass.config_entries.flow.async_init(
+        DOMAIN, context={"source": config_entries.SOURCE_USER}
+    )
+    result2 = await hass.config_entries.flow.async_configure(
+        result["flow_id"],
+        {
+            CONF_API_KEY: "",
+            CONF_NAME: TEST_NAME,
+            CONF_LANG: DEFAULT_LANG,
+            CONF_LOCATION_SOURCE: LOCATION_TYPE_LATLONG,
+        },
+    )
+    assert result2["type"] is FlowResultType.FORM
+    assert result2["step_id"] == "user"
+    assert result2["errors"] == {"base": "cannot_extract_api_key"}
+
+    # Fallback: enter key manually on the re-rendered form
+    result3 = await hass.config_entries.flow.async_configure(
+        result["flow_id"],
+        {
+            CONF_API_KEY: TEST_API_KEY,
+            CONF_NAME: TEST_NAME,
+            CONF_LANG: DEFAULT_LANG,
+            CONF_LOCATION_SOURCE: LOCATION_TYPE_LATLONG,
+        },
+    )
+    assert result3["type"] is FlowResultType.FORM
+    assert result3["step_id"] == LOCATION_TYPE_LATLONG
+
+
+async def test_reconfigure_flow_auto_extract_api_key_and_error(
+    hass: HomeAssistant,
+    mock_weather_api: AiohttpClientMocker,
+    mock_config_entry: MockConfigEntry,
+) -> None:
+    """Test reconfigure flow auto-extracts a new API key when cleared or reports error."""
+    mock_config_entry.add_to_hass(hass)
+    mock_weather_api.get(
+        RESOURCE_WUNDERGROUND,
+        text="<html>no key</html>",
+    )
+
+    result = await mock_config_entry.start_reconfigure_flow(hass)
+    assert result["type"] is FlowResultType.FORM
+    assert result["step_id"] == "reconfigure"
+    assert result["data_schema"] is not None
+    suggested = {
+        key.schema: key.description.get("suggested_value")
+        for key in result["data_schema"].schema
+        if key.description
+    }
+    assert suggested[CONF_API_KEY] == TEST_API_KEY
+
+    # Submitting with empty API key when Wunderground has no key -> cannot_extract_api_key
+    result2 = await hass.config_entries.flow.async_configure(
+        result["flow_id"],
+        {
+            CONF_API_KEY: "",
+            CONF_LANG: DEFAULT_LANG,
+            CONF_LOCATION_SOURCE: LOCATION_TYPE_LATLONG,
+        },
+    )
+    assert result2["type"] is FlowResultType.FORM
+    assert result2["step_id"] == "reconfigure"
+    assert result2["errors"] == {"base": "cannot_extract_api_key"}
+
+    # Now Wunderground returns a valid embedded URL with apiKey=
+    extracted_key = "abcdef0123456789abcdef0123456789"
+    mock_weather_api.clear_requests()
+    mock_weather_api.get(
+        RESOURCE_WUNDERGROUND,
+        text=f"https://api.weather.com/v3/wx/observations/current?apiKey={extracted_key}",
+    )
+    mock_weather_api.get(URL_CURRENT_PATTERN, status=HTTPStatus.OK, json={})
+
+    result3 = await hass.config_entries.flow.async_configure(
+        result["flow_id"],
+        {
+            CONF_API_KEY: "",
+            CONF_LANG: DEFAULT_LANG,
+            CONF_LOCATION_SOURCE: LOCATION_TYPE_LATLONG,
+        },
+    )
+    assert result3["type"] is FlowResultType.FORM
+    assert result3["step_id"] == LOCATION_TYPE_LATLONG
+
+    result4 = await hass.config_entries.flow.async_configure(
+        result3["flow_id"],
+        {
+            CONF_LATITUDE: TEST_LATITUDE,
+            CONF_LONGITUDE: TEST_LONGITUDE,
+        },
+    )
+    await hass.async_block_till_done()
+
+    assert result4["type"] is FlowResultType.ABORT
+    assert result4["reason"] == "reconfigure_successful"
+    assert mock_config_entry.data[CONF_API_KEY] == extracted_key
+
+
+async def test_reconfigure_flow_unchanged_api_key_does_not_contact_wunderground(
+    hass: HomeAssistant,
+    mock_weather_api: AiohttpClientMocker,
+    mock_config_entry: MockConfigEntry,
+) -> None:
+    """Test submitting an existing API key in reconfigure does not request Wunderground."""
+    mock_config_entry.add_to_hass(hass)
+
+    result = await mock_config_entry.start_reconfigure_flow(hass)
+    result2 = await hass.config_entries.flow.async_configure(
+        result["flow_id"],
+        {
+            CONF_API_KEY: TEST_API_KEY,
+            CONF_LANG: DEFAULT_LANG,
+            CONF_LOCATION_SOURCE: LOCATION_TYPE_LATLONG,
+        },
+    )
+    assert result2["type"] is FlowResultType.FORM
+    assert result2["step_id"] == LOCATION_TYPE_LATLONG
+    called_urls = [str(call[1]) for call in mock_weather_api.mock_calls]
+    assert not any(RESOURCE_WUNDERGROUND in url for url in called_urls)

@@ -157,6 +157,7 @@ API_URL_METRIC: Final = "m"
 RESOURCE_CURRENT: Final = "https://api.weather.com/v3/wx/observations/current"
 RESOURCE_FORECAST_DAILY: Final = "https://api.weather.com/v3/wx/forecast/daily/15day"
 RESOURCE_FORECAST_HOURLY: Final = "https://api.weather.com/v3/wx/forecast/hourly/15day"
+RESOURCE_WUNDERGROUND: Final = "https://www.wunderground.com"
 
 RESULTS_CURRENT: Final = "current"
 RESULTS_FORECAST_DAILY: Final = "daily"

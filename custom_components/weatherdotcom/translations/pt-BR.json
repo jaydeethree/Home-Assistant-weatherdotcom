@@ -2,7 +2,7 @@
   "config": {
     "step": {
       "user": {
-        "description": "Configure a integração do Weather.com. Siga as instruções no README do GitHub para obter uma chave de API.",
+        "description": "Configure a integração do Weather.com. Deixe a chave de API em branco para obter uma automaticamente ou siga as instruções no README do GitHub para inseri-la manualmente.",
         "data": {
           "api_key": "Chave de API",
           "name": "Nome da localização",
@@ -24,7 +24,7 @@
         }
       },
       "reconfigure": {
-        "description": "Reconfigure a integração do Weather.com. Você pode alterar a chave de API, o idioma ou a fonte da localização.",
+        "description": "Reconfigure a integração do Weather.com. Você pode alterar a chave de API, o idioma ou a fonte da localização. Deixe a chave de API em branco para obter uma nova automaticamente.",
         "data": {
           "api_key": "Chave de API",
           "lang": "Idioma",
@@ -35,6 +35,7 @@
     "error": {
       "already_configured": "Já existe uma integração do Weather.com com este nome. Escolha um nome diferente.",
       "cannot_connect": "Não foi possível conectar ao Weather.com. Verifique sua conexão de rede e tente novamente.",
+      "cannot_extract_api_key": "Não foi possível obter automaticamente uma chave de API. Insira uma chave de API manualmente seguindo as instruções no README do GitHub.",
       "invalid_api_key": "A chave de API é inválida.",
       "invalid_coordinates": "A latitude deve estar entre -90 e 90, e a longitude entre -180 e 180.",
       "invalid_location_entity": "A entidade selecionada não possui atributos de latitude e longitude válidos.",

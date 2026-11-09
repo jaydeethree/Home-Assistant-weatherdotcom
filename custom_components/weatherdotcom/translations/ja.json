@@ -2,7 +2,7 @@
   "config": {
     "step": {
       "user": {
-        "description": "Weather.com 統合を設定します。API キーを取得するには、GitHub の README に記載されている手順に従ってください。",
+        "description": "Weather.com 統合を設定します。API キーを空欄にすると自動的に取得されます。手動で入力する場合は GitHub README の手順に従ってください。",
         "data": {
           "api_key": "API キー",
           "name": "場所の名前",
@@ -24,7 +24,7 @@
         }
       },
       "reconfigure": {
-        "description": "Weather.com 統合を再設定します。API キー、言語、または位置情報ソースを変更できます。",
+        "description": "Weather.com 統合を再設定します。API キー、言語、または位置情報のソースを変更できます。API キーを空欄にすると新しいキーが自動的に取得されます。",
         "data": {
           "api_key": "API キー",
           "lang": "言語",
@@ -35,6 +35,7 @@
     "error": {
       "already_configured": "この名前の Weather.com 統合は既に存在します。別の名前を選択してください。",
       "cannot_connect": "Weather.com に接続できませんでした。ネットワーク接続を確認して、もう一度お試しください。",
+      "cannot_extract_api_key": "API キーを自動的に取得できませんでした。GitHub README の手順に従って API キーを手動で入力してください。",
       "invalid_api_key": "API キーが無効です。",
       "invalid_coordinates": "緯度は -90 から 90 の間、経度は -180 から 180 の間である必要があります。",
       "invalid_location_entity": "選択したエンティティに有効な緯度および経度の属性がありません。",

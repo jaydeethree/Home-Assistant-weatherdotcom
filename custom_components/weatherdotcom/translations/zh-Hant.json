@@ -2,7 +2,7 @@
   "config": {
     "step": {
       "user": {
-        "description": "設定 Weather.com 整合。請按照 GitHub README 中的說明取得 API 金鑰。",
+        "description": "設定 Weather.com 整合。將 API 金鑰留空以自動取得，或按照 GitHub README 中的說明手動輸入。",
         "data": {
           "api_key": "API 金鑰",
           "name": "位置名稱",
@@ -24,7 +24,7 @@
         }
       },
       "reconfigure": {
-        "description": "重新設定 Weather.com 整合。您可以變更 API 金鑰、語言或位置來源。",
+        "description": "重新設定 Weather.com 整合。您可以變更 API 金鑰、語言或位置來源。將 API 金鑰留空以自動取得新金鑰。",
         "data": {
           "api_key": "API 金鑰",
           "lang": "語言",
@@ -35,6 +35,7 @@
     "error": {
       "already_configured": "已存在同名的 Weather.com 整合。請選擇其他名稱。",
       "cannot_connect": "無法連線至 Weather.com。請檢查您的網路連線並重試。",
+      "cannot_extract_api_key": "無法自動取得 API 金鑰。請按照 GitHub README 中的說明手動輸入 API 金鑰。",
       "invalid_api_key": "API 金鑰無效。",
       "invalid_coordinates": "緯度必須介於 -90 到 90 之間，經度必須介於 -180 到 180 之間。",
       "invalid_location_entity": "所選實體沒有有效的緯度和經度屬性。",

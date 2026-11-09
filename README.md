@@ -22,9 +22,13 @@ Please review the minimum requirements below to determine whether you will be ab
 install and use the software.
 
 - This integration requires a recent version of Home Assistant
-- A Weather.com API Key is required (see below for how to get this)
+- A Weather.com API Key is required (retrieved automatically during setup if left blank, or see below for how to get one manually)
 
 # Weather.com API Key
+If you leave the **API Key** field blank during setup (or clear it during **Reconfigure**), the integration will automatically retrieve the public Weather.com API key from https://www.wunderground.com.
+
+If automatic retrieval fails (for example, due to regional network restrictions), you can retrieve an API key manually:
+
 1) Open Developer Tools in your browser (this is typically done by pressing F12) and open the "Network" tab.
 2) Open https://www.wunderground.com (Wunderground is owned by Weather.com and uses some of the Weather.com APIs)
 3) Enter `/v3` in the search bar:
@@ -46,9 +50,9 @@ Important notes:
 
 This integration is available in HACS, so just install it from there and then:
 
-1. In Home Assistant Settings, select DEVICES & SERVICES, then ADD INTEGRATION.  
-2. Select the "Weather.com" integration.  
-3. Enter your Weather.com API key and submit.  
+1. In Home Assistant Settings, select DEVICES & SERVICES, then ADD INTEGRATION.
+2. Select the "Weather.com" integration.
+3. Leave the API key blank to retrieve one automatically (or enter your Weather.com API key) and submit.
 
 When choosing your location you have the option to use either a fixed latitude/longitude or to follow the location of a device, person, or zone.
 
