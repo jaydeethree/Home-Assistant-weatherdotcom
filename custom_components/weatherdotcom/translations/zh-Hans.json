@@ -2,7 +2,7 @@
   "config": {
     "step": {
       "user": {
-        "description": "配置 Weather.com 集成。请按照 GitHub README 中的说明获取 API 密钥。",
+        "description": "配置 Weather.com 集成。将 API 密钥留空以自动获取，或按照 GitHub README 中的说明手动输入。",
         "data": {
           "api_key": "API 密钥",
           "name": "位置名称",
@@ -24,7 +24,7 @@
         }
       },
       "reconfigure": {
-        "description": "重新配置 Weather.com 集成。您可以更改 API 密钥、语言或位置来源。",
+        "description": "重新配置 Weather.com 集成。您可以更改 API 密钥、语言或位置来源。将 API 密钥留空以自动获取新密钥。",
         "data": {
           "api_key": "API 密钥",
           "lang": "语言",
@@ -35,6 +35,7 @@
     "error": {
       "already_configured": "已存在同名的 Weather.com 集成。请选择其他名称。",
       "cannot_connect": "无法连接到 Weather.com。请检查您的网络连接并重试。",
+      "cannot_extract_api_key": "无法自动获取 API 密钥。请按照 GitHub README 中的说明手动输入 API 密钥。",
       "invalid_api_key": "API 密钥无效。",
       "invalid_coordinates": "纬度必须介于 -90 到 90 之间，经度必须介于 -180 到 180 之间。",
       "invalid_location_entity": "所选实体没有有效的纬度和经度属性。",

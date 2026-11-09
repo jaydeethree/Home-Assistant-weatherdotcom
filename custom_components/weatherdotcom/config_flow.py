@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import asyncio
 import logging
+import re
 from http import HTTPStatus
 from typing import TYPE_CHECKING, Any
 
@@ -47,10 +48,19 @@ from .const import (
     LOCATION_TYPE_ENTITY,
     LOCATION_TYPE_LATLONG,
     RESOURCE_CURRENT,
+    RESOURCE_WUNDERGROUND,
 )
 from .helpers import get_sensor_unique_id
 
 _LOGGER = logging.getLogger(__name__)
+
+# Matches "API_KEY":"<32-hex>" (including Angular &q; escaping) or
+# api.weather.com?...apiKey=<32-hex> (including &a;, &amp;, \u0026 escaping)
+API_KEY_PATTERN = re.compile(
+    r'(?:(?:["\']|&q;)API_KEY(?:["\']|&q;)\s*:\s*(?:["\']|&q;)'
+    r'|api\.weather\.com[^"\'\s<>]*?(?:[?&]|&a;|&amp;|\\u0026)apiKey=)'
+    r"([0-9a-fA-F]{32})"
+)
 
 
 _PREFERRED_LANG_DEFAULTS: dict[str, str] = {
@@ -112,6 +122,55 @@ class WeatherFlowHandler(config_entries.ConfigFlow, domain=DOMAIN):
         """Create the options flow."""
         return WeatherDotComOptionsFlow()
 
+    async def _async_extract_api_key(self) -> str | None:
+        """Attempt to extract the public Weather.com API key from Wunderground."""
+        session = async_get_clientsession(self.hass)
+        headers = {"User-Agent": HEADERS["user-agent"]}
+        try:
+            async with (
+                asyncio.timeout(10),
+                session.get(RESOURCE_WUNDERGROUND, headers=headers) as response,
+            ):
+                status = response.status
+                if status != HTTPStatus.OK:
+                    _LOGGER.warning(
+                        "Could not retrieve API key from Wunderground (HTTP %s)",
+                        status,
+                    )
+                    return None
+                html = await response.text(errors="replace")
+        except TimeoutError, aiohttp.ClientError:
+            _LOGGER.warning("Error connecting to Wunderground to retrieve API key")
+            return None
+
+        if match := API_KEY_PATTERN.search(html):
+            return match.group(1)
+
+        _LOGGER.warning("Could not find Weather.com API key in Wunderground page")
+        return None
+
+    async def _async_resolve_api_key(
+        self, raw_api_key: str | None
+    ) -> tuple[str | None, str | None]:
+        """Resolve (extract if blank) and validate the API key.
+
+        Returns a (validated_api_key, error_key) tuple.
+        """
+        api_key = (raw_api_key or "").strip()
+        extracted = False
+        if not api_key:
+            extracted = True
+            api_key = await self._async_extract_api_key() or ""
+            if not api_key:
+                return None, "cannot_extract_api_key"
+
+        if error := await self._async_validate_api_key(api_key):
+            if extracted and error == "invalid_api_key":
+                return None, "cannot_extract_api_key"
+            return None, error
+
+        return api_key, None
+
     async def _async_validate_api_key(self, api_key: str | None) -> str | None:
         """Validate the API key against the Weather.com endpoint."""
         session = async_get_clientsession(self.hass)
@@ -169,19 +228,20 @@ class WeatherFlowHandler(config_entries.ConfigFlow, domain=DOMAIN):
                 await self.async_set_unique_id(unique_id)
                 self._abort_if_unique_id_configured()
 
-                self._data = user_input
-                if error := await self._async_validate_api_key(
+                api_key, error = await self._async_resolve_api_key(
                     user_input.get(CONF_API_KEY)
-                ):
+                )
+                if error:
                     errors["base"] = error
                 else:
+                    self._data = {**user_input, CONF_API_KEY: api_key}
                     if user_input.get(CONF_LOCATION_SOURCE) == LOCATION_TYPE_LATLONG:
                         return await self.async_step_latlong()
                     return await self.async_step_entity()
 
         data_schema = vol.Schema(
             {
-                vol.Required(CONF_API_KEY): str,
+                vol.Optional(CONF_API_KEY, default=""): str,
                 vol.Required(
                     CONF_NAME,
                     default=self.hass.config.location_name,
@@ -368,18 +428,21 @@ class WeatherFlowHandler(config_entries.ConfigFlow, domain=DOMAIN):
         conf_entry = self._get_reconfigure_entry()
 
         if user_input is not None:
-            self._data = dict(user_input)
-            # Use the stored location name, not the entry title. The title can
-            # be renamed by the user, but the location name is used for unique
-            # IDs, the device identifier, and the storage key, so it must not
-            # change.
-            self._data[CONF_NAME] = conf_entry.data[CONF_NAME]
-
-            if error := await self._async_validate_api_key(
+            api_key, error = await self._async_resolve_api_key(
                 user_input.get(CONF_API_KEY)
-            ):
+            )
+            if error:
                 errors["base"] = error
             else:
+                # Use the stored location name, not the entry title. The title can
+                # be renamed by the user, but the location name is used for unique
+                # IDs, the device identifier, and the storage key, so it must not
+                # change.
+                self._data = {
+                    **user_input,
+                    CONF_API_KEY: api_key,
+                    CONF_NAME: conf_entry.data[CONF_NAME],
+                }
                 # Branch based on the selected location source.
                 if user_input.get(CONF_LOCATION_SOURCE) == LOCATION_TYPE_LATLONG:
                     return await self.async_step_latlong()
@@ -392,9 +455,9 @@ class WeatherFlowHandler(config_entries.ConfigFlow, domain=DOMAIN):
 
         data_schema = vol.Schema(
             {
-                vol.Required(
+                vol.Optional(
                     CONF_API_KEY,
-                    default=conf_entry.data.get(CONF_API_KEY, ""),
+                    default="",
                 ): str,
                 vol.Required(
                     CONF_LANG,
@@ -420,9 +483,16 @@ class WeatherFlowHandler(config_entries.ConfigFlow, domain=DOMAIN):
                 ),
             }
         )
+        suggested_values = (
+            user_input
+            if user_input is not None
+            else {CONF_API_KEY: conf_entry.data.get(CONF_API_KEY, "")}
+        )
         return self.async_show_form(
             step_id="reconfigure",
-            data_schema=self.add_suggested_values_to_schema(data_schema, user_input),
+            data_schema=self.add_suggested_values_to_schema(
+                data_schema, suggested_values
+            ),
             errors=errors,
         )
 

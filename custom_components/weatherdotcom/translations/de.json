@@ -2,7 +2,7 @@
   "config": {
     "step": {
       "user": {
-        "description": "Richten Sie die Weather.com-Integration ein. Befolgen Sie die Anweisungen in der GitHub-README-Datei, um einen API-Schlüssel zu erhalten.",
+        "description": "Richten Sie die Weather.com-Integration ein. Lassen Sie den API-Schlüssel leer, um automatisch einen abzurufen, oder befolgen Sie die Anweisungen in der GitHub-README-Datei, um ihn manuell einzugeben.",
         "data": {
           "api_key": "API-Schlüssel",
           "name": "Standortname",
@@ -24,7 +24,7 @@
         }
       },
       "reconfigure": {
-        "description": "Konfigurieren Sie die Weather.com-Integration neu. Sie können den API-Schlüssel, die Sprache oder die Standortquelle ändern.",
+        "description": "Konfigurieren Sie die Weather.com-Integration neu. Sie können den API-Schlüssel, die Sprache oder die Standortquelle ändern. Lassen Sie den API-Schlüssel leer, um automatisch einen neuen abzurufen.",
         "data": {
           "api_key": "API-Schlüssel",
           "lang": "Sprache",
@@ -35,6 +35,7 @@
     "error": {
       "already_configured": "Eine Weather.com-Integration mit diesem Namen ist bereits vorhanden. Bitte wählen Sie einen anderen Namen.",
       "cannot_connect": "Verbindung zu Weather.com fehlgeschlagen. Bitte überprüfen Sie Ihre Netzwerkverbindung und versuchen Sie es erneut.",
+      "cannot_extract_api_key": "Der API-Schlüssel konnte nicht automatisch abgerufen werden. Bitte geben Sie gemäß den Anweisungen in der GitHub-README-Datei manuell einen API-Schlüssel ein.",
       "invalid_api_key": "Der API-Schlüssel ist ungültig.",
       "invalid_coordinates": "Der Breitengrad muss zwischen -90 und 90 und der Längengrad zwischen -180 und 180 liegen.",
       "invalid_location_entity": "Die ausgewählte Entität verfügt über keine gültigen Breiten- und Längengradattribute.",

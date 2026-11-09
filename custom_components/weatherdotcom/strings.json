@@ -2,7 +2,7 @@
   "config": {
     "step": {
       "user": {
-        "description": "Set up Weather.com integration. Follow the instructions in the GitHub README to get an API key.",
+        "description": "Set up Weather.com integration. Leave the API key blank to retrieve one automatically, or follow the instructions in the GitHub README to enter one manually.",
         "data": {
           "api_key": "API Key",
           "name": "Location Name",
@@ -24,7 +24,7 @@
         }
       },
       "reconfigure": {
-        "description": "Reconfigure the Weather.com integration. You can change the API key, language, or location source.",
+        "description": "Reconfigure the Weather.com integration. You can change the API key, language, or location source. Leave the API key blank to retrieve a new one automatically.",
         "data": {
           "api_key": "API Key",
           "lang": "Language",
@@ -35,6 +35,7 @@
     "error": {
       "already_configured": "A Weather.com integration with this name already exists. Please choose a different name.",
       "cannot_connect": "Failed to connect to Weather.com. Please check your network connection and try again.",
+      "cannot_extract_api_key": "Could not automatically retrieve an API key. Please enter an API key manually following the instructions in the GitHub README.",
       "invalid_api_key": "The API key is invalid.",
       "invalid_coordinates": "Latitude must be between -90 and 90, and longitude must be between -180 and 180.",
       "invalid_location_entity": "The selected entity does not have valid latitude and longitude attributes.",
