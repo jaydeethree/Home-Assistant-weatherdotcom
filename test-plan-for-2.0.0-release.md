@@ -132,44 +132,44 @@ The integration includes 12 translation files (`de`, `en`, `es`, `es-419`, `fr`,
 ## 4. Core Functional & Regression Verification
 
 ### 4.1 Weather Entity & `weather.get_forecasts` (`weather.py`)
-- [ ] **Weather Entity State & Attributes:** Inspect `weather.<location>` in **Developer Tools → States** and on a Lovelace Weather Forecast card:
+- [x] **Weather Entity State & Attributes:** Inspect `weather.<location>` in **Developer Tools → States** and on a Lovelace Weather Forecast card:
   - State matches a valid Home Assistant weather condition (`sunny`, `partlycloudy`, `rainy`, `clear-night`, etc.).
   - Attributes populate accurately: `temperature`, `apparent_temperature`, `dew_point`, `humidity`, `pressure`, `wind_speed`, `wind_gust_speed`, `wind_bearing`, `visibility`, `uv_index`, and `attribution` (`"Data provided by Weather.com"`).
-- [ ] **Forecast Service Calls (`daily`, `twice_daily`, `hourly`):** In **Developer Tools → Actions**, call `weather.get_forecasts` targeting `weather.<location>` for each `type`:
+- [x] **Forecast Service Calls (`daily`, `twice_daily`, `hourly`):** In **Developer Tools → Actions**, call `weather.get_forecasts` targeting `weather.<location>` for each `type`:
   - `type: daily`: Returns 15 daily forecast items with `datetime`, `condition`, `temperature` (high), `templow`, `precipitation`, `precipitation_probability` (max of day & night when daytime is active), `wind_speed`, `wind_bearing`, `humidity`, `uv_index`, and `cloud_coverage`.
   - `type: twice_daily`: Returns 30 items (daytime) or 29 items (after 15:00 local time), alternating `is_daytime: true` and `is_daytime: false` (with nighttime `datetime` offset by +12 hours).
   - `type: hourly`: Returns ~360 hourly items including `apparent_temperature`, `dew_point`, `wind_gust_speed`, `temperature`, `precipitation`, `precipitation_probability`, `wind_speed`, `wind_bearing`, `humidity`, `uv_index`, and `cloud_coverage`.
 
 ### 4.2 Evening Expired-Daypart Behavior (After ~15:00 Local Time)
 After ~15:00 local time at the forecasted location, the Weather.com API returns `null` for `temperatureMax[0]` and all `daypart[0]` index `0` fields.
-- [ ] **High Temperature Restoration from Storage:**
+- [x] **High Temperature Restoration from Storage:**
   - Verify `.storage/weatherdotcom_data_<location>` contains `high_temp_today` and `high_temp_today_timestamp` matching today's `validTimeUtc[0]`.
   - Call `weather.get_forecasts` (`type: daily`) after 15:00 local time and confirm today's forecast (`forecast[0]["temperature"]`) still reports today's daytime high temperature from storage instead of `null`.
   - Restart Home Assistant after 15:00 local time and confirm the stored high temperature is loaded from disk and still appears in `forecast[0]["temperature"]`.
-- [ ] **Daypart Index Shifting (`get_first_daypart_index`):**
+- [x] **Daypart Index Shifting (`get_first_daypart_index`):**
   - Confirm `daily` forecast item `0` pulls condition, humidity, wind, and precipitation probability from tonight's daypart (`period = 1`) rather than returning `null`.
   - Confirm `twice_daily` forecast starts with tonight (`is_daytime: false`).
   - Confirm `day_icon_code`, `day_cloud_cover`, and `day_relative_humidity` on `sensor.<location>_forecast_details` use index `1` for their first element rather than `null`.
 
 ### 4.3 Unit Systems (Imperial vs. Metric)
-- [ ] **US Customary / Imperial (`units=e`):** Verify native units match `°F`, `in` (precipitation & snowfall), `mph`, `inHg`, `ft` (cloud ceiling), and `mi` (visibility).
-- [ ] **Metric (`units=m`):** Switch Home Assistant's unit system to **Metric** (**Settings → System → General**), reload the integration, and verify native units match `°C`, `mm` (precipitation), `cm` (snowfall), `km/h`, `mbar`, `m` (cloud ceiling), and `km` (visibility).
+- [x] **US Customary / Imperial (`units=e`):** Verify native units match `°F`, `in` (precipitation & snowfall), `mph`, `inHg`, `ft` (cloud ceiling), and `mi` (visibility).
+- [x] **Metric (`units=m`):** Switch Home Assistant's unit system to **Metric** (**Settings → System → General**), reload the integration, and verify native units match `°C`, `mm` (precipitation), `cm` (snowfall), `km/h`, `mbar`, `m` (cloud ceiling), and `km` (visibility).
 
 ### 4.4 Calm Wind & Recorder Database Hygiene
-- [ ] **Calm Wind (`windSpeed == 0` or `CALM`):** When wind speed is `0`, verify:
+- [x] **Calm Wind (`windSpeed == 0` or `CALM`):** When wind speed is `0`, verify:
   - `weather.<location>` has `wind_bearing: null`.
   - `sensor.<location>_wind_direction_degrees` and `sensor.<location>_wind_direction_cardinal` report `unknown` rather than a stale bearing or `"CALM"`.
-- [ ] **Unrecorded Forecast Details Attributes:** With `sensor.<location>_forecast_details` enabled and extra attributes selected, verify that state updates do not trigger Home Assistant Recorder warnings about state attributes exceeding 16 KB (as `_unrecorded_attributes` excludes all `EXTRA_ATTRIBUTE_KEYS_*` from Recorder history).
+- [x] **Unrecorded Forecast Details Attributes:** With `sensor.<location>_forecast_details` enabled and extra attributes selected, verify that state updates do not trigger Home Assistant Recorder warnings about state attributes exceeding 16 KB (as `_unrecorded_attributes` excludes all `EXTRA_ATTRIBUTE_KEYS_*` from Recorder history).
 
 ### 4.5 Resilience, Coordinate Fallback, & Storage Cleanup
-- [ ] **Tracked Entity Coordinate Updates & Fallback:**
+- [x] **Tracked Entity Coordinate Updates & Fallback:**
   - Update the coordinates of the tracked `zone` or `person` entity in **Developer Tools → States**, trigger `homeassistant.update_entity` on `weather.<location>`, and confirm `sensor.<location>_latitude` and `sensor.<location>_longitude` update to the new rounded coordinates.
   - Temporarily set the tracked entity's state without `latitude`/`longitude` attributes and trigger a refresh: confirm the coordinator logs a warning (`"Could not determine latitude/longitude from ...; using last known coordinates"`) and continues using `current_latitude`/`current_longitude` without failing.
-- [ ] **Diagnostics Download & Redaction (`diagnostics.py`):**
+- [x] **Diagnostics Download & Redaction (`diagnostics.py`):**
   - On the Weather.com integration page, click the **three-dots menu → Download diagnostics**.
   - Open the downloaded JSON file and verify:
     - `entry_data` shows `"**REDACTED**"` for `api_key`, `latitude`, `longitude`, and `entity_id`.
     - `coordinator_data` and `stored_data` are present and any `lat`/`lon` fields are redacted.
-- [ ] **Storage Cleanup on Entry Removal (`async_remove_entry`):**
+- [x] **Storage Cleanup on Entry Removal (`async_remove_entry`):**
   - Delete a test Weather.com integration entry from **Settings → Devices & Services**.
   - Check the `.storage/` directory on disk and confirm `.storage/weatherdotcom_data_<test_location>` has been deleted.
