@@ -1,3 +1,6 @@
+v2.0.1
+* Added automatic extraction of API keys
+
 v2.0.0
 * Significant code clean-up and modernization, including:
   * Vastly improved error handling
