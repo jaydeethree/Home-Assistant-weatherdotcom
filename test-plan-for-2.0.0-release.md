@@ -105,24 +105,24 @@ This checklist covers end-to-end manual verification in a live Home Assistant in
 
 ### 3.1 UI Translations Across Supported Languages
 The integration includes 12 translation files (`de`, `en`, `es`, `es-419`, `fr`, `hu`, `it`, `pl`, `pt-BR`, `sk`, `zh-Hans`, `zh-Hant`) plus [`icons.json`].
-- [ ] **Switch User Profile Language:** In **Profile → Language**, switch to a non-English language (e.g., **Español**, **Deutsch**, **Français**, or **简体中文**) and hard-refresh the browser:
+- [x] **Switch User Profile Language:** In **Profile → Language**, switch to a non-English language (e.g., **Español**, **Deutsch**, **Français**, or **简体中文**) and hard-refresh the browser:
   - **Setup & Reconfigure Forms:** Verify step descriptions, field labels (`api_key`, `name`, `lang`, `location_source`, `latitude`, `longitude`, `entity_id`), and the **Location Source** radio options (`latlong` / `entity`) are translated.
   - **Options Flow Form:** Click **Configure** and verify the title, description, and attribute group labels (`Daily Attributes`, `Day Attributes`, `Daypart Attributes`) are translated.
   - **Sensor Names & Icons:** View the device page and confirm all 27 sensor friendly names are localized (e.g., `<Location> <Translated Sensor Name>`) and display their expected Material Design icons from [`icons.json`].
 
 ### 3.2 Stable English Entity IDs Under Non-English UI
-- [ ] **Create Entry While UI is Non-English:** While your Home Assistant profile/system language is set to a non-English language (e.g., German or Chinese), add a new Weather.com location named `TestCity`.
+- [x] **Create Entry While UI is Non-English:** While your Home Assistant profile/system language is set to a non-English language (e.g., German or Chinese), add a new Weather.com location named `TestCity`.
   - Verify that the **friendly names** in the UI are localized, while the **entity IDs** remain deterministic English slugs derived from `translation_key` (e.g., `sensor.testcity_temperature`, `sensor.testcity_wind_direction_cardinal`, `sensor.testcity_forecast_details`).
 
 ### 3.3 Smart Default API Language Selection (`_get_default_lang`)
-- [ ] Verify the **Language** dropdown default in Step 1 of the config flow under different HA language/country settings:
+- [x] Verify the **Language** dropdown default in Step 1 of the config flow under different HA language/country settings:
   - `en` with country `US` → `en-US`; `en` with country `GB` → `en-GB`
   - `es` with country `MX` → `es-MX`; `es` with country `ES` → `es-ES`
   - `zh-Hans` → `zh-CN`; `zh-Hant` → `zh-TW`
   - `nb` or `nn` → `no-NO`
 
 ### 3.4 Localized Weather.com API Content
-- [ ] Reconfigure an entry's **Language** to a non-English code (e.g., `es-ES` or `fr-FR`) and verify that text-based sensors update to the target language:
+- [x] Reconfigure an entry's **Language** to a non-English code (e.g., `es-ES` or `fr-FR`) and verify that text-based sensors update to the target language:
   - `sensor.<location>_weather_description` (e.g., `"Parcialmente nublado"`)
   - `sensor.<location>_cloud_cover_phrase`
   - `sensor.<location>_pressure_tendency_trend`
