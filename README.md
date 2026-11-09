@@ -110,10 +110,11 @@ Additional details about the APIs used by this integration are available through
 
 # Localization
 
-Localization is handled in two ways:
+Localization is handled in three ways:
 
-1. **Entity Names:** Sensor and weather entity names in the Home Assistant UI are automatically translated by Home Assistant based on the language selected in your user profile (`User Profile -> Language`).
-2. **Weather.com API Phrases:** The **Language** setting chosen during integration setup (or via **Configure / Reconfigure**) determines the language code sent to the Weather.com API. This localizes textual weather data returned by the API, such as weather descriptions, daily narratives, moon phases, and wind phrases. Home Assistant will automatically suggest the best matching language code based on your system language and country settings.
+1. **Configuration & Options Forms:** Setup, reconfigure, and options dialogs in the Home Assistant UI are translated based on the language selected in your user profile (`User Profile -> Language`).
+2. **Entity Names:** Sensor and weather entity names are translated by Home Assistant based on your system language (`Settings -> System -> General -> Language`). If you change the system language after setting up the integration, reload the integration for entity names to update.
+3. **Weather.com API Phrases:** The **Language** setting chosen during integration setup (or via **Reconfigure**) determines the language code sent to the Weather.com API. This localizes textual weather data returned by the API, such as weather descriptions, daily narratives, moon phases, and wind phrases. Home Assistant will automatically suggest the best matching language code based on your system language and country settings.
 
 Available Weather.com API language codes:
 ```

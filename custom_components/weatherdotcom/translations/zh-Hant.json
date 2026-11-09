@@ -1,0 +1,162 @@
+{
+  "config": {
+    "step": {
+      "user": {
+        "description": "設定 Weather.com 整合。請按照 GitHub README 中的說明取得 API 金鑰。",
+        "data": {
+          "api_key": "API 金鑰",
+          "name": "位置名稱",
+          "lang": "語言",
+          "location_source": "位置來源"
+        }
+      },
+      "latlong": {
+        "description": "輸入用於天氣預報的地理座標。",
+        "data": {
+          "latitude": "緯度",
+          "longitude": "經度"
+        }
+      },
+      "entity": {
+        "description": "選擇用於取得座標的 Home Assistant 追蹤實體或區域。",
+        "data": {
+          "entity_id": "位置實體"
+        }
+      },
+      "reconfigure": {
+        "description": "重新設定 Weather.com 整合。您可以變更 API 金鑰、語言或位置來源。",
+        "data": {
+          "api_key": "API 金鑰",
+          "lang": "語言",
+          "location_source": "位置來源"
+        }
+      }
+    },
+    "error": {
+      "already_configured": "已存在同名的 Weather.com 整合。請選擇其他名稱。",
+      "cannot_connect": "無法連線至 Weather.com。請檢查您的網路連線並重試。",
+      "invalid_api_key": "API 金鑰無效。",
+      "invalid_coordinates": "緯度必須介於 -90 到 90 之間，經度必須介於 -180 到 180 之間。",
+      "invalid_location_entity": "所選實體沒有有效的緯度和經度屬性。",
+      "unknown_error": "發生未知錯誤。請查看 Home Assistant 日誌以取得更多詳情。"
+    },
+    "abort": {
+      "already_configured": "已存在同名的 Weather.com 整合。請選擇其他名稱。",
+      "reconfigure_successful": "Weather.com 整合已成功重新設定。"
+    }
+  },
+  "selector": {
+    "location_source_options": {
+      "options": {
+        "latlong": "緯度/經度",
+        "entity": "實體（區域、裝置追蹤器或人員）"
+      }
+    }
+  },
+  "options": {
+    "step": {
+      "extra_attributes": {
+        "title": "額外天氣屬性",
+        "description": "選擇要新增至「預報詳情」感測器的屬性。請透過上方的 **說明** (?) 查看 GitHub README 中的 **進階設定**。",
+        "data": {
+          "daily_attributes": "每日屬性",
+          "day_attributes": "日間屬性",
+          "daypart_attributes": "分時段屬性"
+        }
+      }
+    }
+  },
+  "entity": {
+    "sensor": {
+      "local_observation_time": {
+        "name": "當地觀測時間"
+      },
+      "weather_description": {
+        "name": "天氣描述"
+      },
+      "relative_humidity": {
+        "name": "相對濕度"
+      },
+      "uv_index": {
+        "name": "紫外線指數"
+      },
+      "wind_direction_degrees": {
+        "name": "風向 - 度數"
+      },
+      "wind_direction_cardinal": {
+        "name": "風向 - 方位"
+      },
+      "dewpoint": {
+        "name": "露點"
+      },
+      "temperature_feels_like": {
+        "name": "溫度 - 體感"
+      },
+      "temperature": {
+        "name": "溫度"
+      },
+      "heat_index": {
+        "name": "酷熱指數"
+      },
+      "wind_chill": {
+        "name": "風寒指數"
+      },
+      "precipitation_last_hour": {
+        "name": "降水量 - 過去 1 小時"
+      },
+      "precipitation_last_6_hours": {
+        "name": "降水量 - 過去 6 小時"
+      },
+      "precipitation_last_24_hours": {
+        "name": "降水量 - 過去 24 小時"
+      },
+      "pressure": {
+        "name": "氣壓"
+      },
+      "wind_gust": {
+        "name": "陣風"
+      },
+      "wind_speed": {
+        "name": "風速"
+      },
+      "cloud_ceiling": {
+        "name": "雲底高度"
+      },
+      "pressure_tendency_trend": {
+        "name": "氣壓趨勢"
+      },
+      "cloud_cover_phrase": {
+        "name": "雲量描述"
+      },
+      "latitude": {
+        "name": "緯度"
+      },
+      "longitude": {
+        "name": "經度"
+      },
+      "icon_code": {
+        "name": "圖示代碼"
+      },
+      "snowfall_last_hour": {
+        "name": "降雪量 - 過去 1 小時"
+      },
+      "snowfall_last_6_hours": {
+        "name": "降雪量 - 過去 6 小時"
+      },
+      "snowfall_last_24_hours": {
+        "name": "降雪量 - 過去 24 小時"
+      },
+      "forecast_details": {
+        "name": "預報詳情"
+      }
+    }
+  },
+  "exceptions": {
+    "cannot_retrieve_coordinates": {
+      "message": "無法從 {location_entity_id} 取得位置座標"
+    },
+    "update_failed": {
+      "message": "取得天氣資料失敗"
+    }
+  }
+}
