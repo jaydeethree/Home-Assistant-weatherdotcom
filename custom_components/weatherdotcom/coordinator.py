@@ -26,8 +26,10 @@ from homeassistant.exceptions import HomeAssistantError
 from homeassistant.helpers.aiohttp_client import async_get_clientsession
 from homeassistant.helpers.device_registry import DeviceEntryType, DeviceInfo
 from homeassistant.helpers.update_coordinator import DataUpdateCoordinator, UpdateFailed
+from homeassistant.util import dt as dt_util
 from homeassistant.util.unit_system import METRIC_SYSTEM
 
+from .api_key import async_extract_api_key, async_validate_api_key
 from .const import (
     API_URL_IMPERIAL,
     API_URL_METRIC,
@@ -56,6 +58,11 @@ _LOGGER = logging.getLogger(__name__)
 
 MIN_TIME_BETWEEN_UPDATES = timedelta(minutes=20)
 MAX_CONSECUTIVE_FAILURES = 3
+# Minimum time between attempts to fetch a new API key from Wunderground. Shared
+# by all config entries, and kept at module level so it survives setup retries.
+API_KEY_REFRESH_COOLDOWN = timedelta(hours=1)
+_API_KEY_REFRESH_LOCK = asyncio.Lock()
+_last_api_key_refresh: datetime | None = None
 _WARNED_ICON_CODES: set[int] = set()
 
 
@@ -104,6 +111,7 @@ class WeatherUpdateCoordinator(DataUpdateCoordinator[dict[str, Any]]):
         entry: WeatherDotComConfigEntry,
     ) -> None:
         """Initialize."""
+        self._entry = entry
         self._api_key = entry.data[CONF_API_KEY]
         self._location_name = entry.data[CONF_NAME]
         self._unit_system_api = (
@@ -201,19 +209,20 @@ class WeatherUpdateCoordinator(DataUpdateCoordinator[dict[str, Any]]):
         self.current_latitude = latitude
         self.current_longitude = longitude
 
+        # Another config entry may have refreshed the shared API key.
+        self._api_key = self._entry.data[CONF_API_KEY]
+
+        fetched = await self._async_fetch_all(latitude, longitude)
+        if all(has_error for _, has_error in fetched) and (
+            await self._async_refresh_api_key()
+        ):
+            fetched = await self._async_fetch_all(latitude, longitude)
+
         (
             (result_current, current_error),
             (result_forecast_daily, daily_error),
             (result_forecast_hourly, hourly_error),
-        ) = await asyncio.gather(
-            self._async_fetch_data(RESOURCE_CURRENT, latitude, longitude, "current"),
-            self._async_fetch_data(
-                RESOURCE_FORECAST_DAILY, latitude, longitude, "daily"
-            ),
-            self._async_fetch_data(
-                RESOURCE_FORECAST_HOURLY, latitude, longitude, "hourly"
-            ),
-        )
+        ) = fetched
         if result_forecast_daily is not None:
             # If the result includes max temperature data for today,
             # update that data in storage; otherwise ensure stored data is loaded.
@@ -264,6 +273,78 @@ class WeatherUpdateCoordinator(DataUpdateCoordinator[dict[str, Any]]):
             )
 
         return results
+
+    async def _async_fetch_all(
+        self, latitude: float, longitude: float
+    ) -> list[tuple[dict[str, Any] | None, bool]]:
+        """Fetch current conditions and both forecasts concurrently."""
+        return list(
+            await asyncio.gather(
+                self._async_fetch_data(
+                    RESOURCE_CURRENT, latitude, longitude, "current"
+                ),
+                self._async_fetch_data(
+                    RESOURCE_FORECAST_DAILY, latitude, longitude, "daily"
+                ),
+                self._async_fetch_data(
+                    RESOURCE_FORECAST_HOURLY, latitude, longitude, "hourly"
+                ),
+            )
+        )
+
+    async def _async_refresh_api_key(self) -> bool:
+        """Try to replace a failing API key with the one Wunderground serves now.
+
+        Called when all Weather.com requests failed. Returns True when a new,
+        working key was stored, so the caller can retry the requests.
+        """
+        global _last_api_key_refresh
+
+        async with _API_KEY_REFRESH_LOCK:
+            old_key = self._api_key
+            # A concurrent refresh for another entry may already have
+            # replaced this key while we were waiting for the lock.
+            if (current := self._entry.data[CONF_API_KEY]) != old_key:
+                self._api_key = current
+                return True
+
+            now = dt_util.utcnow()
+            if (
+                _last_api_key_refresh is not None
+                and now - _last_api_key_refresh < API_KEY_REFRESH_COOLDOWN
+            ):
+                return False
+            _last_api_key_refresh = now
+
+            new_key = await async_extract_api_key(self.hass)
+            if not new_key:
+                return False
+            if new_key == old_key:
+                _LOGGER.warning(
+                    "Wunderground still serves the configured API key; "
+                    "no replacement key available"
+                )
+                return False
+            if error := await async_validate_api_key(self.hass, new_key):
+                _LOGGER.warning(
+                    "API key retrieved from Wunderground did not validate (%s)",
+                    error,
+                )
+                return False
+
+            _LOGGER.warning(
+                "Weather.com API key failed; switched to the key Wunderground "
+                "serves now (ending in %s)",
+                new_key[-6:],
+            )
+            # Update every entry that used the failing key, not just this one.
+            for entry in self.hass.config_entries.async_entries(DOMAIN):
+                if entry.data.get(CONF_API_KEY) == old_key:
+                    self.hass.config_entries.async_update_entry(
+                        entry, data={**entry.data, CONF_API_KEY: new_key}
+                    )
+            self._api_key = new_key
+            return True
 
     async def _async_fetch_data(
         self, resource: str, latitude: float, longitude: float, description: str

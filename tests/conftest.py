@@ -70,6 +70,15 @@ def snapshot(snapshot: SnapshotAssertion) -> SnapshotAssertion:
 
 
 @pytest.fixture(autouse=True)
+def reset_api_key_refresh_cooldown() -> Generator[None]:
+    """Reset the module-level API key refresh cooldown between tests."""
+    with patch(
+        "custom_components.weatherdotcom.coordinator._last_api_key_refresh", None
+    ):
+        yield
+
+
+@pytest.fixture(autouse=True)
 def fast_retry_sleep() -> Generator[AsyncMock]:
     """Patch coordinator retry sleep so error/retry tests run instantly."""
     with patch(

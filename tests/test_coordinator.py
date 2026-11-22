@@ -36,6 +36,7 @@ from custom_components.weatherdotcom.const import (
     HIGH_TEMP_TODAY_STORAGE,
     HIGH_TEMP_TODAY_TIMESTAMP_STORAGE,
     LOCATION_TYPE_ENTITY,
+    RESOURCE_WUNDERGROUND,
     RESULTS_CURRENT,
 )
 from custom_components.weatherdotcom.coordinator import (
@@ -418,3 +419,167 @@ async def test_coordinator_data_accessors(
     assert coordinator.get_forecast_hourly(FIELD_TEMP, hour=0) == 65
     assert coordinator.get_forecast_hourly(FIELD_TEMP, hour=999) is None
     assert coordinator.get_forecast_hourly("nonexistent", hour=0) is None
+
+
+NEW_API_KEY = "abcdef0123456789abcdef0123456789"
+
+
+async def _setup_failing_coordinator(
+    hass: HomeAssistant,
+    aioclient_mock: AiohttpClientMocker,
+    mock_config_entry: MockConfigEntry,
+    wunderground_key: str | None,
+) -> WeatherUpdateCoordinator:
+    """Mock a total Weather.com failure and a Wunderground page."""
+    mock_config_entry.add_to_hass(hass)
+    aioclient_mock.get(URL_CURRENT_PATTERN, status=HTTPStatus.UNAUTHORIZED)
+    aioclient_mock.get(URL_DAILY_PATTERN, status=HTTPStatus.UNAUTHORIZED)
+    aioclient_mock.get(URL_HOURLY_PATTERN, status=HTTPStatus.UNAUTHORIZED)
+    html = (
+        f'<script>{{"API_KEY":"{wunderground_key}"}}</script>'
+        if wunderground_key
+        else "<html></html>"
+    )
+    aioclient_mock.get(RESOURCE_WUNDERGROUND, text=html)
+    return WeatherUpdateCoordinator(hass, mock_config_entry)
+
+
+def _wunderground_calls(aioclient_mock: AiohttpClientMocker) -> int:
+    return sum("wunderground.com" in str(call[1]) for call in aioclient_mock.mock_calls)
+
+
+async def test_coordinator_refreshes_api_key_on_total_failure(
+    hass: HomeAssistant,
+    aioclient_mock: AiohttpClientMocker,
+    current_json: dict[str, Any],
+    daily_15day_json: dict[str, Any],
+    hourly_15day_json: dict[str, Any],
+    mock_config_entry: MockConfigEntry,
+) -> None:
+    """A new key from Wunderground is validated, stored, and used for a retry."""
+    coordinator = await _setup_failing_coordinator(
+        hass, aioclient_mock, mock_config_entry, NEW_API_KEY
+    )
+
+    async def _switch_to_working_api(*args: Any, **kwargs: Any) -> str | None:
+        aioclient_mock.clear_requests()
+        aioclient_mock.get(URL_CURRENT_PATTERN, json=current_json)
+        aioclient_mock.get(URL_DAILY_PATTERN, json=daily_15day_json)
+        aioclient_mock.get(URL_HOURLY_PATTERN, json=hourly_15day_json)
+        return None
+
+    with patch(
+        "custom_components.weatherdotcom.coordinator.async_validate_api_key",
+        side_effect=_switch_to_working_api,
+    ) as mock_validate:
+        data = await coordinator._async_update_data()
+
+    mock_validate.assert_awaited_once_with(hass, NEW_API_KEY)
+    assert mock_config_entry.data[CONF_API_KEY] == NEW_API_KEY
+    assert coordinator._api_key == NEW_API_KEY
+    assert data[RESULTS_CURRENT] == current_json
+    assert all(NEW_API_KEY in str(call[1]) for call in aioclient_mock.mock_calls)
+
+
+@pytest.mark.parametrize(
+    ("extracted_key", "validate_result"),
+    [
+        (None, None),
+        (TEST_API_KEY, None),
+        (NEW_API_KEY, "invalid_api_key"),
+    ],
+    ids=["no_key_found", "same_key", "new_key_invalid"],
+)
+async def test_coordinator_api_key_refresh_without_usable_key(
+    hass: HomeAssistant,
+    aioclient_mock: AiohttpClientMocker,
+    mock_config_entry: MockConfigEntry,
+    extracted_key: str | None,
+    validate_result: str | None,
+) -> None:
+    """No key found, the same key, or an invalid key leaves the entry unchanged."""
+    coordinator = await _setup_failing_coordinator(
+        hass, aioclient_mock, mock_config_entry, None
+    )
+    with (
+        patch(
+            "custom_components.weatherdotcom.coordinator.async_extract_api_key",
+            return_value=extracted_key,
+        ),
+        patch(
+            "custom_components.weatherdotcom.coordinator.async_validate_api_key",
+            return_value=validate_result,
+        ) as mock_validate,
+        pytest.raises(UpdateFailed),
+    ):
+        await coordinator._async_update_data()
+
+    assert mock_config_entry.data[CONF_API_KEY] == TEST_API_KEY
+    assert mock_validate.await_count == (1 if extracted_key == NEW_API_KEY else 0)
+
+
+async def test_coordinator_api_key_refresh_cooldown(
+    hass: HomeAssistant,
+    aioclient_mock: AiohttpClientMocker,
+    mock_config_entry: MockConfigEntry,
+) -> None:
+    """Wunderground is contacted at most once per cooldown period."""
+    coordinator = await _setup_failing_coordinator(
+        hass, aioclient_mock, mock_config_entry, None
+    )
+    for _ in range(2):
+        with pytest.raises(UpdateFailed):
+            await coordinator._async_update_data()
+    assert _wunderground_calls(aioclient_mock) == 1
+
+
+async def test_coordinator_refresh_updates_all_entries_with_same_key(
+    hass: HomeAssistant,
+    aioclient_mock: AiohttpClientMocker,
+    mock_config_entry: MockConfigEntry,
+) -> None:
+    """Every entry using the failing key gets the new key; others are untouched."""
+    other_same = MockConfigEntry(
+        domain=DOMAIN,
+        unique_id="other_same",
+        data={**mock_config_entry.data, CONF_NAME: "Other"},
+    )
+    other_different = MockConfigEntry(
+        domain=DOMAIN,
+        unique_id="other_different",
+        data={**mock_config_entry.data, CONF_NAME: "Third", CONF_API_KEY: "x"},
+    )
+    other_same.add_to_hass(hass)
+    other_different.add_to_hass(hass)
+    coordinator = await _setup_failing_coordinator(
+        hass, aioclient_mock, mock_config_entry, NEW_API_KEY
+    )
+    with (
+        patch(
+            "custom_components.weatherdotcom.coordinator.async_validate_api_key",
+            return_value=None,
+        ),
+        pytest.raises(UpdateFailed),
+    ):
+        # Retry still fails because the mocked API keeps returning 401.
+        await coordinator._async_update_data()
+
+    assert mock_config_entry.data[CONF_API_KEY] == NEW_API_KEY
+    assert other_same.data[CONF_API_KEY] == NEW_API_KEY
+    assert other_different.data[CONF_API_KEY] == "x"
+
+
+async def test_coordinator_api_key_refresh_uses_key_stored_meanwhile(
+    hass: HomeAssistant,
+    mock_config_entry: MockConfigEntry,
+) -> None:
+    """A key stored by another entry's refresh is picked up without contacting Wunderground."""
+    mock_config_entry.add_to_hass(hass)
+    coordinator = WeatherUpdateCoordinator(hass, mock_config_entry)
+    coordinator._api_key = "stale_key"
+    with patch(
+        "custom_components.weatherdotcom.coordinator.async_extract_api_key"
+    ) as mock_extract:
+        assert await coordinator._async_refresh_api_key() is True
+    mock_extract.assert_not_called()
+    assert coordinator._api_key == TEST_API_KEY

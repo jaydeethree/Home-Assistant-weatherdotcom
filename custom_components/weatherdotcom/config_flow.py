@@ -2,13 +2,9 @@
 
 from __future__ import annotations
 
-import asyncio
 import logging
-import re
-from http import HTTPStatus
 from typing import TYPE_CHECKING, Any
 
-import aiohttp
 from homeassistant import config_entries
 
 # Home Assistant 2026.10+ replaced voluptuous with probatio (aliasing voluptuous
@@ -30,9 +26,12 @@ from homeassistant.const import (
 from homeassistant.core import callback
 from homeassistant.helpers import entity_registry as er
 from homeassistant.helpers import selector
-from homeassistant.helpers.aiohttp_client import async_get_clientsession
 from homeassistant.util import slugify
 
+from .api_key import (
+    async_extract_api_key,
+    async_validate_api_key,
+)
 from .const import (
     CONF_EXTRA_ATTRIBUTES,
     CONF_LANG,
@@ -43,24 +42,13 @@ from .const import (
     EXTRA_ATTRIBUTE_KEYS_DAY,
     EXTRA_ATTRIBUTE_KEYS_DAYPART,
     FIELD_VALIDTIMEUTC,
-    HEADERS,
     LANG_CODES,
     LOCATION_TYPE_ENTITY,
     LOCATION_TYPE_LATLONG,
-    RESOURCE_CURRENT,
-    RESOURCE_WUNDERGROUND,
 )
 from .helpers import get_sensor_unique_id
 
 _LOGGER = logging.getLogger(__name__)
-
-# Matches "API_KEY":"<32-hex>" (including Angular &q; escaping) or
-# api.weather.com?...apiKey=<32-hex> (including &a;, &amp;, \u0026 escaping)
-API_KEY_PATTERN = re.compile(
-    r'(?:(?:["\']|&q;)API_KEY(?:["\']|&q;)\s*:\s*(?:["\']|&q;)'
-    r'|api\.weather\.com[^"\'\s<>]*?(?:[?&]|&a;|&amp;|\\u0026)apiKey=)'
-    r"([0-9a-fA-F]{32})"
-)
 
 
 _PREFERRED_LANG_DEFAULTS: dict[str, str] = {
@@ -124,30 +112,7 @@ class WeatherFlowHandler(config_entries.ConfigFlow, domain=DOMAIN):
 
     async def _async_extract_api_key(self) -> str | None:
         """Attempt to extract the public Weather.com API key from Wunderground."""
-        session = async_get_clientsession(self.hass)
-        headers = {"User-Agent": HEADERS["user-agent"]}
-        try:
-            async with (
-                asyncio.timeout(10),
-                session.get(RESOURCE_WUNDERGROUND, headers=headers) as response,
-            ):
-                status = response.status
-                if status != HTTPStatus.OK:
-                    _LOGGER.warning(
-                        "Could not retrieve API key from Wunderground (HTTP %s)",
-                        status,
-                    )
-                    return None
-                html = await response.text(errors="replace")
-        except TimeoutError, aiohttp.ClientError:
-            _LOGGER.warning("Error connecting to Wunderground to retrieve API key")
-            return None
-
-        if match := API_KEY_PATTERN.search(html):
-            return match.group(1)
-
-        _LOGGER.warning("Could not find Weather.com API key in Wunderground page")
-        return None
+        return await async_extract_api_key(self.hass)
 
     async def _async_resolve_api_key(
         self, raw_api_key: str | None
@@ -173,38 +138,7 @@ class WeatherFlowHandler(config_entries.ConfigFlow, domain=DOMAIN):
 
     async def _async_validate_api_key(self, api_key: str | None) -> str | None:
         """Validate the API key against the Weather.com endpoint."""
-        session = async_get_clientsession(self.hass)
-        try:
-            async with asyncio.timeout(10):
-                # Use hardcoded values for the initial test API call. User-supplied values will be used for the created entities.
-                params = {
-                    "geocode": "37.3355,-121.8930",
-                    "format": "json",
-                    "units": "e",
-                    "apiKey": api_key or "",
-                    "language": "en-US",
-                }
-                async with session.get(
-                    RESOURCE_CURRENT, params=params, headers=HEADERS
-                ) as response:
-                    status = response.status
-                    reason = response.reason
-        except (TimeoutError, aiohttp.ClientError) as err:
-            err_msg = str(err).replace(api_key, "REDACTED") if api_key else str(err)
-            _LOGGER.error("Error connecting to Weather.com during config: %s", err_msg)
-            return "cannot_connect"
-
-        if status != HTTPStatus.OK:
-            _LOGGER.error(
-                "Weather.com config responded with HTTP error %s: %s",
-                status,
-                reason,
-            )
-            if status == HTTPStatus.UNAUTHORIZED:
-                return "invalid_api_key"
-            return "unknown_error"
-
-        return None
+        return await async_validate_api_key(self.hass, api_key)
 
     async def async_step_user(
         self, user_input: dict[str, Any] | None = None
